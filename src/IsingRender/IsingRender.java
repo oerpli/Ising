@@ -1,4 +1,4 @@
-package Wolfram;
+package IsingRender;
 
 import processing.core.*;
 //import processing.data.*;
@@ -12,13 +12,15 @@ import Ising.Point;
 
 //import java.text.DecimalFormat;
 
-public class Wolfram extends PApplet {
+public class IsingRender extends PApplet {
+	private long calced = 0;
 	private static final long serialVersionUID = -1664637672574501774L;
 	// 1 -0.8 2.269*E/8
-	private static final int N = 150; // (2NxN Lattice)
+	private int speed = 8;
+	private static final int N = 100; // (2NxN Lattice)
 	private final double seed = 0.99;
 	private final double E = 1.25; // Energy - neighbor0
-	private final double J = -0.4; // Field - sum
+	private final double J = -0.2; // Field - sum
 	private final double Beta = E / 5;
 	private final boolean limit = false;
 	public final int width = 1350;
@@ -95,17 +97,25 @@ public class Wolfram extends PApplet {
 			drawInfo();
 			image(info, 0, 0);
 			tab = 2;
-			if (Math.random() < Math.exp(-5))
-				System.out.println(L.calced);
+			if (Math.random() < 0.03) {
+				int log10 = (int) Math.floor(Math.log10(calced));
+				System.out.println("Proposed Flips: "
+						+ (calced / Math.pow(10, log10)) + "x10^" + log10);
+			}
 			break;
 		}
 		recalc();
 	}
 
 	private void recalc() {
-		for (int i = 0; i < L.size[2]; i++) {
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < L.size[2] * speed; i++) {
 			L.tryFlip(1);
+			calced++;
 		}
+		if (Math.random() < 0.05)
+			System.out.println("Time/" + (L.size[2] * speed) + " Flips: "
+					+ (System.currentTimeMillis() - start) + "ms");
 		tab = 0;
 	}
 
@@ -116,9 +126,10 @@ public class Wolfram extends PApplet {
 		info.textSize(18);
 		info.background(0);
 		info.fill(color(180, 180, 180));
-		info.text("Lattice size: " + L.size[0] + " x " + L.size[1]
+		String s = "Lattice size: " + L.size[0] + " x " + L.size[1]
 				+ " Hamiltonian:  " + (int) L.getHamiltonian() + " Seed: "
-				+ seed + " Plus: " + L.plus, 25, 20);
+				+ seed + " Plus: " + L.plus + " Speed: " + speed;
+		info.text(s, 25, 20);
 		info.text("", 206, 20);
 		info.endDraw();
 	}
@@ -140,13 +151,15 @@ public class Wolfram extends PApplet {
 		int a = 0;
 		if (p.is(1)) {
 			a = 255;
-			lattice.fill(a, a + 15, a + 15);
+			// lattice.fill(a, a + 15, a + 15);
+			lattice.fill(a, a, a);
 		} else if (p.is(-1)) {
-			a = 80;
-			lattice.fill(255, a + 15, a + 15);
+			a = 30;
+			// lattice.fill(255, a + 15, a + 15);
+			lattice.fill(a, a, a);
 		} else {
-			a = 0;
-			lattice.fill(a, a + 55, a + 15);
+			a = 80;
+			lattice.fill(a, a, a);
 		}
 		lattice.rect(p.x * size, p.y * size, size, size);
 		if (limit && p.is(1)) {
@@ -165,7 +178,7 @@ public class Wolfram extends PApplet {
 	}
 
 	static public void main(String[] passedArgs) {
-		String[] appletArgs = new String[] { "wolfram" };
+		String[] appletArgs = new String[] { "IsingRender" };
 		if (passedArgs != null) {
 			PApplet.main(concat(appletArgs, passedArgs));
 		} else {

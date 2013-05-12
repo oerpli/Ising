@@ -28,14 +28,14 @@ public class Point {
 
 		// POREN
 		boolean poren = true;
-		int tiefe = 20;
-		int breite = 6;
-		int abstand = 10;
+		int tiefe = 15;
+		int breite = 10;
+		int abstand = breite*3;
 
 		if (poren) {
-			if ((y < tiefe || y > L.size[1] - tiefe)
-					&& !(x % abstand >= 0 && x % abstand < breite) || y < 3
-					|| y > L.size[1] - 3) {
+			if ((y > L.size[1] - tiefe)
+					&& !(x % abstand >= 0 && x % abstand < breite)
+					|| y > L.size[1] - 2) {
 				this.v = 0;
 			}
 		}
@@ -67,6 +67,8 @@ public class Point {
 	}
 
 	private void getEnergy() {
+		if (v == 0)
+			return;
 		L.E_near -= e_near;
 		byte sum = 0;
 		for (Point p : near) {
@@ -77,7 +79,7 @@ public class Point {
 	}
 
 	public void getNewEnergy() {
-		if (!e_in_new) {
+		if (!e_in_new && v != 0) {
 			L.E_near_new -= e_near;
 			byte sum = 0;
 			for (Point p : near) {

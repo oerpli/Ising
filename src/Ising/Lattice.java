@@ -20,8 +20,6 @@ public class Lattice {
 	public int plus = 0;
 	public int E_near_new = 0;
 	public int E_sum_new = 0;
-	public long calced = 0;
-
 	// private static final double kB = 1.3806488e-23;// Boltzmann SI
 	// private static final double kB = 8e-5;// Boltzmann Gauﬂ
 	// private static final double T = 1; // Temperature
@@ -59,7 +57,6 @@ public class Lattice {
 	// }
 
 	public boolean tryFlip(int c) {
-		calced += c;
 		int[] indexes = new int[c];
 		for (int i = 0; i < c; i++) {
 			indexes[i] = (int) Math.floor(Math.random() * this.size[2]);
