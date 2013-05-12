@@ -93,8 +93,9 @@ public class Point {
 		}
 	}
 
-	public void setOffset() {
+	public boolean setOffset() {
 		this.offset = (byte) -(v << 1); // -v*2
+		return v != 0;
 	}
 
 	public byte getOffset() {
@@ -103,7 +104,7 @@ public class Point {
 
 	public void acceptFlip(boolean accept) {
 		if (accept) {
-			if (!draw && offset != 0) {
+			if (!draw) {
 				draw = true;
 			}
 			v += offset;

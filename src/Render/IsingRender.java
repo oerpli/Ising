@@ -40,7 +40,7 @@ public class IsingRender extends PApplet {
 
 	// private XYChart lineChart;
 	public void setup() {
-		setup(4);
+		setup(3);
 	}
 
 	public void setup(int a) {
@@ -74,7 +74,7 @@ public class IsingRender extends PApplet {
 			J = -0.2;
 			kT = 2.269 + 0.5;
 			break;
-		case 4: // Pore - ohne Poren
+		case 4: // Pore - ohne Poren bis 10^10 kein Phasenübergang
 			Point.poren = false;
 			speed = 3;
 			E = 1;
