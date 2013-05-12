@@ -12,6 +12,7 @@ public class Point {
 	private boolean e_in_new = false;
 	private boolean draw = true;
 	public static Lattice L;
+	public static boolean poren = false;
 
 	public byte getV() {
 		return v;
@@ -27,7 +28,6 @@ public class Point {
 		this.y = xy[1];
 
 		// POREN
-		boolean poren = true;
 		int tiefe = 30;
 		int breite = 9;
 		int abstand = breite * 3;
