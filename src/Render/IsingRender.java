@@ -17,13 +17,13 @@ public class IsingRender extends PApplet {
 	private double E; // Coupling Constant
 	private double J; // Field
 	private double kT;// Temperature
-	private double seed = 0.99;// Seed
+	private double seed;// Seed
 
 	// Renderparameters
 	private int speed = 1; // N*speed flips/render
 	private final boolean limit = false; // red frames
-	private final int N = 100; // (2NxN Lattice)
-	private int size = 600 / N;
+	private int N; // (2NxN Lattice)
+	private int size;
 
 	// System
 	private PGraphics lattice, info; // chart_bg,chart
@@ -33,38 +33,67 @@ public class IsingRender extends PApplet {
 	private static final long serialVersionUID = -1664637672574501774L;
 
 	private final DecimalFormat df = new DecimalFormat("0.00");
+	private final float[] up = new float[] { 255, 255, 255 };
+	private final float[] down = new float[] { 250, 55, 55 };
+	private final float[] wall = new float[] { 55, 55, 55 };
+	private final float[] eframe = new float[] { 255, 0, 0 };
 
 	// private XYChart lineChart;
-
 	public void setup() {
+		setup(4);
+	}
+
+	public void setup(int a) {
 		// Physics
-		speed = 5;
-		switch (1) {
-		case 0:
-			Point.poren = false;
+		N = 100;
+		speed = 3;
+		seed = 1;
+		switch (a) {
+		case 0: // Demo homogene Nukleation mit Poren
+			Point.poren = true;
 			E = 1;
 			J = -0.8;
 			kT = 2.269;
 			break;
-		case 1:
+		case 1:// Demo Homogene Nukleation ohne Poren
+			E = 1;
+			J = -0.8;
+			kT = 2.269;
+			break;
+		case 2: // T < Tc
 			seed = 0.5;
 			Point.poren = false;
 			E = 1;
 			J = 0;
 			kT = 1;
 			break;
-		case 2: // AJ Page, RP Sear
+		case 3: // Pore - Demo
+			Point.poren = true;
+			speed = 3;
+			E = 1;
+			J = -0.2;
+			kT = 2.269 + 0.5;
+			break;
+		case 4: // Pore - ohne Poren
+			Point.poren = false;
+			speed = 3;
+			E = 1;
+			J = -0.2;
+			kT = 2.269 + 0.5;
+			break;
+		case 5: // AJ Page, RP Sear
 			Point.poren = true;
 			E = 0.44;
 			J = -0.05;
 			kT = 1;
 			break;
 		}
+		size = 600 / N;
 		L = new Lattice(2 * N, N, seed, E, J, 1 / kT);
 
 		// System
 		size(1250, 650);
-		frameRate(25);
+		frameRate(60);
 		lattice = createGraphics(1200, 600);
 		info = createGraphics(1200, 20);
 		// chart_bg = createGraphics(chart.width + 20, chart.height + 20);
@@ -151,8 +180,8 @@ public class IsingRender extends PApplet {
 		info.background(0);
 		info.fill(color(180, 180, 180));
 		int log10 = (int) Math.floor(Math.log10(Math.abs(L.getHamiltonian())));
-		String energy = df.format(L.getHamiltonian() / Math.pow(10, log10)) + "x10^"
-				+ log10;
+		String energy = df.format(L.getHamiltonian() / Math.pow(10, log10))
+				+ "x10^" + log10;
 		String s = "Lattice size: " + L.size[0] + " x " + L.size[1]
 				+ " Energy:  " + energy + " Seed: " + seed + " Plus: " + L.plus
 				+ " Speed: " + speed;
@@ -175,20 +204,15 @@ public class IsingRender extends PApplet {
 		p.drawn();
 		int a = 0;
 		if (p.is(1)) {
-			a = 255;
-			// lattice.fill(a, a + 15, a + 15);
-			lattice.fill(a, a, a);
+			lattice.fill(up[0], up[1], up[2]);
 		} else if (p.is(-1)) {
-			a = 30;
-			// lattice.fill(255, a + 15, a + 15);
-			lattice.fill(a, a, a);
+			lattice.fill(down[0], down[1], down[2]);
 		} else {
-			a = 80;
-			lattice.fill(a, a, a);
+			lattice.fill(wall[0], wall[1], wall[2]);
 		}
 		lattice.rect(p.x * size, p.y * size, size, size);
 		if (limit && p.is(-1)) {
-			lattice.fill(255, 0, 0);
+			lattice.fill(eframe[0], eframe[1], eframe[2]);
 			if (!p.near[0].is(p))
 				lattice.rect(p.x * size, p.y * size, size, 1);
 			if (!p.near[1].is(p))
