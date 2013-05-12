@@ -222,7 +222,6 @@ public class IsingRender extends PApplet {
 			if (!p.near[3].is(p))
 				lattice.rect(p.x * size, p.y * size, 1, size);
 		}
-
 	}
 
 	static public void main(String[] passedArgs) {
