@@ -28,14 +28,15 @@ public class Point {
 
 		// POREN
 		boolean poren = true;
-		int tiefe = 15;
-		int breite = 10;
-		int abstand = breite*3;
+		int tiefe = 30;
+		int breite = 9;
+		int abstand = breite * 3;
+		int xoffset = 1;
 
 		if (poren) {
 			if ((y > L.size[1] - tiefe)
-					&& !(x % abstand >= 0 && x % abstand < breite)
-					|| y > L.size[1] - 2) {
+					&& !((x - xoffset) % abstand >= 0 && (x - xoffset)
+							% abstand < breite) || y > L.size[1] - 2) {
 				this.v = 0;
 			}
 		}
