@@ -12,6 +12,7 @@ public class Point {
 	private boolean e_in_new = false;
 	private boolean draw = true;
 	public static Lattice L;
+	public static boolean poren = false;
 
 	public byte getV() {
 		return v;
@@ -27,7 +28,6 @@ public class Point {
 		this.y = xy[1];
 
 		// POREN
-		boolean poren = true;
 		int tiefe = 30;
 		int breite = 9;
 		int abstand = breite * 3;
@@ -93,8 +93,9 @@ public class Point {
 		}
 	}
 
-	public void setOffset() {
+	public boolean setOffset() {
 		this.offset = (byte) -(v << 1); // -v*2
+		return v != 0;
 	}
 
 	public byte getOffset() {
@@ -103,7 +104,7 @@ public class Point {
 
 	public void acceptFlip(boolean accept) {
 		if (accept) {
-			if (!draw && offset != 0) {
+			if (!draw) {
 				draw = true;
 			}
 			v += offset;

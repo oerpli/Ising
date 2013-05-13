@@ -67,7 +67,8 @@ public class Lattice {
 	private boolean tryFlip(int[] indexes) {
 		for (int i : indexes) {
 			Point p = getPoint(i);
-			p.setOffset();
+			if (!p.setOffset())
+				return false;
 			changedPoints.add(p);
 			for (Point n : p.near) {
 				changedPoints.add(n);
