@@ -1,19 +1,20 @@
 package Ising;
 
 public class Point {
+	public static boolean poren = false;
+	public static Lattice L;
 	private byte v; // value
 	private byte offset;
 	public final int x;
 	public final int y;
 	public Point[] near = new Point[4]; // "von neumann"- neighbors
+	
 	private int e_near = 0;
 	private int e_near_new = 0;
 
 	private boolean e_in_new = false;
 	private boolean draw = true;
-	public static Lattice L;
-	public static boolean poren = false;
-
+	
 	public byte getV() {
 		return v;
 	}

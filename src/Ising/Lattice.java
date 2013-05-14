@@ -80,12 +80,10 @@ public class Lattice {
 		return acceptFlip(testFlip());// TODO
 	}
 
-	// TODO also except higher energy sometimes
 	private boolean testFlip() {
 		double diffE = getDiffHamiltonian();
-		if (diffE <= 0) {
+		if (diffE <= 0)
 			return true;
-		}
 		return Math.random() < Math.exp(-diffE * Beta);
 	}
 

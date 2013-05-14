@@ -69,7 +69,7 @@ public class IsingRender extends PApplet {
 			break;
 		case 3: // Pore - Demo
 			Point.poren = true;
-			speed = 3;
+			speed = 1;
 			E = 1;
 			J = -0.2;
 			kT = 2.269 + 0.5;
@@ -93,7 +93,7 @@ public class IsingRender extends PApplet {
 
 		// System
 		size(1250, 650);
-		frameRate(60);
+		frameRate(120);
 		lattice = createGraphics(1200, 600);
 		info = createGraphics(1200, 20);
 		// chart_bg = createGraphics(chart.width + 20, chart.height + 20);
