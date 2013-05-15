@@ -14,8 +14,8 @@ import java.text.DecimalFormat;
 
 public class IsingRender extends PApplet {
 	// Physics:
-	private double E; // Coupling Constant
-	private double J; // Field
+	private double J; // Coupling Constant
+	private double h; // Field
 	private double kT;// Temperature
 	private double seed;// Seed
 
@@ -48,48 +48,60 @@ public class IsingRender extends PApplet {
 		N = 100;
 		speed = 3;
 		seed = 1;
-		switch (a) {
+		Point.breite = 14;
+		switch (6) {
 		case 0: // Demo homogene Nukleation mit Poren
 			Point.poren = true;
-			E = 1;
-			J = -0.8;
+			J = 1;
+			h = -0.8;
 			kT = 2.269;
 			break;
 		case 1:// Demo Homogene Nukleation ohne Poren
-			E = 1;
-			J = -0.8;
-			kT = 2.269;
+			speed = 4;
+			J = 0.8;
+			h = 0;
+			kT = 3.269;
+			break;
+		case 6:// Demo Homogene Nukleation ohne Poren EQUILIBRIUM!!
+			speed = 8;
+			seed = 1-seed;
+			J = 0.8;
+			h = 0;
+			kT = 3.269;
 			break;
 		case 2: // T < Tc
+			speed = 1;
 			seed = 0.5;
 			Point.poren = false;
-			E = 1;
-			J = 0;
-			kT = 1;
+			J = 1;
+			h = 0;
+			kT = 0.5;
 			break;
 		case 3: // Pore - Demo
 			Point.poren = true;
-			speed = 1;
-			E = 1;
-			J = -0.2;
+			speed = 5;
+			N = 120;
+			J = 1;
+			h = -0.2;
 			kT = 2.269 + 0.5;
 			break;
 		case 4: // Pore - ohne Poren bis 10^10 kein Phasenübergang
 			Point.poren = false;
 			speed = 3;
-			E = 1;
-			J = -0.2;
+			N = 120;
+			J = 1;
+			h = -0.2;
 			kT = 2.269 + 0.5;
 			break;
 		case 5: // AJ Page, RP Sear
 			Point.poren = true;
-			E = 0.44;
-			J = -0.05;
+			J = 0.44;
+			h = -0.05;
 			kT = 1;
 			break;
 		}
 		size = 600 / N;
-		L = new Lattice(2 * N, N, seed, E, J, 1 / kT);
+		L = new Lattice(2 * N, N, seed, J, h, 1 / kT);
 
 		// System
 		size(1250, 650);
@@ -200,6 +212,7 @@ public class IsingRender extends PApplet {
 		lattice.endDraw();
 	}
 
+	@SuppressWarnings("unused")
 	private void drawPoint(Point p) {
 		p.drawn();
 		int a = 0;

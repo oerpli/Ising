@@ -15,6 +15,9 @@ public class Point {
 	private boolean e_in_new = false;
 	private boolean draw = true;
 	
+	
+	public static int breite = 9;
+	
 	public byte getV() {
 		return v;
 	}
@@ -30,7 +33,6 @@ public class Point {
 
 		// POREN
 		int tiefe = 30;
-		int breite = 9;
 		int abstand = breite * 3;
 		int xoffset = 1;
 

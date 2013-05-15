@@ -24,8 +24,8 @@ public class Lattice {
 	// private static final double kB = 8e-5;// Boltzmann Gauﬂ
 	// private static final double T = 1; // Temperature
 	// 1, -0.5, 2.2.69*E/8
-	private final double E; // Energy - neighbor0
-	private final double J; // Field - sum
+	private final double J; // Energy - neighbor0
+	private final double h; // Field - sum
 	private final double Beta;
 
 	public Lattice(int x, int y, double seed, double E, double J, double Beta) {
@@ -33,8 +33,8 @@ public class Lattice {
 		sites = new Point[size[2]];
 		// cell = new byte[x][y];
 		this.init(seed);
-		this.E = E;
-		this.J = J;
+		this.J = E;
+		this.h = J;
 		this.Beta = Beta;
 	}
 
@@ -135,11 +135,11 @@ public class Lattice {
 	}
 
 	public double getDiffHamiltonian() {
-		return -E * E_near_new - J * E_sum_new;
+		return -J * E_near_new - h * E_sum_new;
 	}
 
 	public double getHamiltonian() {
-		return -E * E_near - J * E_sum;
+		return -J * E_near - h * E_sum;
 	}
 
 	/**
