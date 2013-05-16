@@ -1,0 +1,449 @@
+\documentclass{beamer}
+
+\setbeamertemplate{navigation symbols}{}
+%\setbeameroption{show notes}
+
+\usetheme{Malmoe}
+\usecolortheme{beaver}
+%\logo{Abraham}
+%\beamertemplatenavigationsymbolsempty
+
+
+
+\beamersetuncovermixins{\opaqueness<1>{25}}{\opaqueness<2->{15}}
+\usepackage{amssymb}
+%\usepackage{float}
+
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+\usepackage{graphicx}
+%\usepackage{wrapfig}
+\usepackage{textcomp}
+\usepackage{braket}
+\usepackage{bbm}
+\usepackage{framed}
+\usepackage{bbold}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{ifthen}
+%\usepackage{setspace}
+\newcommand{\tikzfig}[2]{
+\begin{figure}[h]
+\begin{center}
+\input{./img/TikZ/#1.tex}
+\end{center}\end{figure}
+}
+\newcommand{\tikzfigC}[2]{\begin{figure}[h]\begin{center}\input{./img/TikZ/#1.tex}\end{center}\caption{{#2}}\end{figure}}
+\newcommand{\fig}[2]{\begin{figure}[h]\begin{center}\includegraphics[width = 0.5\textwidth]{./img/#1}\end{center}\caption{{#2}}\end{figure}}
+\usepackage[T1]{fontenc}
+\usepackage{amsthm}
+
+\usepackage{bm}
+\usepackage{amsbsy}
+
+\usepackage{tikz}
+\usepackage{xcolor}
+	\usetikzlibrary{calc}
+	\usetikzlibrary{arrows}
+
+\usepackage{scalefnt}
+\usetikzlibrary{shapes,shapes.multipart}
+\usepackage{caption}
+\addto\captionsngerman{
+\renewcommand{\figurename}{Figure}%
+\renewcommand{\tablename}{Tab.}%
+}
+
+
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\I}{\mathbbm{1}}
+\newcommand{\intfin}{\int\limits_{-\infty}^{+\infty} \!}
+\newcommand{\intR}{\int\limits_{\mathbbm{R}}\!}
+\newcommand{\intRn}{\int\limits_{\mathbbm{R}^n}\!\di ^n}
+\newcommand{\intRm}[1]{\int\limits_{\R^{#1}}\! \di^{#1}}
+\newcommand{\intRR}{\int\limits_{-R}^{+R}\!}
+\newcommand{\di}{\mathrm{d}}
+
+
+
+\newcommand{\dt}[1]{\frac{\di #1}{\di t}}
+\newcommand{\pdt}[1]{\frac{\partial #1}{\partial t}}
+\newcommand{\pdx}[1]{\frac{\partial #1}{\partial x}}
+\newcommand{\pdy}[1]{\frac{\partial #1}{\partial y}}
+\newcommand{\pdz}[1]{\frac{\partial #1}{\partial z}}
+\newcommand{\dd}[2][1]{\frac{\di #1}{\di #2}}
+\newcommand{\pp}[2][1]{\frac{\partial #1}{\partial #2}}
+\newcommand{\nk}{\text{\normalfont ,}}
+\newcommand{\np}{\text{\normalfont .}}
+
+\setlength{\parskip}{1.5ex plus0.5ex minus0.5ex}
+\setlength{\parindent}{0em} 
+% my commands
+\sloppy 
+\frenchspacing 
+\raggedbottom 
+
+\newcommand{\msc}[1]{$\mathcal{#1}$}
+\newcommand{\mmc}[1]{\mathcal{#1}}
+\newcommand{\R}{\mathbbm{R}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\phip}{\varphi}
+\newcommand{\msp}[1]{$\displaystyle #1 $}
+\newcommand{\mmp}[1]{\displaystyle #1 }
+
+\newcommand{\gev}[1]{\langle \langle  #1 \rangle \rangle}
+
+\newcommand{\Gf}{\widetilde{G}(\omega,\vec{k})}
+
+
+
+
+\begin{document}
+\part{ABS}
+\title{Nucleation in the Ising Model}
+\author{Abraham Hinteregger}
+\institute{University of Vienna}
+\date{17.5.2013}
+\titlepage
+
+ \setcounter{tocdepth}{4}
+%\frame{\tableofcontents}
+
+
+
+\AtBeginSection[]{
+\begin{frame}
+%\begin{spacing}{0}
+\frametitle{Chapter} 
+\tableofcontents[currentsection,currentsubsection,currentsubsubsection,hideothersubsections]
+%\end{spacing}
+\end{frame}
+}
+
+\section{Ising Model} 
+\subsection{History}
+\begin{frame}\frametitle{History} 
+\begin{block}{}
+\begin{itemize}%[<+->]
+\item 1924: \href{http://link.springer.com/content/pdf/10.1007 BF02980577.pdf}{Ernst Ising - \textit{Beitrag zur Theorie des Ferromagnetismus}\footnote{Zeitschrift für Physik Februar–April 1925, Volume 31, Issue 1, pp 253-258 }}
+\begin{quote}
+''Es entsteht \ldots [durch] \ldots die Beschr"ankung der Wechselwirkung auf diejenige  benachbarter Elemente [\ldots] kein Ferromagnetismus.''
+\end{quote}
+\item 1936: \href{http://journals.cambridge.org/action/displayAbstract?fromPage=online\&aid=2027260}{Rudolph Peierls - \textit{On Ising's model of ferromagnetism}\footnote{Cambridge Philosophical Society 1936 / Volume 32 / Issue 03 / October}}
+\begin{quote}
+''[\ldots] for sufficiently low temperatures the Ising model in two [or more] dimensions shows ferromagnetism [\ldots].
+\end{quote}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\subsection{Lattice \& lattice sites}
+
+\begin{frame}\frametitle{Lattice}
+\tikzfigC{Ising1D}{Lattice in 1 dimension}
+\vspace*{0.25cm}
+\tikzfigC{Ising2D}{Lattice in 2 \alt<9-10>{and 3 }{}dimensions}
+
+\end{frame}
+
+
+\begin{frame}\frametitle{Lattice Sites}
+\begin{itemize}
+\item Each site has a state $s_i = -1\lor1$
+\visible<2->{\item Assignment of states $s = (s_0, s_1, s_2,\ldots, s_{N-1})$ to the lattice sites is called a configuration
+\item Therefore $2^N$ unique configurations for a lattice with N lattice sites.}
+\end{itemize}
+\end{frame}
+
+
+
+%: MAYBE
+%\subsection{Dynamics}
+%\begin{frame}\frametitle{Dynamics}
+%\begin{itemize}
+%\item Transition from one configuration to another - 
+%\end{itemize}
+%\end{frame}
+
+\subsection{Energy \& Monte Carlo}
+\subsubsection{Energy}
+\begin{frame}\frametitle{Energy}
+\begin{itemize}
+\item Each configuration has a corresponding energy - the Hamiltonian $H$
+\visible<1->{
+\begin{equation*}
+H(s) = H(s_0, s_1,\ldots, s_{N-1})=
+\alert<3>{ -J \sum_{\text{<i,j>}}s_i\cdot s_j}
+\alert<2>{- h \sum_{\text{i}}s_i}
+\end{equation*}
+}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{equation*}
+H(s)= -J \sum_{\text{<i,j>}}s_i\cdot s_j
+\end{equation*}\tikzfigC{Examples}{Energy contribution (from nearest neighbor interaction) of the central lattice site}
+\end{frame}
+
+\subsubsection{Monte Carlo}
+\begin{frame}\frametitle{Single Flip Monte Carlo (Metropolis- Hastings Algorithm)}
+\begin{itemize}
+\item Current configuration is $s_t$
+\begin{itemize}
+\item first configuration arbitrary
+\end{itemize}
+\item Flip one lattice site $\rightarrow$ $s_f$
+\begin{itemize}
+\item  has to be chosen randomly - suitable RNG necessary
+\end{itemize}
+\item Calculate energy difference $\Delta H = H(s_f) - H(s)$
+\item Calculate acceptance probability $P$
+\begin{equation*}
+P = \operatorname{min}\left(1,e^{-\beta\cdot \Delta H}\right),\qquad \beta = 1/kT > 0 
+\end{equation*}
+\item Generate random number $r \in [0,1[$
+\begin{itemize}
+\item $r<P \rightarrow s_{t+1} = s_f$ 
+\item $r>P \rightarrow s_{t+1} = s_t$ 
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\subsection{Temperature}
+\begin{frame}\frametitle{Temperature in the Ising Model}
+\begin{equation*}
+P = \operatorname{min}\left(1,e^{-\beta\cdot \Delta H}\right),\qquad \beta = 1/kT > 0
+\end{equation*}
+\begin{itemize}
+\item $\Delta H < 0 \rightarrow P = 1$
+\item high temperature leads to higher acceptance probability
+$\rightarrow$ unordered (low magnetization, Curie Temperature $T_c$)
+\item critical temperature $T_c$ when $\left<\sum_i^N s_i\right>/N \approx 0$
+\visible<2->{\begin{itemize}
+\item $kT_c/J = 2.269$
+\end{itemize}}
+\end{itemize}
+\end{frame}
+
+
+\subsection{Summary}
+\begin{frame}\frametitle{Summary - Ising Model}
+\begin{itemize}
+\item molecules on a lattice - each with with one of two possible states
+\item (magnetic) moments prefer to align
+\item low temperatures: ordered
+\item high temperatures: disordered
+\end{itemize}
+\end{frame}
+
+
+
+
+
+\section{Nucleation}
+\subsection{What is Nucleation?}
+\begin{frame}\frametitle{Nucleation}
+\begin{itemize}
+\item is a phase transformation process
+\item phase transformation grows from small nucleus
+\begin{exampleblock}{Examples}
+\begin{itemize}
+\item
+cloud chamber
+\item
+\href{http://www.youtube.com/watch?v=pTdiTe3x0Bo}{supercooled water}
+\end{itemize}
+\end{exampleblock}
+\end{itemize}
+\end{frame}
+\subsection{Homogeneous  Nucleation}\begin{frame}\frametitle{Nucleation}
+\begin{itemize}
+\item
+Homogeneous nucleation
+\begin{itemize}
+\item in a uniform substance
+\item no nucleation until nucleus with critical size ''appears'' (due to stochastic processes)
+\item higher supersaturation leads to smaller critical radius.
+\item rarely occurs in nature
+\end{itemize}
+\item Heterogeneous Nucleation{}
+\begin{itemize}
+\item begins at some preferable interface and grows from there
+\item much (!) more likely
+\item common in nature (freezing (in most cases), bubbles in water,...)
+\end{itemize}
+\end{itemize}
+\end{frame}
+\subsection{Heterogeneous  Nucleation}
+\begin{frame}\frametitle{Nucleation}
+\begin{itemize}
+\item
+Homogeneous nucleation
+\begin{itemize}
+\item in a uniform substance
+\item no nucleation until nucleus with critical size ''appears'' (due to stochastic processes)
+\item higher supersaturation leads to smaller critical radius.
+\item rarely occurs in nature
+\end{itemize}
+\item Heterogeneous Nucleation{}
+\begin{itemize}
+\item begins at some preferable interface and grows from there
+\item much (!) more likely
+\item common in nature (freezing (in most cases), bubbles in water,...)
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Nucleation in the Ising Model}
+\subsection{Homogeneous Nucleation}
+\begin{frame}{Homogeneous Nucleation in the Ising Model}
+
+
+%: ÜBERARBEITEN
+\begin{itemize}
+\item Necessary modifications:\begin{itemize}
+\item none\\
+\end{itemize}\end{itemize}\begin{itemize}
+\item Problems
+\begin{itemize}
+\item long time until nucleus of critical size appears 
+\item inefficient to simulate billions of cycles until phase change takes place
+\end{itemize}
+\end{itemize}
+\end{frame}
+\begin{frame}
+\frametitle{Cluster size}
+\fig{nsize.png}{Propability of finding a cluster of size N at different times\footnote{\href{http://www.ncbi.nlm.nih.gov/pubmed/16494425}{Pan, Rappl, Chandler, Balsara: J. Phys. Chem. B 2006}}}
+\end{frame}
+%: NACH HOMOGENER NUKLEATION TPS EINFÜGEN
+\subsection{Transition Path Sampling}
+\begin{frame}\frametitle{Transition Path Sampling (TPS) - ''shooting'' method\footnote{aa\href{http://dx.doi.org/10.1063\%2F1.476378}{Dellago, Bolhuis, Chandler: Advances in Chemical Physics 123 (1998)}}}
+\begin{itemize}
+\item needs two stable states (A \& B)
+\item path through configuration space connecting these
+\item change the path a little at a random point between A and B
+\item sample new path and accept if it connects A with B
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Transition Path Sampling}
+\fig{tps}{First path (red), slightly changed and accepted path (blue), rejected path (green)\footnote{\href{dx.doi.org/10.1088/0953-8984/21/33/333101}{Esobedo, Borrero, Araque - J. Phys.: Condens. Matter 21 (2009)}}}
+\end{frame}
+\subsection{Heterogeneous Nucleation}
+
+\begin{frame}
+\frametitle{Heterogeneous Nucleation}
+\begin{itemize}
+\item Necessary modifications:\begin{itemize}
+\item handle boundaries in heterogeneous nucleation
+\begin{equation*}
+H(s)= \color{gray}{ -J \sum_{\text{<i,j>}}s_i\cdot s_j - h \sum_{\text{i}}s_i}\color{black} - J_s \sum_{\text{<i,j>}}^{\text{II}}s_i\cdot s_j
+\end{equation*}
+\item implement walls/surfaces with fixed spins
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}\frametitle{Nucleation in and out of Pores\footnote{Page, Sear - Heterogeneous Nucleation in and out of Pores PRL 97, 065701 (2006)}}
+\alt<2>{\fig{upspins}{2 phases of nucleation}}{
+\begin{equation*}
+H(s)= { -0.8 \sum_{\text{<i,j>}}s_i\cdot s_j - 0.05 \sum_{\text{i}}s_i}\color{gray} - 0 \sum_{\text{<i,j>}}^{\text{II}}s_i\cdot s_j,\color{black}\qquad kT = 1
+\end{equation*}
+\begin{itemize}
+\item nucleation near surfaces $10^{12}$ times faster
+\item fastest in pores
+\item nucleation in 2 steps
+\item diversified pore sizes lead to fastest reaction as probability of existence optimal pore size is higher
+\end{itemize}}
+\end{frame}
+
+
+\begin{frame}\frametitle{Problems}
+\begin{itemize}
+\item phase transitions are rare events (with realistic values for the coupling constant, ...)
+\item nonequilibrium systems therefore TPS (transition path sampling) not applicable.
+\alert<2->{\visible<2->{\item $\rightarrow$ Forward Flux Sampling}}
+\end{itemize}
+\end{frame}
+
+
+\subsection{Forward Flux Sampling}
+\begin{frame}
+\frametitle{Forward Flux Sampling}
+\begin{itemize}
+\item Similar to TIS (transition interface sampling - a modified TPS)\begin{itemize}
+\item initial state A: $\lambda < \lambda_A = \lambda_0$
+\item final state B:\quad\!\!\! $\lambda > \lambda_B = \lambda_n$
+\item path has to pass every $\lambda_i$ in increasing order (can go backwards in between too) until it reaches $\lambda_n$ (B)
+\end{itemize}
+\item after reaching a new interface ($\lambda_{i+1}$) configuration is stored
+\item stored configurations used as starting point for new trial runs
+\item trial runs continued until path reaches A ($\rightarrow$ failure) or a new interface $\lambda_{i+1}$ ($\rightarrow$ success)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{(Direct) Forward Flux Sampling\footnote{\href{iopscience.iop.org/0953-8984/21/46/463102}{Allen, Valeriani, Rein ten Wolde: 2009 J. Phys.: Condens. Matter 21}}}
+\only<1>{\fig{DFFS1}{Sampling path starting in A - store configurations where the path leaves A (X)}}
+\only<2>{\fig{DFFS2}{Sampling new paths from every stored configuration. Discard if path goes back to A}}
+\end{frame}
+
+
+%!RATE CONSTANTS
+
+\section{Outlook}\subsection{Limitations of the Ising Model}
+\begin{frame}
+\frametitle{Limitations of the Ising Model}
+\begin{itemize}
+\item only nearest neighbor interaction (can be changed to e.g. next-nearest neighbor interaction)
+\item no forces from the outside (can be changed with additional term in the Hamiltonian)
+\item $\rightarrow$ more qualitative than quantitative results
+\end{itemize}
+\end{frame}
+\subsection{Potts Model}
+\begin{frame}
+\frametitle{Potts Model}
+\begin{itemize}
+\item states not only $-1 \land 1$ but (discrete) angles.
+\item $H = -J_c \sum_{i,j}cos\left(\theta_i -\theta_j\right) +  \ldots$
+\item Applications
+\begin{itemize}
+\item
+percolation (Wu: ''Percolation and the Potts Model'' (1978))
+\item 
+flow of foam (Sanyal, Soma: ''Viscous instabilities in flowing foams'' (2006))
+\item 
+cancerous tumors (Sun, Chang, Cai: ''A Discrete Simulation of Tumor Growth Concerning Nutrient Concentration'' (2004))
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{}
+\subsection{Additional Literature}
+\begin{frame}
+\begin{itemize}
+\item Page, Sear - Heterogenous Nucleation in and out of Pores (2006): PRL 97, 065701
+\item Allen, Valeriani, Rein ten Wolde - Forward Flux Sampling for rare event simulations (2009): J. Phys.: Condens. Matter 21 (2009) 463102 (21pp)
+\item Allen, Frenkel, Rein ten Wolde - Forward Flux Sampling-type schemes for simulating rare events: Efficiency analysis (2008): http://arxiv.org/abs/cond-mat/0602269v1
+\item Escobedo, Borrero, Araque -  Transition path sampling and forward flux sampling. Applications to biological systems 2009 J. Phys.: Condens. Matter 21 333101
+\end{itemize}
+\end{frame}
+\subsection{Simulation}
+\begin{frame}
+\begin{itemize}
+\item Sourcefiles and binaries on my github \href{https://github.com/oerpli/Ising2D}{https://github.com/oerpli/Ising2D}
+\end{itemize}
+\end{frame}
+
+
+\end{document}

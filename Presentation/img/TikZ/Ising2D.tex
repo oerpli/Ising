@@ -1,0 +1,80 @@
+% !TeX root = ../../Nucleation in the Ising Model.tex
+    \begin{tikzpicture}[thick,>=latex,scale=1,l/.style={latex-latex},F/.style={-latex,very thick},v/.style={-latex',thick},
+			vc/.style={-latex',thick,color=gray},d/.style={thin},w/.style={fill=white}] 
+  \begin{scope}
+
+ \foreach \i in {0, 0.5, ..., 2.5} {
+	\draw(0,\i)--+(2.5,0);
+	\draw(\i,0)--+(0,2.5);
+
+	 \foreach \j in {0, 0.5, ..., 2.5} {
+        	\visible<3->{	 \filldraw (\i,\j) circle (1pt);}
+        	}
+    }
+ 	\visible<4->{
+	\draw(0,0)node[below]{0};
+ 	\draw(0.5,0)node[below]{1};
+ 	\draw(1,0)node[below]{2};
+	\draw(1.5,2.5)node[above]{N-3};
+	\draw(2.5,2.5)node[above]{N-1};
+	\draw(2,-0.25)node[below]{\ldots};
+	\visible<5-6>{\draw[red](1,1)--+(0.5,0);
+			\draw[red](1,1)--+(-0.5,0);
+			\draw[red](1,1)--+(0,0.5);
+			\draw[red](1,1)--+(0,-0.5);
+	}
+        	\visible<5-6>{\filldraw[red](1,1) circle (2pt);
+	}
+        	\visible<6>{\filldraw[red](0.5,1) circle (1pt);
+			\filldraw[red](1.5,1) circle (1pt);
+			\filldraw[red](1,1.5) circle (1pt);
+			\filldraw[red](1,0.5) circle (1pt);
+	}
+
+        	\visible<7->{\filldraw[red](0,0) circle (2pt);
+	}
+        	\visible<8->{\draw[red](0,0)--+(0.5,0);\draw[red](0,0)--+(0,0.5);
+			\filldraw[red](0,2.5) circle (1pt);
+			\filldraw[red](0.5,0) circle (1pt);
+			\filldraw[red](0,0.5) circle (1pt);
+			\filldraw[red](2.5,0) circle (1pt);
+	}
+
+
+\begin{scope}[scale=1]
+\coordinate(O) at(5,0,0);
+\only<9->{
+
+\foreach \x in {0, 1, ..., 2} {
+\foreach \y in {0, 1, ..., 2} {
+\draw($(O)+(0,\x,-\y)$)--+(2,0,0);
+\draw($(O)+(\x,0,-\y)$)--+(0,2,0);
+\draw($(O)+(\x,\y,0)$)--+(0,0,-2);
+	 \foreach \z in {-1, -2, ..., -2} {
+        		\filldraw($(O)+ (\x,\y,\z)$) circle (1pt);
+	}
+	 \filldraw($(O)+ (\x,\y,0)$) circle (1pt);
+}}}
+\only<10->{
+\filldraw[red]($(O)+(1,1,-1)$) circle (2pt);
+
+\filldraw[red]($(O)+(0,1,-1)$) circle (1pt);
+\filldraw[red]($(O)+(1,0,-1)$) circle (1pt);
+\filldraw[red]($(O)+(2,1,-1)$) circle (1pt);
+\filldraw[red]($(O)+(1,2,-1)$) circle (1pt);
+\filldraw[red]($(O)+(1,1,0)$) circle (1pt);
+\filldraw[red]($(O)+(1,1,-2)$) circle (1pt);
+
+\coordinate(O) at(6,1,-1);
+\draw[red](O)--+(0,1,0) ;
+\draw[red](O)--+(0,0,-1) ;
+\draw[red](O)--+(0,0,1) ;
+\draw[red](O)--+(1,0,0) ;
+\draw[red](O)--+(-1,0,0) ;
+\draw[red](O)--+(0,-1,0) ;		
+}
+\end{scope}
+
+}
+    \end{scope}
+    \end{tikzpicture}
