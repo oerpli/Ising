@@ -49,7 +49,7 @@ public class IsingRender extends PApplet {
 		speed = 3;
 		seed = 1;
 		Point.breite = 14;
-		switch (6) {
+		switch (4) {
 		case 0: // Demo homogene Nukleation mit Poren
 			Point.poren = true;
 			J = 1;

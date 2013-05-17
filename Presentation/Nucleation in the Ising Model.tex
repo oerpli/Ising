@@ -401,13 +401,19 @@ H(s)= { -0.8 \sum_{\text{<i,j>}}s_i\cdot s_j - 0.05 \sum_{\text{i}}s_i}\color{gr
 
 %!RATE CONSTANTS
 
-\section{Outlook}\subsection{Limitations of the Ising Model}
+\section{Outlook}\subsection{Possible Adjustments}
 \begin{frame}
-\frametitle{Limitations of the Ising Model}
+\frametitle{Possible Adjustments to the Ising Model}
 \begin{itemize}
-\item only nearest neighbor interaction (can be changed to e.g. next-nearest neighbor interaction)
-\item no forces from the outside (can be changed with additional term in the Hamiltonian)
-\item $\rightarrow$ more qualitative than quantitative results
+\item next-nearest neighbor interaction or even higher range
+\item forces from the outside, e.g. gravity
+\item Multi Hit Swendsen Wang algorithm
+\item Kawasaki Dynamics (alternative Metropolis algorithm with fixed state ratios and amounts)\begin{itemize}
+\item choose any (A-B) bond
+\item $(A-B) \rightarrow (B-A)$
+\item calculate new energy
+\item \ldots
+\end{itemize}
 \end{itemize}
 \end{frame}
 \subsection{Potts Model}
