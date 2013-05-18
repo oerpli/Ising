@@ -1,10 +1,7 @@
 package Render;
 
 import processing.core.*;
-//import processing.data.*;
-//import processing.event.*;
-//import processing.opengl.*;
-//import org.gicentre.utils.stat.*;
+
 
 import Ising.Lattice;
 import Ising.Point;
