@@ -8,7 +8,7 @@ package Ising;
  * 
  * @author oerpli
  */
-public abstract class Initialize {
+public abstract class S_Initialize {
 	/**
 	 * //TODO Maybe make an executable that imports Ising Render which then
 	 * uses/imports Ising etc.
