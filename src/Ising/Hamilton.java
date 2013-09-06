@@ -2,15 +2,16 @@ package Ising;
 
 /**
  * Static class containing Energy related stuff. For more flexibility
- * (parallelization)maybe shouldn't be static..
+ * (parallelization)maybe shouldn't be static.. // TODO
+ * 
  * 
  * Beta shouldn't be here i guess. - it's more algorithm (Metropolis Hastings)
- * related than anything else (including energy).
+ * related than anything else (including energy). // TODO
  * 
  * @author oerpli
  * 
  */
-public class Hamilton {
+public abstract class Hamilton {
 	public static double J, h; // Fieldparameters
 	public static double Beta; // Boltzmann (scaling factor);
 
@@ -20,7 +21,7 @@ public class Hamilton {
 
 	/**
 	 * Changing Energy Values should be private and updated via calls from the
-	 * Lattice.
+	 * Lattice. // TODO
 	 */
 	public static int plus = 0;
 	public static int E_near_new = 0;

@@ -160,8 +160,9 @@ public class Lattice {
 	}
 
 	/**
-	 * Initializes energy. Should be in Hamilton
+	 * Initializes energy. Should be in Hamiltonian.
 	 */
+	// TODO
 	public void calcSum() {
 		Hamilton.E_sum = 0;
 		for (Point p : sites) {
