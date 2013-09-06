@@ -13,7 +13,7 @@ package Ising;
  */
 public abstract class Hamilton {
 	public static double J, h; // Fieldparameters
-	public static double Beta; // Boltzmann (scaling factor);
+	public static double Beta; // Boltzmann (scaling factor)//TODO
 
 	// Energy Values
 	protected static int E_near = 0;// interaction related
