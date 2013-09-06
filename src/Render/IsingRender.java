@@ -1,8 +1,7 @@
 package Render;
 
 import processing.core.*;
-
-
+import Ising.Hamilton;
 import Ising.Lattice;
 import Ising.Point;
 //import controlP5.*;
@@ -61,7 +60,7 @@ public class IsingRender extends PApplet {
 			break;
 		case 6:// Demo Homogene Nukleation ohne Poren EQUILIBRIUM!!
 			speed = 8;
-			seed = 1-seed;
+			seed = 1 - seed;
 			J = 0.8;
 			h = 0;
 			kT = 3.269;
@@ -188,12 +187,12 @@ public class IsingRender extends PApplet {
 		info.textSize(18);
 		info.background(0);
 		info.fill(color(180, 180, 180));
-		int log10 = (int) Math.floor(Math.log10(Math.abs(L.getHamiltonian())));
-		String energy = df.format(L.getHamiltonian() / Math.pow(10, log10))
+		int log10 = (int) Math.floor(Math.log10(Math.abs(Hamilton.getE())));
+		String energy = df.format(Hamilton.getE() / Math.pow(10, log10))
 				+ "x10^" + log10;
 		String s = "Lattice size: " + L.size[0] + " x " + L.size[1]
-				+ " Energy:  " + energy + " Seed: " + seed + " Plus: " + L.plus
-				+ " Speed: " + speed;
+				+ " Energy:  " + energy + " Seed: " + seed + " Plus: "
+				+ Hamilton.plus + " Speed: " + speed;
 		info.text(s, 25, 20);
 		info.text("", 206, 20);
 		info.endDraw();

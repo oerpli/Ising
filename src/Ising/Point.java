@@ -8,16 +8,15 @@ public class Point {
 	public final int x;
 	public final int y;
 	public Point[] near = new Point[4]; // "von neumann"- neighbors
-	
+
 	private int e_near = 0;
 	private int e_near_new = 0;
 
 	private boolean e_in_new = false;
 	private boolean draw = true;
-	
-	
+
 	public static int breite = 9;
-	
+
 	public byte getV() {
 		return v;
 	}
@@ -26,7 +25,7 @@ public class Point {
 		Point.L = L;
 		this.v = v;
 		if (v == 1) {
-			L.plus++;
+			Hamilton.plus++;
 		}
 		this.x = xy[0];
 		this.y = xy[1];
@@ -73,26 +72,26 @@ public class Point {
 	private void getEnergy() {
 		if (v == 0)
 			return;
-		L.E_near -= e_near;
+		Hamilton.E_near -= e_near;
 		byte sum = 0;
 		for (Point p : near) {
 			sum += p.v;
 		}
 		e_near = sum * v;
-		L.E_near += e_near;
+		Hamilton.E_near += e_near;
 	}
 
 	public void getNewEnergy() {
 		if (!e_in_new && v != 0) {
-			L.E_near_new -= e_near;
+			Hamilton.E_near_new -= e_near;
 			byte sum = 0;
 			for (Point p : near) {
 				sum += p.v + p.offset;
 			}
 			e_near_new = sum * (v + offset);
-			L.E_near_new += e_near_new;
+			Hamilton.E_near_new += e_near_new;
 			e_in_new = true;
-			L.E_sum_new += offset;
+			Hamilton.E_sum_new += offset;
 		}
 	}
 

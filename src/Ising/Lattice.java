@@ -13,29 +13,29 @@ public class Lattice {
 	// public byte[][] cell;
 	public Point[] sites;
 	public final int size[]; // Dimensions for easier access
-	public final boolean periodic = true; // Periodic boundaries
+	// public final boolean periodic = true; // Periodic boundaries
 	private ArrayList<Point> changedPoints = new ArrayList<Point>();
-	protected int E_near = 0;
-	protected int E_sum = 0;
-	public int plus = 0;
-	public int E_near_new = 0;
-	public int E_sum_new = 0;
+
+	// protected int E_near = 0;
+	// protected int E_sum = 0;
+	// public int plus = 0;
+	// public int E_near_new = 0;
+	// public int E_sum_new = 0;
+
 	// private static final double kB = 1.3806488e-23;// Boltzmann SI
 	// private static final double kB = 8e-5;// Boltzmann Gauﬂ
 	// private static final double T = 1; // Temperature
 	// 1, -0.5, 2.2.69*E/8
-	private final double J; // Energy - neighbor0
-	private final double h; // Field - sum
-	private final double Beta;
+	// private final double J; // Energy - neighbor0
+	// private final double h; // Field - sum
+	// private final double Beta;
 
-	public Lattice(int x, int y, double seed, double E, double J, double Beta) {
+	public Lattice(int x, int y, double seed, double J, double h, double Beta) {
 		size = new int[] { x, y, x * y };
 		sites = new Point[size[2]];
 		// cell = new byte[x][y];
 		this.init(seed);
-		this.J = E;
-		this.h = J;
-		this.Beta = Beta;
+		Hamilton.set(J, h, Beta);
 	}
 
 	/**
@@ -81,22 +81,22 @@ public class Lattice {
 	}
 
 	private boolean testFlip() {
-		double diffE = getDiffHamiltonian();
+		double diffE = Hamilton.getDE();
 		if (diffE <= 0)
 			return true;
-		return Math.random() < Math.exp(-diffE * Beta);
+		return Math.random() < Math.exp(-diffE * Hamilton.Beta);
 	}
 
 	private boolean acceptFlip(boolean accept) {
 		if (accept) {
-			E_near += E_near_new;
-			E_sum += E_sum_new;
-			plus += E_sum_new >> 1;
+			Hamilton.E_near += Hamilton.E_near_new;
+			Hamilton.E_sum += Hamilton.E_sum_new;
+			Hamilton.plus += Hamilton.E_sum_new >> 1;
 		}
 		for (Point p : changedPoints) {
 			p.acceptFlip(accept);
 		}
-		E_sum_new = E_near_new = 0;
+		Hamilton.E_sum_new = Hamilton.E_near_new = 0;
 		changedPoints.clear();
 		return accept;
 	}
@@ -134,14 +134,6 @@ public class Lattice {
 		return getPoint(getI(xy));
 	}
 
-	public double getDiffHamiltonian() {
-		return -J * E_near_new - h * E_sum_new;
-	}
-
-	public double getHamiltonian() {
-		return -J * E_near - h * E_sum;
-	}
-
 	/**
 	 * String output of the lattice
 	 * 
@@ -167,10 +159,13 @@ public class Lattice {
 		return s.toString();
 	}
 
+	/**
+	 * Initializes energy. Should be in Hamilton
+	 */
 	public void calcSum() {
-		E_sum = 0;
+		Hamilton.E_sum = 0;
 		for (Point p : sites) {
-			E_sum += p.getV();
+			Hamilton.E_sum += p.getV();
 		}
 	}
 }
