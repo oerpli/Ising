@@ -8,9 +8,9 @@ package Ising;
  * 
  * @author oerpli
  */
-public class Initialize {
+public abstract class Initialize {
 	/**
-	 * Maybe make an executable that imports Ising Render which then
+	 * //TODO Maybe make an executable that imports Ising Render which then
 	 * uses/imports Ising etc.
 	 * 
 	 * If that's finished Initialize should be here in Ising. Maybe another
@@ -18,4 +18,9 @@ public class Initialize {
 	 * 
 	 * Not mixing up the settings may be tedious.
 	 */
+
+	/**
+	 * Maaaaaaaaaybe Lattice could/should be abstract.
+	 */
+
 }
