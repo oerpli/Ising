@@ -1,6 +1,7 @@
 package Ising;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * A lattice as basis for the Ising Algorithm. Only 2D periodic implemented so
@@ -13,8 +14,9 @@ public class Lattice {
 	// public byte[][] cell;
 	public Point[] sites;
 	public final int size[]; // Dimensions for easier access
+	public final int N;
 	// public final boolean periodic = true; // Periodic boundaries
-	private ArrayList<Point> changedPoints = new ArrayList<Point>();
+	private HashSet<Point> changedPoints = new HashSet<Point>();
 
 	// protected int E_near = 0;
 	// protected int E_sum = 0;
@@ -30,36 +32,32 @@ public class Lattice {
 	// private final double h; // Field - sum
 	// private final double Beta;
 
-	public Lattice(int x, int y, double seed, double J, double h, double Beta) {
-		size = new int[] { x, y, x * y };
-		sites = new Point[size[2]];
-		// cell = new byte[x][y];
-		this.init(seed);
-		Hamilton.set(J, h, Beta);
-	}
-
-	/**
-	 * Needed on first run to assign random values
-	 */
-	private void init(double seed) {
-		for (int i = 0; i < size[2]; i++) {
-			sites[i] = new Point(this, getXY(i),
+	public Lattice(int x, int y, int z, double seed, double J, double h,
+			double Beta) {
+		size = new int[] { x, y, z };
+		N = x * y * z;
+		sites = new Point[N];
+		for (int i = 0; i < N; i++) {
+			sites[i] = new Point(i, this, getXY(i),
 					(byte) (Math.random() < seed ? 1 : -1));
 		}
+
+		Hamilton.reset();
+		Hamilton.set(J, h, Beta);
+
 		for (Point p : sites) {
-			p.getNear();
+			p.init();
 		}
-		calcSum();
 	}
 
 	// public void tryFlip() {
 	// tryFlip(1);
 	// }
 
-	public boolean tryFlip(int c) {
-		int[] indexes = new int[c];
-		for (int i = 0; i < c; i++) {
-			indexes[i] = (int) Math.floor(Math.random() * this.size[2]);
+	public boolean tryFlip(int count) {
+		int[] indexes = new int[count];
+		for (int i = 0; i < count; i++) {
+			indexes[i] = (int) Math.floor(Math.random() * this.N);
 		}
 		return tryFlip(indexes);
 	}
@@ -67,7 +65,7 @@ public class Lattice {
 	private boolean tryFlip(int[] indexes) {
 		for (int i : indexes) {
 			Point p = getPoint(i);
-			if (!p.setOffset())
+			if (!p.proposeFlip())
 				return false;
 			changedPoints.add(p);
 			for (Point n : p.near) {
@@ -77,61 +75,67 @@ public class Lattice {
 		for (Point p : changedPoints) {
 			p.getNewEnergy();
 		}
-		return acceptFlip(testFlip());// TODO
+		return acceptFlip();// TODO
 	}
 
-	private boolean testFlip() {
-		double diffE = Hamilton.getDE();
-		if (diffE <= 0)
-			return true;
-		return Math.random() < Math.exp(-diffE * Hamilton.Beta);
-	}
-
-	private boolean acceptFlip(boolean accept) {
-		if (accept) {
-			Hamilton.E_near += Hamilton.E_near_new;
-			Hamilton.E_sum += Hamilton.E_sum_new;
-			Hamilton.plus += Hamilton.E_sum_new >> 1;
-		}
+	// POREN// TODO this part is shit
+	private boolean acceptFlip() {
+		boolean flip = A_MetropolisHastings.accept();
+		Hamilton.accept(flip);
 		for (Point p : changedPoints) {
-			p.acceptFlip(accept);
+			p.acceptFlip(flip);
 		}
-		Hamilton.E_sum_new = Hamilton.E_near_new = 0;
 		changedPoints.clear();
-		return accept;
+		return flip;
 	}
-
-	// @Deprecated
-	// private void setPoint(int i, int j) {
-	// }
 
 	protected int[] getXY(int i) {
-		int[] xy = new int[2];
-		xy[0] = i % size[0];
-		xy[1] = (int) Math.floor(i / size[0]);
-		return xy;
-	}
-
-	protected int getI(int x, int y) {
-		y += size[1];
-		x += size[0];
-		return (x % size[0]) + (y % size[1]) * size[0];
-	}
-
-	protected int getI(int[] xy) {
-		return getI(xy[0], xy[1]);
+		int[] xyz = new int[S_Initialize.D];
+		xyz[0] = i % size[0];
+		if (S_Initialize.D == 1)
+			return xyz;
+		xyz[1] = (int) Math.floor(i / size[0]);
+		if (S_Initialize.D == 2)
+			return xyz;
+		xyz[2] = (int) Math.floor(i / (size[0] * size[1]));
+		return xyz;
 	}
 
 	protected Point getPoint(int i) {
 		return sites[i];
 	}
 
-	protected Point getPoint(int x, int y) {
-		return getPoint(getI(x, y));
+	/**
+	 * Needed for initialization
+	 * 
+	 * @param x
+	 *            Coordinate
+	 * @param y
+	 *            Coordinate
+	 * @param z
+	 *            Coordinate
+	 * @return
+	 */
+	public Point getPoint(int x, int y, int z) {
+		return getPoint(getI(x, y, z));
 	}
 
-	protected Point getPoint(int[] xy) {
-		return getPoint(getI(xy));
+	private Point getPoint(int[] xyz) {
+		return getPoint(getI(xyz));
+	}
+
+	// TODO DEBUG
+	private int getI(int[] xyz) {
+		return getI(xyz[0], xyz[1], xyz[2]);
+	}
+
+	// TODO 3DIM
+	protected int getI(int x, int y, int z) {
+		x += size[0];
+		y += size[1];
+		z += size[2];
+		return (x % size[0]) + (y % size[1]) * size[0] + (z % size[2])
+				* size[0] * size[1];
 	}
 
 	/**
@@ -143,8 +147,8 @@ public class Lattice {
 	public String toString() {
 		StringBuffer s = new StringBuffer();
 		for (Point p : sites) {
-			s.append(p.getV() == 1 ? '+' : '-');
-			s.append(p.x == size[0] - 1 ? '\n' : "");
+			s.append(p.toString());
+			s.append((p.x == size[0] - 1 ? '\n' : ""));
 		}
 		return s.toString();
 	}
@@ -152,21 +156,9 @@ public class Lattice {
 	public String toStringNew() {
 		StringBuffer s = new StringBuffer();
 		for (Point p : sites) {
-			s.append(p.getV() + p.getOffset() == 1 ? '+' : '-');
+			s.append(p.getVn() == 1 ? '+' : '-');
 			s.append(p.x == size[0] - 1 ? '\n' : "");
-
 		}
 		return s.toString();
-	}
-
-	/**
-	 * Initializes energy. Should be in Hamiltonian.
-	 */
-	// TODO
-	public void calcSum() {
-		Hamilton.E_sum = 0;
-		for (Point p : sites) {
-			Hamilton.E_sum += p.getV();
-		}
 	}
 }

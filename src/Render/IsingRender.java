@@ -4,11 +4,11 @@ import processing.core.*;
 import Ising.Hamilton;
 import Ising.Lattice;
 import Ising.Point;
-//import controlP5.*;
-
-import java.text.DecimalFormat;
+import controlP5.*;
 
 public class IsingRender extends PApplet {
+	private static final long serialVersionUID = -1664637672574501774L;
+
 	// Physics:
 	private double J; // Coupling Constant
 	private double h; // Field
@@ -23,136 +23,96 @@ public class IsingRender extends PApplet {
 
 	// System
 	private PGraphics lattice, info; // chart_bg,chart
+	private ControlP5 cp5;
+	private boolean play = false;
+
 	Lattice L;
 	private int tab = 0;
 	private long calced = 0;
-	private static final long serialVersionUID = -1664637672574501774L;
-
-	private final DecimalFormat df = new DecimalFormat("0.00");
-	private final float[] up = new float[] { 255, 255, 255 };
-	private final float[] down = new float[] { 250, 55, 55 };
-	private final float[] wall = new float[] { 55, 55, 55 };
-	private final float[] eframe = new float[] { 255, 0, 0 };
 
 	// private XYChart lineChart;
 	public void setup() {
+		cp5 = new ControlP5(this);
+		int b = 0;
+		cp5.addBang("play/pause").setPosition(25 + 100 * b++, 630)
+				.setSize(99, 20).getCaptionLabel()
+				.align(ControlP5.CENTER, ControlP5.CENTER);
+		cp5.addBang("reset").setPosition(75 + 50 * b++, 630).setSize(49, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+		cp5.addBang("sweep").setPosition(75 + 50 * b++, 630).setSize(49, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+		cp5.addBang("flip").setPosition(75 + 50 * b++, 630).setSize(49, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+		cp5.addBang("bonds").setPosition(75 + 50 * b++, 630).setSize(49, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 		setup(3);
-	}
-
-	public void setup(int a) {
-		// Physics
-		N = 100;
-		speed = 3;
-		seed = 1;
-		Point.breite = 14;
-		switch (4) {
-		case 0: // Demo homogene Nukleation mit Poren
-			Point.poren = true;
-			J = 1;
-			h = -0.8;
-			kT = 2.269;
-			break;
-		case 1:// Demo Homogene Nukleation ohne Poren
-			speed = 4;
-			J = 0.8;
-			h = 0;
-			kT = 3.269;
-			break;
-		case 6:// Demo Homogene Nukleation ohne Poren EQUILIBRIUM!!
-			speed = 8;
-			seed = 1 - seed;
-			J = 0.8;
-			h = 0;
-			kT = 3.269;
-			break;
-		case 2: // T < Tc
-			speed = 1;
-			seed = 0.5;
-			Point.poren = false;
-			J = 1;
-			h = 0;
-			kT = 0.5;
-			break;
-		case 3: // Pore - Demo
-			Point.poren = true;
-			speed = 5;
-			N = 120;
-			J = 1;
-			h = -0.2;
-			kT = 2.269 + 0.5;
-			break;
-		case 4: // Pore - ohne Poren bis 10^10 kein Phasenübergang
-			Point.poren = false;
-			speed = 3;
-			N = 120;
-			J = 1;
-			h = -0.2;
-			kT = 2.269 + 0.5;
-			break;
-		case 5: // AJ Page, RP Sear
-			Point.poren = true;
-			J = 0.44;
-			h = -0.05;
-			kT = 1;
-			break;
-		}
-		size = 600 / N;
-		L = new Lattice(2 * N, N, seed, J, h, 1 / kT);
-
-		// System
-		size(1250, 650);
-		frameRate(120);
-		lattice = createGraphics(1200, 600);
-		info = createGraphics(1200, 20);
-		// chart_bg = createGraphics(chart.width + 20, chart.height + 20);
-		// chart = createGraphics(700, 450);
-		// PFont font = createFont("Comic Sans MS", 100, true);
-		// textFont(font);
+		frameRate(60);
+		size(650, 650);
+		lattice = createGraphics(600, 600);
+		info = createGraphics(600, 20);
 		background(0);
 	}
 
-	// private void chart(int xData, float yData) {
-	// // background(0);
-	// chart.beginDraw();
-	// if (0 == (xData % chart.width))
-	// chart.background(0);
-	// chart.strokeWeight(2);
-	// chart.line(0, chart.height, chart.width, chart.height);
-	// chart.line(0, chart.height, 0, 0);
-	// chart.stroke(255, 255, 255);
-	// chart.strokeWeight(1);
-	// chart.point(xData % chart.width, chart.height - yData * chart.height);
-	// chart.endDraw();
-	// }
+	public void setup(int a) {
+		// System
+		LatticeSetup();
+		size = 600 / N;
+		speed = 100;
+	}
 
-	// private void chart_background(int xData) {
-	// chart_background.beginDraw();
-	// if (0 == (xData) % (chart.width))
-	// chart_background.background(0);
-	// chart_background.textSize(10);
-	// if (0 == (xData) % (chart.width)) {
-	// for (int i = 1; i <= 10; i++) {
-	// if (i != 10) {
-	// chart_background.text(i + "0", 0, chart.height
-	// - chart.height / 10 * i);
-	// }
-	// // chart_background.stroke(cp5.get(Textfield.class, "rule")
-	// // .getColor().getBackground());
-	// chart_background.line(20, chart.height - chart.height / 10 * i,
-	// chart_background.width, chart.height - chart.height
-	// / 10 * i);
-	// }
-	// }
-	// if (0 == xData % 50)
-	// chart_background.text(xData, (xData) % (chart.width) + 20,
-	// chart_background.height);
-	// chart_background.endDraw();
-	// }
+	private void LatticeSetup() {
+		// Physics
+		Point.breite = 14;
+		Point.poren = false;
+
+		N = 15;
+		seed = 1;
+		J = 1;
+		h = 0;
+		kT = 5.999;
+		L = new Lattice(N, N, 1, seed, J, h, 1 / kT);
+	}
+
+	public void controlEvent(ControlEvent event) {
+		if (event.isFrom("play/pause")) {
+			play = !play;
+		} else if (event.isFrom("reset")) {
+			stop();
+			LatticeSetup();
+		} else if (!play && event.isFrom("sweep")) {
+			Sweep(L.N);
+		} else if (!play && event.isFrom("flip")) {
+			Sweep(1);
+		} else if (event.isFrom("bonds")) {
+			S_System.BONDS = !S_System.BONDS;
+			lattice.fill(0);
+			lattice.rect(0, 0, 600, 600);
+			drawLattice(true);
+		}
+		tab = 0;
+	}
+
+	private void Sweep(int c) {
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < c * speed; i++) {
+			L.tryFlip(1);
+			calced++;
+		}
+		if (Math.random() < 0.05)
+			System.out.println("Time/" + (L.N * speed) + " Flips: "
+					+ (System.currentTimeMillis() - start) + "ms");
+
+		tab = 0;
+	}
+
+	public void stop() {
+		play = false;
+	}
 
 	public void draw() {
 		switch (tab) {
 		case 0:
-			drawLattice();
+			drawLattice(false);
 			image(lattice, 25, 25);
 			drawInfo();
 			image(info, 0, 0);
@@ -160,24 +120,13 @@ public class IsingRender extends PApplet {
 			if (Math.random() < 0.03) {
 				int log10 = (int) Math.floor(Math.log10(calced));
 				System.out.println("Proposed Flips: "
-						+ df.format(calced / Math.pow(10, log10)) + "x10^"
-						+ log10);
+						+ S_System.df.format(calced / Math.pow(10, log10))
+						+ "x10^" + log10);
 			}
 			break;
 		}
-		recalc();
-	}
-
-	private void recalc() {
-		long start = System.currentTimeMillis();
-		for (int i = 0; i < L.size[2] * speed; i++) {
-			L.tryFlip(1);
-			calced++;
-		}
-		if (Math.random() < 0.05)
-			System.out.println("Time/" + (L.size[2] * speed) + " Flips: "
-					+ (System.currentTimeMillis() - start) + "ms");
-		tab = 0;
+		if (play)
+			Sweep(1);
 	}
 
 	private void drawInfo() {
@@ -188,22 +137,24 @@ public class IsingRender extends PApplet {
 		info.background(0);
 		info.fill(color(180, 180, 180));
 		int log10 = (int) Math.floor(Math.log10(Math.abs(Hamilton.getE())));
-		String energy = df.format(Hamilton.getE() / Math.pow(10, log10))
+		String energy = S_System.df.format(Hamilton.getE()
+				/ Math.pow(10, log10))
 				+ "x10^" + log10;
-		String s = "Lattice size: " + L.size[0] + " x " + L.size[1]
-				+ " Energy:  " + energy + " Seed: " + seed + " Plus: "
-				+ Hamilton.plus + " Speed: " + speed;
+		// 123412521 instead of 1.2*10^x
+		energy = "" + Hamilton.getE();
+		String s = "Size: " + L.size[0] + "x" + L.size[1] + " Energy:  "
+				+ energy + "Mag: " + Hamilton.E_m + " Seed: " + seed
+				+ " Speed: " + speed;
 		info.text(s, 25, 20);
 		info.text("", 206, 20);
 		info.endDraw();
 	}
 
-	private void drawLattice() {
+	private void drawLattice(boolean drawAll) {
 		lattice.beginDraw();
 		lattice.noStroke();
-
 		for (Point p : L.sites)
-			if (p.getRedraw() || limit)
+			if (drawAll || p.getRedraw() || limit)
 				drawPoint(p);
 		lattice.endDraw();
 	}
@@ -211,25 +162,79 @@ public class IsingRender extends PApplet {
 	@SuppressWarnings("unused")
 	private void drawPoint(Point p) {
 		p.drawn();
-		int a = 0;
-		if (p.is(1)) {
-			lattice.fill(up[0], up[1], up[2]);
-		} else if (p.is(-1)) {
-			lattice.fill(down[0], down[1], down[2]);
+		if (S_System.BONDS && size > 20) {
+			if (p.x == 0) {
+				if (p.is(p.near[3]))
+					lattice.fill(S_System.bon[0], S_System.bon[1],
+							S_System.bon[2]);
+				else
+					lattice.fill(S_System.boff[0], S_System.boff[1],
+							S_System.boff[2]);
+				lattice.rect((p.x + 0.5F) * size, (p.y + 0.45F) * size,
+						-size / 2, size / 10);
+			}
+			if (p.y == 0) {
+				if (p.is(p.near[0]))
+					lattice.fill(S_System.bon[0], S_System.bon[1],
+							S_System.bon[2]);
+				else
+					lattice.fill(S_System.boff[0], S_System.boff[1],
+							S_System.boff[2]);
+				lattice.rect((p.x + 0.45F) * size, (p.y + 0.5F) * size,
+						size / 10, -size / 2);
+			}
+
+			if (p.is(1)) {
+				lattice.fill(S_System.up[0], S_System.up[1], S_System.up[2]);
+			} else if (p.is(-1)) {
+				lattice.fill(S_System.down[0], S_System.down[1],
+						S_System.down[2]);
+			} else {
+				lattice.fill(S_System.wall[0], S_System.wall[1],
+						S_System.wall[2]);
+			}
+			lattice.rect(p.x * size + size / 4, p.y * size + size / 4,
+					size / 2, size / 2);
+
+			if (p.is(p.near[1]))
+				lattice.fill(S_System.bon[0], S_System.bon[1], S_System.bon[2]);
+			else
+				lattice.fill(S_System.boff[0], S_System.boff[1],
+						S_System.boff[2]);
+			lattice.rect((p.x + 0.75F) * size, (p.y + 0.45F) * size, size / 2,
+					size / 10);
+
+			if (p.is(p.near[2]))
+				lattice.fill(S_System.bon[0], S_System.bon[1], S_System.bon[2]);
+			else
+				lattice.fill(S_System.boff[0], S_System.boff[1],
+						S_System.boff[2]);
+			lattice.rect((p.x + 0.45F) * size, (p.y + 0.75F) * size, size / 10,
+					size / 2);
+
 		} else {
-			lattice.fill(wall[0], wall[1], wall[2]);
-		}
-		lattice.rect(p.x * size, p.y * size, size, size);
-		if (limit && p.is(-1)) {
-			lattice.fill(eframe[0], eframe[1], eframe[2]);
-			if (!p.near[0].is(p))
-				lattice.rect(p.x * size, p.y * size, size, 1);
-			if (!p.near[1].is(p))
-				lattice.rect((p.x + 1) * size, p.y * size, -1, size);
-			if (!p.near[2].is(p))
-				lattice.rect(p.x * size, (p.y + 1) * size, size, -1);
-			if (!p.near[3].is(p))
-				lattice.rect(p.x * size, p.y * size, 1, size);
+			if (p.is(1)) {
+				lattice.fill(S_System.up[0], S_System.up[1], S_System.up[2]);
+			} else if (p.is(-1)) {
+				lattice.fill(S_System.down[0], S_System.down[1],
+						S_System.down[2]);
+			} else {
+				lattice.fill(S_System.wall[0], S_System.wall[1],
+						S_System.wall[2]);
+			}
+			lattice.rect(p.x * size, p.y * size, size, size);
+			if (limit && p.is(-1)) {
+				lattice.fill(S_System.eframe[0], S_System.eframe[1],
+						S_System.eframe[2]);
+				if (!p.near[0].is(p))
+					lattice.rect(p.x * size, p.y * size, size, 1);
+				if (!p.near[1].is(p))
+					lattice.rect((p.x + 1) * size, p.y * size, -1, size);
+				if (!p.near[2].is(p))
+					lattice.rect(p.x * size, (p.y + 1) * size, size, -1);
+				if (!p.near[3].is(p))
+					lattice.rect(p.x * size, p.y * size, 1, size);
+			}
 		}
 	}
 

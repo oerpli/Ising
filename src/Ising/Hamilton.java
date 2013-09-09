@@ -16,16 +16,23 @@ public abstract class Hamilton {
 	public static double Beta; // Boltzmann (scaling factor)//TODO
 
 	// Energy Values
-	protected static int E_near = 0;// interaction related
-	protected static int E_sum = 0;// field related
+	public static int E_nn = 0;// nn - interaction
+	public static int E_m = 0;// magnetization
 
 	/**
 	 * Changing Energy Values should be private and updated via calls from the
 	 * Lattice. // TODO
 	 */
-	public static int plus = 0;
-	public static int E_near_new = 0;
-	public static int E_sum_new = 0;
+	// public static int plus = 0;
+	public static int E_nn_new = 0;
+	public static int E_m_new = 0;
+
+	public static void reset() {
+		E_m = 0;
+		E_nn = 0;
+		E_nn_new = 0;
+		E_m_new = 0;
+	}
 
 	public static void set(double J, double h, double Beta) {
 		Hamilton.J = J;
@@ -34,11 +41,27 @@ public abstract class Hamilton {
 	}
 
 	public static double getE() { // Energy
-		return -Hamilton.J * Hamilton.E_near - Hamilton.h * Hamilton.E_sum;
+		return -(J * E_nn + h * E_m);
 	}
 
 	public static double getDE() {// Energy Difference
-		return -Hamilton.J * Hamilton.E_near_new - Hamilton.h
-				* Hamilton.E_sum_new;
+		return -(J * E_nn_new + h * E_m_new);
 	}
+
+	public static void accept(boolean flip) {
+		if (flip) {
+			Hamilton.E_nn += Hamilton.E_nn_new;
+			Hamilton.E_m += Hamilton.E_m_new;
+		}
+		Hamilton.E_nn_new = 0;
+		Hamilton.E_m_new = 0;
+	}
+
+	// public static String out() {
+	// String out = "NN: " + E_nn + "\n";
+	// out += "NNn: " + E_nn_new + "\n";
+	// out += "M: " + E_m + "\n";
+	// out += "Mn: " + E_m_new;
+	// return out;
+	// }
 }

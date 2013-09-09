@@ -9,6 +9,8 @@ package Ising;
  * @author oerpli
  */
 public abstract class S_Initialize {
+	public final static int D = (int) Math.sqrt(4);
+
 	/**
 	 * //TODO Maybe make an executable that imports Ising Render which then
 	 * uses/imports Ising etc.
