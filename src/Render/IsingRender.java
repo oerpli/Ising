@@ -17,7 +17,6 @@ public class IsingRender extends PApplet {
 
 	// Renderparameters
 	private int speed = 1; // N*speed flips/render
-	private final boolean limit = false; // red frames
 	private int N; // (2NxN Lattice)
 	private int size;
 
@@ -45,19 +44,19 @@ public class IsingRender extends PApplet {
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 		cp5.addBang("bonds").setPosition(75 + 50 * b++, 630).setSize(49, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		setup(3);
 		frameRate(60);
 		size(650, 650);
 		lattice = createGraphics(600, 600);
 		info = createGraphics(600, 20);
 		background(0);
+		setup(3);
 	}
 
 	public void setup(int a) {
 		// System
 		LatticeSetup();
 		size = 600 / N;
-		speed = 100;
+		speed = 1;
 	}
 
 	private void LatticeSetup() {
@@ -105,6 +104,9 @@ public class IsingRender extends PApplet {
 		tab = 0;
 	}
 
+	/**
+	 * Stop simulation
+	 */
 	public void stop() {
 		play = false;
 	}
@@ -117,16 +119,22 @@ public class IsingRender extends PApplet {
 			drawInfo();
 			image(info, 0, 0);
 			tab = 2;
-			if (Math.random() < 0.03) {
-				int log10 = (int) Math.floor(Math.log10(calced));
-				System.out.println("Proposed Flips: "
-						+ S_System.df.format(calced / Math.pow(10, log10))
-						+ "x10^" + log10);
-			}
+			printFlips(0.0001);
 			break;
 		}
 		if (play)
-			Sweep(1);
+			Sweep(L.N);
+	}
+
+	private boolean printFlips(double x) {
+		if (Math.random() < x) {
+			int log10 = (int) Math.floor(Math.log10(calced));
+			System.out.println("Proposed Flips: "
+					+ S_System.df.format(calced / Math.pow(10, log10)) + "x10^"
+					+ log10);
+			return true;
+		} else
+			return false;
 	}
 
 	private void drawInfo() {
@@ -154,7 +162,7 @@ public class IsingRender extends PApplet {
 		lattice.beginDraw();
 		lattice.noStroke();
 		for (Point p : L.sites)
-			if (drawAll || p.getRedraw() || limit)
+			if (drawAll || p.getRedraw() || S_System.limit)
 				drawPoint(p);
 		lattice.endDraw();
 	}
@@ -163,27 +171,7 @@ public class IsingRender extends PApplet {
 	private void drawPoint(Point p) {
 		p.drawn();
 		if (S_System.BONDS && size > 20) {
-			if (p.x == 0) {
-				if (p.is(p.near[3]))
-					lattice.fill(S_System.bon[0], S_System.bon[1],
-							S_System.bon[2]);
-				else
-					lattice.fill(S_System.boff[0], S_System.boff[1],
-							S_System.boff[2]);
-				lattice.rect((p.x + 0.5F) * size, (p.y + 0.45F) * size,
-						-size / 2, size / 10);
-			}
-			if (p.y == 0) {
-				if (p.is(p.near[0]))
-					lattice.fill(S_System.bon[0], S_System.bon[1],
-							S_System.bon[2]);
-				else
-					lattice.fill(S_System.boff[0], S_System.boff[1],
-							S_System.boff[2]);
-				lattice.rect((p.x + 0.45F) * size, (p.y + 0.5F) * size,
-						size / 10, -size / 2);
-			}
-
+			drawBonds(p);
 			if (p.is(1)) {
 				lattice.fill(S_System.up[0], S_System.up[1], S_System.up[2]);
 			} else if (p.is(-1)) {
@@ -195,23 +183,6 @@ public class IsingRender extends PApplet {
 			}
 			lattice.rect(p.x * size + size / 4, p.y * size + size / 4,
 					size / 2, size / 2);
-
-			if (p.is(p.near[1]))
-				lattice.fill(S_System.bon[0], S_System.bon[1], S_System.bon[2]);
-			else
-				lattice.fill(S_System.boff[0], S_System.boff[1],
-						S_System.boff[2]);
-			lattice.rect((p.x + 0.75F) * size, (p.y + 0.45F) * size, size / 2,
-					size / 10);
-
-			if (p.is(p.near[2]))
-				lattice.fill(S_System.bon[0], S_System.bon[1], S_System.bon[2]);
-			else
-				lattice.fill(S_System.boff[0], S_System.boff[1],
-						S_System.boff[2]);
-			lattice.rect((p.x + 0.45F) * size, (p.y + 0.75F) * size, size / 10,
-					size / 2);
-
 		} else {
 			if (p.is(1)) {
 				lattice.fill(S_System.up[0], S_System.up[1], S_System.up[2]);
@@ -223,7 +194,7 @@ public class IsingRender extends PApplet {
 						S_System.wall[2]);
 			}
 			lattice.rect(p.x * size, p.y * size, size, size);
-			if (limit && p.is(-1)) {
+			if (S_System.limit && p.is(-1)) {
 				lattice.fill(S_System.eframe[0], S_System.eframe[1],
 						S_System.eframe[2]);
 				if (!p.near[0].is(p))
@@ -236,6 +207,33 @@ public class IsingRender extends PApplet {
 					lattice.rect(p.x * size, p.y * size, 1, size);
 			}
 		}
+	}
+
+	private void drawBonds(Point p) {
+		if (p.y == 0) {
+			drawBondColor(p, 0);
+			lattice.rect((p.x + 0.45F) * size, 0.5F * size, size / 10,
+					-size / 2);
+		}
+		if (p.x == 0) {
+			drawBondColor(p, 3);
+			lattice.rect(0.5F * size, (p.y + 0.45F) * size, -size / 2,
+					size / 10);
+		}
+		drawBondColor(p, 1);
+		lattice.rect((p.x + 0.75F) * size, (p.y + 0.45F) * size, size / 2,
+				size / 10);
+
+		drawBondColor(p, 2);
+		lattice.rect((p.x + 0.45F) * size, (p.y + 0.75F) * size, size / 10,
+				size / 2);
+	}
+
+	private void drawBondColor(Point p, int i) {
+		if (p.bond(i))
+			lattice.fill(S_System.bon[0], S_System.bon[1], S_System.bon[2]);
+		else
+			lattice.fill(S_System.boff[0], S_System.boff[1], S_System.boff[2]);
 	}
 
 	static public void main(String[] passedArgs) {

@@ -6,6 +6,7 @@ import java.util.Scanner;
 public abstract class S_System {
 	// Text Output
 	public static final DecimalFormat df = new DecimalFormat("0.00");
+	public final static boolean limit = false; // red frames
 
 	// Colors
 	private final static float h = 250;

@@ -191,4 +191,8 @@ public class Point {
 		return draw;
 	}
 
+	public boolean bond(int i) {
+		return this.is(near[i]);
+	}
+
 }
