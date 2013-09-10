@@ -1,28 +1,20 @@
 package Ising;
 
-import Render.IsingRender;
-
 public class Point {
 	public static Lattice L;
 	private byte v; // value
-	private byte offset;// between flip and flip accept
 	public final int x, y, z;
-	public Point[] near = new Point[S_Initialize.D * 2]; // "von neumann"-
-															// neighbors
+	// "von neumann"- neighbors
+	public Point[] near = new Point[S_Initialize.D * 2];
 	public final int index;
-	private int S;
-
-	private boolean draw = true;
+	private int S; // Sum of nearby v- values.
+	private boolean draw = true; // changed?
 
 	/**
 	 * @return Value of the Point
 	 */
 	public byte getV() {
 		return v;
-	}
-
-	public int getVn() {
-		return getV() + offset;
 	}
 
 	public Point(int index, Lattice L, int[] xyz, byte v) {
@@ -182,9 +174,7 @@ public class Point {
 	}
 
 	public String getSV() {
-		// if (S * v > 4 || S * v < -4)
 		return (S * v > 0 ? "" : " ") + -(S * v);
-		// return "";
 	}
 
 }

@@ -25,6 +25,7 @@ public abstract class S_System {
 	public static boolean BONDS = true;
 	public static boolean NUMBERS = false;
 	public static boolean FRAMED = false; // red frames
+	public static boolean LOG = true;
 
 	// Some input/output stuff //TODO
 	public static Scanner sc = new Scanner(System.in);

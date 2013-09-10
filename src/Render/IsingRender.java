@@ -32,13 +32,17 @@ public class IsingRender extends PApplet {
 	private long time;
 	private int c;
 
+	private long sweeps;
+
 	// private XYChart lineChart;
 	public void setup() {
 		cp5 = new ControlP5(this);
 		int b = 0;
 		cp5.addBang("play/pause").setPosition(25 + 100 * b++, 630)
-				.setSize(99, 20).getCaptionLabel()
+				.setSize(74, 20).getCaptionLabel()
 				.align(ControlP5.CENTER, ControlP5.CENTER);
+		cp5.addBang("log").setPosition(50 + 50 * b, 630).setSize(24, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 		cp5.addBang("+").setPosition(75 + 50 * b, 630).setSize(24, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 		cp5.addBang("-").setPosition(100 + 50 * b++, 630).setSize(24, 20)
@@ -71,11 +75,11 @@ public class IsingRender extends PApplet {
 		Point.breite = 14;
 		Point.poren = false;
 
-		N = 10;
+		N = 6;
 		seed = 0.5;
 		J = 1;
 		h = 0;
-		kT = 3.6690;
+		kT = 8.90;
 		L = new Lattice(N, N, 1, seed, J, h, 1 / kT);
 	}
 
@@ -113,6 +117,8 @@ public class IsingRender extends PApplet {
 			Pause();
 		} else if (event.isFrom("reset")) {
 			speed = 1;
+			sweeps = 0;
+			calced = 0;
 			Stop();
 			setupLattice();
 		} else if (!play && event.isFrom("sweep")) {
@@ -138,12 +144,23 @@ public class IsingRender extends PApplet {
 			speed *= 2;
 		} else if (event.isFrom("-") && speed > 1) {
 			speed /= 2;
+		} else if (event.isFrom("log")) {
+			S_System.LOG = !S_System.LOG;
+			if (S_System.LOG)
+				System.out.println("t E M");
 		}
 		tab = 0;
 	}
 
 	private void sweep(int n) {
 		flip(L.N * n);
+		sweeps += n;
+		if (S_System.LOG)
+			log();
+	}
+
+	private void log() {
+		System.out.println(sweeps + " " + Hamilton.E_nn + " " + Hamilton.E_m);
 	}
 
 	private void flip(int c) {

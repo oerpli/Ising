@@ -146,13 +146,4 @@ public class Lattice {
 		}
 		return s.toString();
 	}
-
-	public String toStringNew() {
-		StringBuffer s = new StringBuffer();
-		for (Point p : sites) {
-			s.append(p.getVn() == 1 ? '+' : '-');
-			s.append(p.x == size[0] - 1 ? '\n' : "");
-		}
-		return s.toString();
-	}
 }

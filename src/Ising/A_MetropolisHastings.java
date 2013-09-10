@@ -21,7 +21,6 @@ public abstract class A_MetropolisHastings implements A_Interface {
 			return true;
 		if (!x.containsKey(diffE)) {
 			x.put(diffE, Math.exp(-diffE * Hamilton.Beta));
-			System.out.println(diffE);
 		}
 		return Math.random() < x.get(diffE);
 	}
