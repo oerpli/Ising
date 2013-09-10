@@ -29,7 +29,8 @@ public class IsingRender extends PApplet {
 	private int tab = 0;
 	private long calced = 0;
 
-	private long start;
+	private long time;
+	private int c;
 
 	// private XYChart lineChart;
 	public void setup() {
@@ -38,6 +39,10 @@ public class IsingRender extends PApplet {
 		cp5.addBang("play/pause").setPosition(25 + 100 * b++, 630)
 				.setSize(99, 20).getCaptionLabel()
 				.align(ControlP5.CENTER, ControlP5.CENTER);
+		cp5.addBang("+").setPosition(75 + 50 * b, 630).setSize(24, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+		cp5.addBang("-").setPosition(100 + 50 * b++, 630).setSize(24, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 		cp5.addBang("reset").setPosition(75 + 50 * b++, 630).setSize(49, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 		cp5.addBang("sweep").setPosition(75 + 50 * b++, 630).setSize(49, 20)
@@ -50,16 +55,12 @@ public class IsingRender extends PApplet {
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 		cp5.addBang("energy/J").setPosition(75 + 50 * b++, 630).setSize(49, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+
 		frameRate(60);
 		size(650, 650);
 		lattice = createGraphics(600, 600);
 		info = createGraphics(600, 20);
 		background(0);
-		setup(3);
-	}
-
-	private void setup(int a) {
-		// System
 		setupLattice();
 		size = 600 / N;
 		speed = 1;
@@ -71,10 +72,10 @@ public class IsingRender extends PApplet {
 		Point.poren = false;
 
 		N = 10;
-		seed = 1;
+		seed = 0.5;
 		J = 1;
 		h = 0;
-		kT = 5.999;
+		kT = 3.6690;
 		L = new Lattice(N, N, 1, seed, J, h, 1 / kT);
 	}
 
@@ -104,19 +105,20 @@ public class IsingRender extends PApplet {
 			break;
 		}
 		if (play)
-			sweep(L.N);
+			sweep(speed);
 	}
 
 	public void controlEvent(ControlEvent event) {
 		if (event.isFrom("play/pause")) {
 			Pause();
 		} else if (event.isFrom("reset")) {
+			speed = 1;
 			Stop();
 			setupLattice();
 		} else if (!play && event.isFrom("sweep")) {
-			sweep(L.N);
-		} else if (!play && event.isFrom("flip")) {
 			sweep(1);
+		} else if (!play && event.isFrom("flip")) {
+			flip(1);
 		} else if (event.isFrom("bonds")) {
 			S_System.BONDS = !S_System.BONDS;
 			lattice.fill(0);
@@ -132,31 +134,37 @@ public class IsingRender extends PApplet {
 			lattice.fill(0);
 			lattice.rect(0, 0, 600, 600);
 			drawLattice(true);
+		} else if (event.isFrom("+")) {
+			speed *= 2;
+		} else if (event.isFrom("-") && speed > 1) {
+			speed /= 2;
 		}
 		tab = 0;
 	}
 
-	private void sweep(int c) {
-		start = System.currentTimeMillis();
-		for (int i = 0; i < c * speed; i++) {
+	private void sweep(int n) {
+		flip(L.N * n);
+	}
+
+	private void flip(int c) {
+		time = -System.currentTimeMillis();
+		this.c = c;
+		for (int i = 0; i < c; i++) {
 			L.tryFlip(1);
 			calced++;
 		}
-		printFlips(0.005);
+		time += System.currentTimeMillis();
 		tab = 0;
 	}
 
-	private boolean printFlips(double x) {
-		if (Math.random() < x) {
-			System.out.println("Time/" + (L.N * speed) + " Flips: "
-					+ (System.currentTimeMillis() - start) + "ms");
-			int log10 = (int) Math.floor(Math.log10(calced));
-			System.out.println("Proposed Flips: "
-					+ S_System.df.format(calced / Math.pow(10, log10)) + "x10^"
-					+ log10);
-			return true;
-		} else
-			return false;
+	private String stringFlips() {
+		String out = "";
+		if (play) {
+			out += "ms/" + c + "F: " + time + " ";
+			out += "(" + (c / (time + 1)) + "F/ms)";
+			// System.out.println("Proposed Flips: " + scientific(calced));
+		}
+		return out;
 	}
 
 	private void drawInfo() {
@@ -166,17 +174,21 @@ public class IsingRender extends PApplet {
 		info.textSize(18);
 		info.background(0);
 		info.fill(color(255, 255, 255));
-		// int log10 = (int) Math.floor(Math.log10(Math.abs(Hamilton.getE())));
-		// String energy = S_System.df.format(Hamilton.getE()
-		// / Math.pow(10, log10))
-		// + "x10^" + log10;
+		// String energy = scientific(Hamilton.getE());
 		String energy = "" + Hamilton.getE(); // 123412521 instead of 1.2*10^x
-		String s = "Size: " + L.size[0] + "x" + L.size[1] + " Energy:  "
-				+ energy + "Mag: " + Hamilton.E_m + " Seed: " + seed
-				+ " Speed: " + speed;
+		String s = L.size[0] + "x" + L.size[1] + ", ";
+		s += "Speed: " + speed + ", " + stringFlips() + ", ";
+		s += "E: " + energy + ", E_m: " + Hamilton.E_m;
 		info.text(s, 25, 17);
 		// info.text("", 206, 20);
 		info.endDraw();
+	}
+
+	private String scientific(double x) {
+		int log10 = (int) Math.floor(Math.log10(Math.abs(x)));
+		String out = S_System.df.format(x / Math.pow(10, log10)) + "x10^"
+				+ log10;
+		return out;
 	}
 
 	private void drawLattice(boolean drawAll) {

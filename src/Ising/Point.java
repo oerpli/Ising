@@ -108,16 +108,16 @@ public class Point {
 				near[5] = L.getPoint(x, y, z - 1);
 			}
 		}
-		this.broadcast(v, false);
+		this.broadcast(v);
 	}
 
-	private void broadcast(int v, boolean print) {
+	private void broadcast(int v) {
 		for (Point p : near) {
-			p.receive(v, print);
+			p.receive(v);
 		}
 	}
 
-	private void receive(int n, boolean print) {
+	private void receive(int n) {
 		S += n;
 	}
 
@@ -158,8 +158,7 @@ public class Point {
 		if (accept) {
 			draw = true;
 			v = (byte) -v;
-			this.broadcast(2 * v, true);
-			System.out.println(index + ": " + S * v);
+			this.broadcast(2 * v);
 		}
 	}
 
