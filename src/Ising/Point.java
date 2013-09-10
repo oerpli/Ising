@@ -1,5 +1,7 @@
 package Ising;
 
+import Render.IsingRender;
+
 public class Point {
 	public static Lattice L;
 	private byte v; // value
@@ -7,15 +9,10 @@ public class Point {
 	public final int x, y, z;
 	public Point[] near = new Point[S_Initialize.D * 2]; // "von neumann"-
 															// neighbors
-
-	private int e_nn = 0;
-	private int e_nn_new = 0;
-
+	public final int index;
 	private int S;
 
-	private boolean e_in_new = false;
 	private boolean draw = true;
-	public final int i;// TODO DEBUG
 
 	/**
 	 * @return Value of the Point
@@ -28,11 +25,10 @@ public class Point {
 		return getV() + offset;
 	}
 
-	public Point(int i, Lattice L, int[] xyz, byte v) {
-		this.i = i;
+	public Point(int index, Lattice L, int[] xyz, byte v) {
+		this.index = index;
 		Point.L = L;
 		this.v = v;
-
 		this.x = xyz[0];
 		if (S_Initialize.D > 1)
 			this.y = xyz[1];
@@ -42,7 +38,6 @@ public class Point {
 			this.z = xyz[2];
 		else
 			z = 0;
-
 	}
 
 	// POREN// TODO this part is shit
@@ -113,24 +108,26 @@ public class Point {
 				near[5] = L.getPoint(x, y, z - 1);
 			}
 		}
-		this.getEnergy();
+		this.broadcast(v, false);
+	}
+
+	private void broadcast(int v, boolean print) {
+		for (Point p : near) {
+			p.receive(v, print);
+		}
+	}
+
+	private void receive(int n, boolean print) {
+		S += n;
 	}
 
 	/**
 	 * Calculates the NN- Energy of the point - 0 if it's a wall (v == 0).
 	 * Updates the Hamiltonian accordingly.
 	 */
-	private void getEnergy() {
+	public void initEnergy() {
 		Hamilton.E_m += v;
-		if (v == 0)
-			return;
-		// Hamilton.E_nn -= e_nn;
-		byte sum = 0;
-		for (Point p : near) {
-			sum += p.v;
-		}
-		e_nn = sum * v;
-		Hamilton.E_nn += e_nn;
+		Hamilton.E_nn += v * S;
 	}
 
 	/**
@@ -138,17 +135,8 @@ public class Point {
 	 * Updates the Hamiltonian accordingly.
 	 */
 	public void getNewEnergy() {
-		if (!e_in_new && v != 0) {
-			Hamilton.E_nn_new -= e_nn;
-			short sum = 0;
-			for (Point p : near) {
-				sum += p.v + p.offset;
-			}
-			e_nn_new = sum * (v + offset);
-			Hamilton.E_nn_new += e_nn_new;
-			Hamilton.E_m_new += offset;
-			e_in_new = true;
-		}
+		Hamilton.E_m_new += -2 * v;
+		Hamilton.E_nn_new += -4 * v * S;
 	}
 
 	/**
@@ -157,7 +145,6 @@ public class Point {
 	 * @return
 	 */
 	public boolean proposeFlip() {
-		this.offset = (byte) -(v * 2); // -v*2
 		return v != 0;
 	}
 
@@ -169,13 +156,11 @@ public class Point {
 	 */
 	public void acceptFlip(boolean accept) {
 		if (accept) {
-			draw = true;// if(!draw)?
-			v += offset;
-			this.e_nn = this.e_nn_new;
+			draw = true;
+			v = (byte) -v;
+			this.broadcast(2 * v, true);
+			System.out.println(index + ": " + S * v);
 		}
-		this.e_nn_new = 0;
-		this.offset = 0;
-		this.e_in_new = false;
 	}
 
 	/**
@@ -195,6 +180,12 @@ public class Point {
 
 	public boolean bond(int i) {
 		return this.is(near[i]);
+	}
+
+	public String getSV() {
+		// if (S * v > 4 || S * v < -4)
+		return (S * v > 0 ? "" : " ") + -(S * v);
+		// return "";
 	}
 
 }

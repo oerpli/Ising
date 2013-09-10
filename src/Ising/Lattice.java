@@ -41,13 +41,13 @@ public class Lattice {
 			sites[i] = new Point(i, this, getXY(i),
 					(byte) (Math.random() < seed ? 1 : -1));
 		}
-
 		Hamilton.reset();
 		Hamilton.set(J, h, Beta);
-
-		for (Point p : sites) {
+		for (Point p : sites)
 			p.init();
-		}
+		for (Point p : sites)
+			p.initEnergy();
+
 	}
 
 	// public void tryFlip() {
@@ -65,16 +65,11 @@ public class Lattice {
 	private boolean tryFlip(int[] indexes) {
 		for (int i : indexes) {
 			Point p = getPoint(i);
-			if (!p.proposeFlip())
-				return false;
-			changedPoints.add(p);
-			for (Point n : p.near) {
-				changedPoints.add(n);
-			}
+			if (p.proposeFlip())
+				changedPoints.add(p);
 		}
-		for (Point p : changedPoints) {
+		for (Point p : changedPoints)
 			p.getNewEnergy();
-		}
 		return acceptFlip();// TODO
 	}
 
@@ -82,9 +77,8 @@ public class Lattice {
 	private boolean acceptFlip() {
 		boolean flip = A_MetropolisHastings.accept();
 		Hamilton.accept(flip);
-		for (Point p : changedPoints) {
+		for (Point p : changedPoints)
 			p.acceptFlip(flip);
-		}
 		changedPoints.clear();
 		return flip;
 	}

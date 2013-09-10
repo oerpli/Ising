@@ -48,6 +48,8 @@ public class IsingRender extends PApplet {
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 		cp5.addBang("framed").setPosition(75 + 50 * b++, 630).setSize(49, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+		cp5.addBang("energy/J").setPosition(75 + 50 * b++, 630).setSize(49, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 		frameRate(60);
 		size(650, 650);
 		lattice = createGraphics(600, 600);
@@ -68,7 +70,7 @@ public class IsingRender extends PApplet {
 		Point.breite = 14;
 		Point.poren = false;
 
-		N = 15;
+		N = 10;
 		seed = 1;
 		J = 1;
 		h = 0;
@@ -121,7 +123,12 @@ public class IsingRender extends PApplet {
 			lattice.rect(0, 0, 600, 600);
 			drawLattice(true);
 		} else if (!S_System.BONDS && event.isFrom("framed")) {
-			S_System.framed = !S_System.framed;
+			S_System.FRAMED = !S_System.FRAMED;
+			lattice.fill(0);
+			lattice.rect(0, 0, 600, 600);
+			drawLattice(true);
+		} else if (event.isFrom("energy/J")) {
+			S_System.NUMBERS = !S_System.NUMBERS;
 			lattice.fill(0);
 			lattice.rect(0, 0, 600, 600);
 			drawLattice(true);
@@ -158,18 +165,17 @@ public class IsingRender extends PApplet {
 		info.fill(0);
 		info.textSize(18);
 		info.background(0);
-		info.fill(color(180, 180, 180));
-		int log10 = (int) Math.floor(Math.log10(Math.abs(Hamilton.getE())));
-		String energy = S_System.df.format(Hamilton.getE()
-				/ Math.pow(10, log10))
-				+ "x10^" + log10;
-		// 123412521 instead of 1.2*10^x
-		energy = "" + Hamilton.getE();
+		info.fill(color(255, 255, 255));
+		// int log10 = (int) Math.floor(Math.log10(Math.abs(Hamilton.getE())));
+		// String energy = S_System.df.format(Hamilton.getE()
+		// / Math.pow(10, log10))
+		// + "x10^" + log10;
+		String energy = "" + Hamilton.getE(); // 123412521 instead of 1.2*10^x
 		String s = "Size: " + L.size[0] + "x" + L.size[1] + " Energy:  "
 				+ energy + "Mag: " + Hamilton.E_m + " Seed: " + seed
 				+ " Speed: " + speed;
-		info.text(s, 25, 20);
-		info.text("", 206, 20);
+		info.text(s, 25, 17);
+		// info.text("", 206, 20);
 		info.endDraw();
 	}
 
@@ -177,14 +183,14 @@ public class IsingRender extends PApplet {
 		lattice.beginDraw();
 		lattice.noStroke();
 		for (Point p : L.sites)
-			if (drawAll || p.getRedraw() || S_System.framed)
-				drawPoint(p);
+			if (p.getRedraw() || drawAll)
+				drawPoint(p, true);
 		lattice.endDraw();
 	}
 
-	private void drawPoint(Point p) {
+	private void drawPoint(Point p, boolean recursive) {
 		p.drawn();
-		int x = p.getV() + 1;
+		int x = p.getV() + 1;// map v-values to color-array (-1,0,1 -> 0,1,2);
 		if (S_System.BONDS) {
 			lattice.fill(S_System.c[x][0], S_System.c[x][1], S_System.c[x][2]);
 			lattice.rect(p.x * size + size / 4, p.y * size + size / 4,
@@ -193,7 +199,7 @@ public class IsingRender extends PApplet {
 		} else {
 			lattice.fill(S_System.c[x][0], S_System.c[x][1], S_System.c[x][2]);
 			lattice.rect(p.x * size, p.y * size, size, size);
-			if (S_System.framed && p.is(-1)) {
+			if (S_System.FRAMED && p.is(-1)) {
 				lattice.fill(S_System.frame[0], S_System.frame[1],
 						S_System.frame[2]);
 				if (!p.bond(0))
@@ -206,6 +212,11 @@ public class IsingRender extends PApplet {
 					lattice.rect(p.x * size, p.y * size, 1, size);
 			}
 		}
+		if (S_System.NUMBERS)
+			drawNumbers(p, recursive);
+		if (S_System.FRAMED && recursive)
+			for (Point n : p.near)
+				drawPoint(n, false);
 	}
 
 	private void drawBonds(Point p, boolean recursive) {
@@ -224,11 +235,11 @@ public class IsingRender extends PApplet {
 		if (recursive) {
 			if (p.x == 0)
 				drawBonds(p.near[3], false);
-			else if (p.x == L.size[0])
+			else if (p.x == L.size[0] - 1)
 				drawBonds(p.near[1], false);
 			if (p.y == 0)
 				drawBonds(p.near[0], false);
-			else if (p.x == L.size[1])
+			else if (p.x == L.size[1] - 1)
 				drawBonds(p.near[2], false);
 		}
 	}
@@ -238,6 +249,18 @@ public class IsingRender extends PApplet {
 			lattice.fill(S_System.bon[0], S_System.bon[1], S_System.bon[2]);
 		else
 			lattice.fill(S_System.boff[0], S_System.boff[1], S_System.boff[2]);
+	}
+
+	private void drawNumbers(Point p, boolean recursive) {
+		if (S_System.NUMBERS) {
+			lattice.textSize(16);
+			lattice.fill(0, 0, 0);
+			lattice.text(p.getSV(), p.x * size + size / 3, p.y * size + size
+					* 0.6F);
+		}
+		if (recursive)
+			for (Point x : p.near)
+				drawPoint(x, false);
 	}
 
 	static public void main(String[] passedArgs) {
