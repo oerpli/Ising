@@ -186,10 +186,10 @@ public class IsingRender extends PApplet {
 		p.drawn();
 		int x = p.getV() + 1;
 		if (S_System.BONDS) {
-			drawBonds(p);
 			lattice.fill(S_System.c[x][0], S_System.c[x][1], S_System.c[x][2]);
 			lattice.rect(p.x * size + size / 4, p.y * size + size / 4,
 					size / 2, size / 2);
+			drawBonds(p, true);
 		} else {
 			lattice.fill(S_System.c[x][0], S_System.c[x][1], S_System.c[x][2]);
 			lattice.rect(p.x * size, p.y * size, size, size);
@@ -208,24 +208,29 @@ public class IsingRender extends PApplet {
 		}
 	}
 
-	private void drawBonds(Point p) {
-		if (p.y == 0) {
-			drawBondColor(p, 0);
-			lattice.rect((p.x + 0.45F) * size, 0.5F * size, size / 10,
-					-size / 2);
-		}
-		if (p.x == 0) {
-			drawBondColor(p, 3);
-			lattice.rect(0.5F * size, (p.y + 0.45F) * size, -size / 2,
-					size / 10);
-		}
+	private void drawBonds(Point p, boolean recursive) {
+		drawBondColor(p, 0);
+		lattice.rect((p.x + 0.45F) * size, (p.y - .25F) * size, size / 10,
+				size / 2);
 		drawBondColor(p, 1);
 		lattice.rect((p.x + 0.75F) * size, (p.y + 0.45F) * size, size / 2,
 				size / 10);
-
 		drawBondColor(p, 2);
 		lattice.rect((p.x + 0.45F) * size, (p.y + 0.75F) * size, size / 10,
 				size / 2);
+		drawBondColor(p, 3);
+		lattice.rect((p.x - 0.25F) * size, (p.y + 0.45F) * size, size / 2,
+				size / 10);
+		if (recursive) {
+			if (p.x == 0)
+				drawBonds(p.near[3], false);
+			else if (p.x == L.size[0])
+				drawBonds(p.near[1], false);
+			if (p.y == 0)
+				drawBonds(p.near[0], false);
+			else if (p.x == L.size[1])
+				drawBonds(p.near[2], false);
+		}
 	}
 
 	private void drawBondColor(Point p, int i) {

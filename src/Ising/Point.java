@@ -11,6 +11,8 @@ public class Point {
 	private int e_nn = 0;
 	private int e_nn_new = 0;
 
+	private int S;
+
 	private boolean e_in_new = false;
 	private boolean draw = true;
 	public final int i;// TODO DEBUG
