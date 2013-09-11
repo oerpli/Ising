@@ -1,6 +1,5 @@
 package Ising;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -10,6 +9,7 @@ import java.util.HashSet;
  * @author oerpli
  */
 public class Lattice {
+	public static int D = (int) Math.sqrt(1);
 	// public Point cell[][]; // Lattice
 	// public byte[][] cell;
 	public Point[] sites;
@@ -35,6 +35,13 @@ public class Lattice {
 	public Lattice(int x, int y, int z, double seed, double J, double h,
 			double Beta) {
 		size = new int[] { x, y, z };
+		Lattice.D = 0;
+		if (x > 0)
+			Lattice.D++;
+		if (y > 1)
+			Lattice.D++;
+		if (z > 1)
+			Lattice.D++;
 		N = x * y * z;
 		sites = new Point[N];
 		for (int i = 0; i < N; i++) {
@@ -77,19 +84,20 @@ public class Lattice {
 	private boolean acceptFlip() {
 		boolean flip = A_MetropolisHastings.accept();
 		Hamilton.accept(flip);
-		for (Point p : changedPoints)
-			p.acceptFlip(flip);
+		if (flip)
+			for (Point p : changedPoints)
+				p.acceptFlip();
 		changedPoints.clear();
 		return flip;
 	}
 
 	protected int[] getXY(int i) {
-		int[] xyz = new int[S_Initialize.D];
+		int[] xyz = new int[Lattice.D];
 		xyz[0] = i % size[0];
-		if (S_Initialize.D == 1)
+		if (Lattice.D == 1)
 			return xyz;
 		xyz[1] = (int) Math.floor(i / size[0]);
-		if (S_Initialize.D == 2)
+		if (Lattice.D == 2)
 			return xyz;
 		xyz[2] = (int) Math.floor(i / (size[0] * size[1]));
 		return xyz;

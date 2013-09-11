@@ -22,7 +22,7 @@ public abstract class S_System {
 	public static final float[] bon = new float[] { h, h, h };
 	public static final float[] boff = new float[] { d, d, d };
 
-	public static boolean BONDS = true;
+	public static boolean BONDS = false;
 	public static boolean NUMBERS = false;
 	public static boolean FRAMED = false; // red frames
 	public static boolean LOG = true;

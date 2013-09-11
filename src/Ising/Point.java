@@ -5,7 +5,7 @@ public class Point {
 	private byte v; // value
 	public final int x, y, z;
 	// "von neumann"- neighbors
-	public Point[] near = new Point[S_Initialize.D * 2];
+	public Point[] near = new Point[Lattice.D * 2];
 	public final int index;
 	private int S; // Sum of nearby v- values.
 	private boolean draw = true; // changed?
@@ -22,11 +22,11 @@ public class Point {
 		Point.L = L;
 		this.v = v;
 		this.x = xyz[0];
-		if (S_Initialize.D > 1)
+		if (Lattice.D > 1)
 			this.y = xyz[1];
 		else
 			y = 0;
-		if (S_Initialize.D > 2)
+		if (Lattice.D > 2)
 			this.z = xyz[2];
 		else
 			z = 0;
@@ -90,12 +90,12 @@ public class Point {
 	 * Sets neighbors and nn- energy - only used for initialization.
 	 */
 	public void init() {
-		near[0] = L.getPoint(x, y - 1, z);
+		near[0] = L.getPoint(x - 1, y, z);
 		near[1] = L.getPoint(x + 1, y, z);
-		if (S_Initialize.D > 1) {
-			near[2] = L.getPoint(x, y + 1, z);
-			near[3] = L.getPoint(x - 1, y, z);
-			if (S_Initialize.D > 2) {
+		if (Lattice.D > 1) {
+			near[2] = L.getPoint(x, y - 1, z);
+			near[3] = L.getPoint(x, y + 1, z);
+			if (Lattice.D > 2) {
 				near[4] = L.getPoint(x, y, z + 1);
 				near[5] = L.getPoint(x, y, z - 1);
 			}
@@ -127,7 +127,7 @@ public class Point {
 	 * Updates the Hamiltonian accordingly.
 	 */
 	public void getNewEnergy() {
-		Hamilton.E_m_new += -2 * v;
+		Hamilton.E_m_new -= 2 * v;
 		Hamilton.E_nn_new += -4 * v * S;
 	}
 
@@ -146,12 +146,10 @@ public class Point {
 	 * 
 	 * @param accept
 	 */
-	public void acceptFlip(boolean accept) {
-		if (accept) {
-			draw = true;
-			v = (byte) -v;
-			this.broadcast(2 * v);
-		}
+	public void acceptFlip() {
+		draw = true;
+		v = (byte) -v;
+		this.broadcast(2 * v);
 	}
 
 	/**

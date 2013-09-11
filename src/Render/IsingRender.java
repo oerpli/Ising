@@ -16,8 +16,8 @@ public class IsingRender extends PApplet {
 	private double seed;// Seed
 
 	// Renderparameters
-	private int speed = 1; // N*speed flips/render
-	private int N; // (2NxN Lattice)
+	private int speed = 1;
+	private int N;
 	private int size;
 
 	// System
@@ -74,12 +74,11 @@ public class IsingRender extends PApplet {
 		// Physics
 		Point.breite = 14;
 		Point.poren = false;
-
-		N = 6;
+		N = 20;
 		seed = 0.5;
 		J = 1;
 		h = 0;
-		kT = 8.90;
+		kT = 2.70;
 		L = new Lattice(N, N, 1, seed, J, h, 1 / kT);
 	}
 
@@ -211,6 +210,7 @@ public class IsingRender extends PApplet {
 	private void drawLattice(boolean drawAll) {
 		lattice.beginDraw();
 		lattice.noStroke();
+		lattice.textSize(16);
 		for (Point p : L.sites)
 			if (p.getRedraw() || drawAll)
 				drawPoint(p, true);
@@ -228,48 +228,57 @@ public class IsingRender extends PApplet {
 		} else {
 			lattice.fill(S_System.c[x][0], S_System.c[x][1], S_System.c[x][2]);
 			lattice.rect(p.x * size, p.y * size, size, size);
-			if (S_System.FRAMED && p.is(-1)) {
+			if (S_System.FRAMED) {
 				lattice.fill(S_System.frame[0], S_System.frame[1],
 						S_System.frame[2]);
 				if (!p.bond(0))
-					lattice.rect(p.x * size, p.y * size, size, 1);
+					lattice.rect(p.x * size, p.y * size, 1, size);
 				if (!p.bond(1))
 					lattice.rect((p.x + 1) * size, p.y * size, -1, size);
-				if (!p.bond(2))
-					lattice.rect(p.x * size, (p.y + 1) * size, size, -1);
-				if (!p.bond(3))
-					lattice.rect(p.x * size, p.y * size, 1, size);
+				if (Lattice.D > 1) {
+					if (!p.bond(2))
+						lattice.rect(p.x * size, p.y * size, size, 1);
+					if (!p.bond(3))
+						lattice.rect(p.x * size, (p.y + 1) * size, size, -1);
+				}
+
 			}
 		}
-		if (S_System.NUMBERS)
-			drawNumbers(p, recursive);
 		if (S_System.FRAMED && recursive)
 			for (Point n : p.near)
 				drawPoint(n, false);
+		if (S_System.NUMBERS)
+			drawNumbers(p, recursive);
 	}
 
 	private void drawBonds(Point p, boolean recursive) {
 		drawBondColor(p, 0);
-		lattice.rect((p.x + 0.45F) * size, (p.y - .25F) * size, size / 10,
-				size / 2);
+		lattice.rect((p.x - 0.25F) * size, (p.y + 0.45F) * size, size / 2,
+				size / 10);
 		drawBondColor(p, 1);
 		lattice.rect((p.x + 0.75F) * size, (p.y + 0.45F) * size, size / 2,
 				size / 10);
-		drawBondColor(p, 2);
-		lattice.rect((p.x + 0.45F) * size, (p.y + 0.75F) * size, size / 10,
-				size / 2);
-		drawBondColor(p, 3);
-		lattice.rect((p.x - 0.25F) * size, (p.y + 0.45F) * size, size / 2,
-				size / 10);
+		if (Lattice.D > 1) {
+			drawBondColor(p, 2);
+			lattice.rect((p.x + 0.45F) * size, (p.y - .25F) * size, size / 10,
+					size / 2);
+			drawBondColor(p, 3);
+			lattice.rect((p.x + 0.45F) * size, (p.y + 0.75F) * size, size / 10,
+					size / 2);
+		}
+
 		if (recursive) {
 			if (p.x == 0)
-				drawBonds(p.near[3], false);
+				drawBonds(p.near[0], false);
 			else if (p.x == L.size[0] - 1)
 				drawBonds(p.near[1], false);
-			if (p.y == 0)
-				drawBonds(p.near[0], false);
-			else if (p.x == L.size[1] - 1)
-				drawBonds(p.near[2], false);
+
+			if (Lattice.D > 1) {
+				if (p.y == 0)
+					drawBonds(p.near[2], false);
+				else if (p.y == L.size[1] - 1)
+					drawBonds(p.near[3], false);
+			}
 		}
 	}
 
@@ -281,12 +290,8 @@ public class IsingRender extends PApplet {
 	}
 
 	private void drawNumbers(Point p, boolean recursive) {
-		if (S_System.NUMBERS) {
-			lattice.textSize(16);
-			lattice.fill(0, 0, 0);
-			lattice.text(p.getSV(), p.x * size + size / 3, p.y * size + size
-					* 0.6F);
-		}
+		lattice.fill(0, 0, 0);
+		lattice.text(p.getSV(), p.x * size + size / 3, p.y * size + size * 0.6F);
 		if (recursive)
 			for (Point x : p.near)
 				drawPoint(x, false);
