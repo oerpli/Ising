@@ -2,8 +2,11 @@ package Render;
 
 import java.text.DecimalFormat;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
-public abstract class S_System {
+public abstract class S {
 	// Text Output
 	public static final DecimalFormat df = new DecimalFormat("0.00");
 
@@ -29,5 +32,6 @@ public abstract class S_System {
 
 	// Some input/output stuff //TODO
 	public static Scanner sc = new Scanner(System.in);
-
+	static FileWriter writer;
+	static File file;
 }

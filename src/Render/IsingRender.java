@@ -1,5 +1,9 @@
 package Render;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import processing.core.*;
 import Ising.Hamilton;
 import Ising.Lattice;
@@ -17,7 +21,7 @@ public class IsingRender extends PApplet {
 
 	// Renderparameters
 	private int speed = 1;
-	private int N;
+	private int N, N2;
 	private int size;
 
 	// System
@@ -75,11 +79,21 @@ public class IsingRender extends PApplet {
 		Point.breite = 14;
 		Point.poren = false;
 		N = 20;
+		N2 = N;
 		seed = 0.5;
 		J = 1;
 		h = 0;
 		kT = 2.70;
-		L = new Lattice(N, N, 1, seed, J, h, 1 / kT);
+		L = new Lattice(N, N2, 1, seed, J, h, 1 / kT);
+		S.file = new File("" + N + "x" + N2 + "-" + J + "-" + h + "-" + kT
+				+ ".txt");
+		try {
+			S.writer = new FileWriter(S.file, true);
+			S.writer.write("t E M\n");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
@@ -93,6 +107,11 @@ public class IsingRender extends PApplet {
 	 * Toggle simulation.
 	 */
 	public void Pause() {
+		try {
+			S.writer.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		play = !play;
 	}
 
@@ -125,17 +144,17 @@ public class IsingRender extends PApplet {
 		} else if (!play && event.isFrom("flip")) {
 			flip(1);
 		} else if (event.isFrom("bonds")) {
-			S_System.BONDS = !S_System.BONDS;
+			S.BONDS = !S.BONDS;
 			lattice.fill(0);
 			lattice.rect(0, 0, 600, 600);
 			drawLattice(true);
-		} else if (!S_System.BONDS && event.isFrom("framed")) {
-			S_System.FRAMED = !S_System.FRAMED;
+		} else if (!S.BONDS && event.isFrom("framed")) {
+			S.FRAMED = !S.FRAMED;
 			lattice.fill(0);
 			lattice.rect(0, 0, 600, 600);
 			drawLattice(true);
 		} else if (event.isFrom("energy/J")) {
-			S_System.NUMBERS = !S_System.NUMBERS;
+			S.NUMBERS = !S.NUMBERS;
 			lattice.fill(0);
 			lattice.rect(0, 0, 600, 600);
 			drawLattice(true);
@@ -144,32 +163,41 @@ public class IsingRender extends PApplet {
 		} else if (event.isFrom("-") && speed > 1) {
 			speed /= 2;
 		} else if (event.isFrom("log")) {
-			S_System.LOG = !S_System.LOG;
-			if (S_System.LOG)
+			S.LOG = !S.LOG;
+			if (S.LOG)
 				System.out.println("t E M");
 		}
 		tab = 0;
 	}
 
 	private void sweep(int n) {
-		flip(L.N * n);
-		sweeps += n;
-		if (S_System.LOG)
-			log();
+		time = -System.currentTimeMillis();
+		this.c = L.N * n;
+		for (int i = 0; i < n; i++) {
+			flip(L.N);
+			sweeps += 1;
+			if (S.LOG)
+				log();
+		}
+		time += System.currentTimeMillis();
+
 	}
 
 	private void log() {
-		System.out.println(sweeps + " " + Hamilton.E_nn + " " + Hamilton.E_m);
+		String s = sweeps + " " + Hamilton.E_nn + " " + Hamilton.E_m + '\n';
+		try {
+			S.writer.write(s);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// System.out.print(s);
 	}
 
-	private void flip(int c) {
-		time = -System.currentTimeMillis();
-		this.c = c;
-		for (int i = 0; i < c; i++) {
+	private void flip(int n) {
+		for (int i = 0; i < n; i++) {
 			L.tryFlip(1);
 			calced++;
 		}
-		time += System.currentTimeMillis();
 		tab = 0;
 	}
 
@@ -202,8 +230,7 @@ public class IsingRender extends PApplet {
 
 	private String scientific(double x) {
 		int log10 = (int) Math.floor(Math.log10(Math.abs(x)));
-		String out = S_System.df.format(x / Math.pow(10, log10)) + "x10^"
-				+ log10;
+		String out = S.df.format(x / Math.pow(10, log10)) + "x10^" + log10;
 		return out;
 	}
 
@@ -220,17 +247,16 @@ public class IsingRender extends PApplet {
 	private void drawPoint(Point p, boolean recursive) {
 		p.drawn();
 		int x = p.getV() + 1;// map v-values to color-array (-1,0,1 -> 0,1,2);
-		if (S_System.BONDS) {
-			lattice.fill(S_System.c[x][0], S_System.c[x][1], S_System.c[x][2]);
+		if (S.BONDS) {
+			lattice.fill(S.c[x][0], S.c[x][1], S.c[x][2]);
 			lattice.rect(p.x * size + size / 4, p.y * size + size / 4,
 					size / 2, size / 2);
 			drawBonds(p, true);
 		} else {
-			lattice.fill(S_System.c[x][0], S_System.c[x][1], S_System.c[x][2]);
+			lattice.fill(S.c[x][0], S.c[x][1], S.c[x][2]);
 			lattice.rect(p.x * size, p.y * size, size, size);
-			if (S_System.FRAMED) {
-				lattice.fill(S_System.frame[0], S_System.frame[1],
-						S_System.frame[2]);
+			if (S.FRAMED) {
+				lattice.fill(S.frame[0], S.frame[1], S.frame[2]);
 				if (!p.bond(0))
 					lattice.rect(p.x * size, p.y * size, 1, size);
 				if (!p.bond(1))
@@ -244,10 +270,10 @@ public class IsingRender extends PApplet {
 
 			}
 		}
-		if (S_System.FRAMED && recursive)
+		if (S.FRAMED && recursive)
 			for (Point n : p.near)
 				drawPoint(n, false);
-		if (S_System.NUMBERS)
+		if (S.NUMBERS)
 			drawNumbers(p, recursive);
 	}
 
@@ -284,9 +310,9 @@ public class IsingRender extends PApplet {
 
 	private void drawBondColor(Point p, int i) {
 		if (p.bond(i))
-			lattice.fill(S_System.bon[0], S_System.bon[1], S_System.bon[2]);
+			lattice.fill(S.bon[0], S.bon[1], S.bon[2]);
 		else
-			lattice.fill(S_System.boff[0], S_System.boff[1], S_System.boff[2]);
+			lattice.fill(S.boff[0], S.boff[1], S.boff[2]);
 	}
 
 	private void drawNumbers(Point p, boolean recursive) {
