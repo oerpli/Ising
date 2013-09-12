@@ -32,8 +32,7 @@ public class Lattice {
 	// private final double h; // Field - sum
 	// private final double Beta;
 
-	public Lattice(int x, int y, int z, double seed, double J, double h,
-			double Beta) {
+	public Lattice(int x, int y, int z, double seed, float J, float h, float kT) {
 		size = new int[] { x, y, z };
 		Lattice.D = 0;
 		if (x > 0)
@@ -49,7 +48,7 @@ public class Lattice {
 					(byte) (Math.random() < seed ? 1 : -1));
 		}
 		Hamilton.reset();
-		Hamilton.set(J, h, Beta);
+		Hamilton.set(J, h, kT);
 		for (Point p : sites)
 			p.init();
 		for (Point p : sites)

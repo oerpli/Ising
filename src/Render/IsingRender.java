@@ -14,24 +14,22 @@ public class IsingRender extends PApplet {
 	private static final long serialVersionUID = -1664637672574501774L;
 
 	// Physics:
-	private double J; // Coupling Constant
-	private double h; // Field
-	private double kT;// Temperature
+	// private float J; // Coupling Constant
+	// private float h; // Field
+	// private float kT;// Temperature
 	private double seed;// Seed
 
 	// Renderparameters
-	private int speed = 1;
 	private int N, N2;
 	private int size;
 
 	// System
 	private PGraphics lattice, info; // chart_bg,chart
-	private ControlP5 cp5;
 	private boolean play = false;
 
 	Lattice L;
 	private int tab = 0;
-	private long calced = 0;
+	// private long calced = 0;
 
 	private long time;
 	private int c;
@@ -40,60 +38,73 @@ public class IsingRender extends PApplet {
 
 	// private XYChart lineChart;
 	public void setup() {
-		cp5 = new ControlP5(this);
+		S.cp5 = new ControlP5(this);
 		int b = 0;
-		cp5.addBang("play/pause").setPosition(25 + 100 * b++, 630)
+		S.cp5.addBang("play/pause").setPosition(25 + 100 * b++, 630)
 				.setSize(74, 20).getCaptionLabel()
 				.align(ControlP5.CENTER, ControlP5.CENTER);
-		cp5.addBang("log").setPosition(50 + 50 * b, 630).setSize(24, 20)
+		S.cp5.addBang("log").setPosition(50 + 50 * b, 630).setSize(24, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		cp5.addBang("+").setPosition(75 + 50 * b, 630).setSize(24, 20)
+		S.cp5.addBang("+").setPosition(75 + 50 * b, 630).setSize(24, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		cp5.addBang("-").setPosition(100 + 50 * b++, 630).setSize(24, 20)
+		S.cp5.addBang("-").setPosition(100 + 50 * b++, 630).setSize(24, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		cp5.addBang("reset").setPosition(75 + 50 * b++, 630).setSize(49, 20)
+		S.cp5.addBang("reset").setPosition(75 + 50 * b++, 630).setSize(49, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		cp5.addBang("sweep").setPosition(75 + 50 * b++, 630).setSize(49, 20)
+		S.cp5.addBang("sweep").setPosition(75 + 50 * b++, 630).setSize(49, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		cp5.addBang("flip").setPosition(75 + 50 * b++, 630).setSize(49, 20)
+		S.cp5.addBang("flip").setPosition(75 + 50 * b++, 630).setSize(49, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		cp5.addBang("bonds").setPosition(75 + 50 * b++, 630).setSize(49, 20)
+		S.cp5.addBang("bonds").setPosition(75 + 50 * b++, 630).setSize(49, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		cp5.addBang("framed").setPosition(75 + 50 * b++, 630).setSize(49, 20)
+		S.cp5.addBang("framed").setPosition(75 + 50 * b++, 630).setSize(49, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		cp5.addBang("energy/J").setPosition(75 + 50 * b++, 630).setSize(49, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+		S.cp5.addBang("energy/J").setPosition(75 + 50 * b++, 630)
+				.setSize(49, 20).getCaptionLabel()
+				.align(ControlP5.CENTER, ControlP5.CENTER);
 
 		frameRate(60);
-		size(650, 650);
+		size(650, 670);
 		lattice = createGraphics(600, 600);
 		info = createGraphics(600, 20);
 		background(0);
 		setupLattice();
 		size = 600 / N;
-		speed = 1;
+		S.speed = 1;
+		setupFields(b);
+	}
+
+	private void setupFields(int b) {
+		S.cp5.addTextfield("J").setPosition(75 + 50 * b++, 630).setSize(47, 20)
+				.setAutoClear(false).setValue("" + Hamilton.J)
+				.setInputFilter(0).setFont(createFont("arial", 15));
+		S.cp5.addTextfield("h").setPosition(75 + 50 * b++, 630).setSize(47, 20)
+				.setAutoClear(false).setValue("" + Hamilton.h)
+				.setInputFilter(0).setFont(createFont("arial", 15));
+		S.cp5.addTextfield("kT").setPosition(75 + 50 * b++, 630)
+				.setSize(49, 20).setAutoClear(false).setValue("" + Hamilton.kT)
+				.setInputFilter(0).setFont(createFont("arial", 15));
 	}
 
 	private void setupLattice() {
 		// Physics
 		Point.breite = 14;
 		Point.poren = false;
-		N = 20;
+		N = 2;
 		N2 = N;
 		seed = 0.5;
-		J = 1;
-		h = 0;
-		kT = 2.70;
-		L = new Lattice(N, N2, 1, seed, J, h, 1 / kT);
-		S.file = new File("" + N + "x" + N2 + "-" + J + "-" + h + "-" + kT
-				+ ".txt");
+		float J = 1;
+		float h = 0;
+		float kT = 2.70F;
+		L = new Lattice(N, N2, 1, seed, J, h, kT);
+		S.file = new File("LOG_" + N + "x" + N2 + J + "-" + kT + "_"
+				+ System.currentTimeMillis() + ".txt");
 		try {
 			S.writer = new FileWriter(S.file, true);
 			S.writer.write("t E M\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -107,11 +118,6 @@ public class IsingRender extends PApplet {
 	 * Toggle simulation.
 	 */
 	public void Pause() {
-		try {
-			S.writer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		play = !play;
 	}
 
@@ -127,16 +133,16 @@ public class IsingRender extends PApplet {
 			break;
 		}
 		if (play)
-			sweep(speed);
+			sweep(S.speed);
 	}
 
 	public void controlEvent(ControlEvent event) {
 		if (event.isFrom("play/pause")) {
 			Pause();
 		} else if (event.isFrom("reset")) {
-			speed = 1;
+			S.speed = 1;
 			sweeps = 0;
-			calced = 0;
+			// calced = 0;
 			Stop();
 			setupLattice();
 		} else if (!play && event.isFrom("sweep")) {
@@ -159,15 +165,40 @@ public class IsingRender extends PApplet {
 			lattice.rect(0, 0, 600, 600);
 			drawLattice(true);
 		} else if (event.isFrom("+")) {
-			speed *= 2;
-		} else if (event.isFrom("-") && speed > 1) {
-			speed /= 2;
+			S.speed *= 2;
+		} else if (event.isFrom("-") && S.speed > 1) {
+			S.speed /= 2;
 		} else if (event.isFrom("log")) {
-			S.LOG = !S.LOG;
-			if (S.LOG)
-				System.out.println("t E M");
+			newFile();
+		} else if (event.isFrom("J")) {
+			Hamilton.setJ(parseFloat(S.cp5.get(Textfield.class, "J").getText()));
+			System.out.println(Hamilton.out());
+		} else if (event.isFrom("h")) {
+			Hamilton.setH(parseFloat(S.cp5.get(Textfield.class, "h").getText()));
+			System.out.println(Hamilton.out());
+		} else if (event.isFrom("kT")) {
+			Hamilton.setKT(Math.max(0.0001F,
+					parseFloat(S.cp5.get(Textfield.class, "kT").getText())));
+			System.out.println(Hamilton.out());
 		}
 		tab = 0;
+	}
+
+	private void newFile() {
+		try {
+			S.writer.flush();
+			String name = "LOG_" + N + "x" + N2 + Hamilton.J + "-"
+					+ Hamilton.kT + "_" + System.currentTimeMillis() + ".txt";
+			S.file = new File(name);
+			System.out.println("New Logfile:" + name);
+			S.writer = new FileWriter(S.file, true);
+			S.writer.write(N + "x" + N2 + '\n');
+			S.writer.write("J=" + Hamilton.J + ";h=" + Hamilton.h + ";kT="
+					+ Hamilton.kT + '\n');
+			S.writer.write("t E M\n");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void sweep(int n) {
@@ -176,7 +207,7 @@ public class IsingRender extends PApplet {
 		for (int i = 0; i < n; i++) {
 			flip(L.N);
 			sweeps += 1;
-			if (S.LOG)
+			if (sweeps % 1024 == 0)
 				log();
 		}
 		time += System.currentTimeMillis();
@@ -196,7 +227,7 @@ public class IsingRender extends PApplet {
 	private void flip(int n) {
 		for (int i = 0; i < n; i++) {
 			L.tryFlip(1);
-			calced++;
+			// calced++;
 		}
 		tab = 0;
 	}
@@ -221,7 +252,7 @@ public class IsingRender extends PApplet {
 		// String energy = scientific(Hamilton.getE());
 		String energy = "" + Hamilton.getE(); // 123412521 instead of 1.2*10^x
 		String s = L.size[0] + "x" + L.size[1] + ", ";
-		s += "Speed: " + speed + ", " + stringFlips() + ", ";
+		s += "Speed: " + S.speed + ", " + stringFlips() + ", ";
 		s += "E: " + energy + ", E_m: " + Hamilton.E_m;
 		info.text(s, 25, 17);
 		// info.text("", 206, 20);

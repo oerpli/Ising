@@ -6,32 +6,34 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import controlP5.ControlP5;
+
 public abstract class S {
 	// Text Output
-	public static final DecimalFormat df = new DecimalFormat("0.00");
-
+	static final DecimalFormat df = new DecimalFormat("0.00");
 	// Colors
-
 	private static final float[] up = new float[] { 20, 200, 240 };
 	private static final float[] down = new float[] { 30, 50, 220 };
 	private static final float[] wall = new float[] { 55, 55, 55 };
 
-	public static final float[][] c = new float[][] { down, wall, up };
-	public static final float[] frame = new float[] { 255, 0, 0 };
+	static final float[][] c = new float[][] { down, wall, up };
+	static final float[] frame = new float[] { 255, 0, 0 };
 
-	private final static float h = 250;
-	// private final static float m = 175;
-	private final static float d = 25;
-	public static final float[] bon = new float[] { h, h, h };
-	public static final float[] boff = new float[] { d, d, d };
+	private final static float h = 250, d = 25; // m = 175;
+	static final float[] bon = new float[] { h, h, h };
+	static final float[] boff = new float[] { d, d, d };
 
-	public static boolean BONDS = false;
-	public static boolean NUMBERS = false;
-	public static boolean FRAMED = false; // red frames
-	public static boolean LOG = true;
+	static boolean BONDS = false;
+	static boolean NUMBERS = false;
+	static boolean FRAMED = false; // red frames
+	static boolean LOG = true;
+
+	static int speed = 1;
 
 	// Some input/output stuff //TODO
-	public static Scanner sc = new Scanner(System.in);
+	static Scanner sc = new Scanner(System.in);
 	static FileWriter writer;
 	static File file;
+	static ControlP5 cp5;
+
 }

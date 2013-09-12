@@ -4,10 +4,7 @@ import java.util.HashMap;
 
 /**
  * Bei neuer Energiedifferenz wird die Akzeptanzwahrscheinlichkeit gespeichert
- * damit sie nicht mehr berechnet werden muss. Wenn Problem bekannt und
- * Algorithmus nicht geändert wird theoretisch auch im Voraus möglich um
- * anschließend nicht mehr prüfen zu müssen. Bereits ohne diese Optimierung von
- * 4MF/s auf 4.6 bis 5.5MF/s.
+ * damit sie nicht mehr berechnet werden muss.
  * 
  * @author oerpli
  * 
@@ -20,8 +17,12 @@ public abstract class A_MetropolisHastings implements A_Interface {
 		if (diffE <= 0)
 			return true;
 		if (!x.containsKey(diffE)) {
-			x.put(diffE, Math.exp(-diffE * Hamilton.Beta));
+			x.put(diffE, Math.exp(-diffE * Hamilton.getBeta()));
 		}
 		return Math.random() < x.get(diffE);
+	}
+
+	public static void clearMap() {
+		x.clear();
 	}
 }

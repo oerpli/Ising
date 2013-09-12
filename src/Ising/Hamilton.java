@@ -12,8 +12,9 @@ package Ising;
  * 
  */
 public abstract class Hamilton {
-	public static double J, h; // Fieldparameters
-	public static double Beta; // Boltzmann (scaling factor)//TODO
+	public static float J, h; // Fieldparameters
+	private static float Beta; // Boltzmann (scaling factor)//TODO
+	public static float kT;
 
 	// Energy Values
 	public static int E_nn = 0;// nn - interaction
@@ -34,10 +35,26 @@ public abstract class Hamilton {
 		E_m_new = 0;
 	}
 
-	public static void set(double J, double h, double Beta) {
+	public static void setJ(float J) {
 		Hamilton.J = J;
+		A_MetropolisHastings.clearMap();
+	}
+
+	public static void setH(float h) {
 		Hamilton.h = h;
-		Hamilton.Beta = Beta;
+		A_MetropolisHastings.clearMap();
+	}
+
+	public static void setKT(float kT) {
+		Hamilton.kT = kT;
+		Hamilton.Beta = 1 / kT;
+		A_MetropolisHastings.clearMap();
+	}
+
+	public static void set(float J, float h, float kT) {
+		Hamilton.setJ(J);
+		Hamilton.setH(h);
+		Hamilton.setKT(kT);
 	}
 
 	public static double getE() { // Energy
@@ -57,11 +74,14 @@ public abstract class Hamilton {
 		Hamilton.E_m_new = 0;
 	}
 
-	// public static String out() {
-	// String out = "NN: " + E_nn + "\n";
-	// out += "NNn: " + E_nn_new + "\n";
-	// out += "M: " + E_m + "\n";
-	// out += "Mn: " + E_m_new;
-	// return out;
-	// }
+	public static String out() {
+		String out = "J=" + J + '\n';
+		out += "h=" + h + '\n';
+		out += "kT=" + kT;
+		return out;
+	}
+
+	public static double getBeta() {
+		return Beta;
+	}
 }
