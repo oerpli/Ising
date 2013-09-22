@@ -1,7 +1,5 @@
 package Ising;
 
-import java.util.HashSet;
-
 /**
  * A lattice as basis for the Ising Algorithm. Only 2D periodic implemented so
  * far
@@ -10,28 +8,13 @@ import java.util.HashSet;
  */
 public class Lattice {
 	public static int D = (int) Math.sqrt(1);
-	// public Point cell[][]; // Lattice
-	// public byte[][] cell;
 	public Point[] sites;
-	public final int size[]; // Dimensions for easier access
+	public final int size[]; // Dimensions
 	public final int N;
+	public Algorithm A = new A_MetropolisHastings();
+
 	// public final boolean periodic = true; // Periodic boundaries
-	private HashSet<Point> changedPoints = new HashSet<Point>();
-	public A_Interface Algorithm = new A_MetropolisHastings();
-
-	// protected int E_near = 0;
-	// protected int E_sum = 0;
-	// public int plus = 0;
-	// public int E_near_new = 0;
-	// public int E_sum_new = 0;
-
-	// private static final double kB = 1.3806488e-23;// Boltzmann SI
-	// private static final double kB = 8e-5;// Boltzmann Gauﬂ
-	// private static final double T = 1; // Temperature
-	// 1, -0.5, 2.2.69*E/8
-	// private final double J; // Energy - neighbor0
-	// private final double h; // Field - sum
-	// private final double Beta;
+	// private HashSet<Point> changedPoints = new HashSet<Point>();
 
 	public Lattice(int x, int y, int z, double seed, float J, float h, float kT) {
 		size = new int[] { x, y, z };
@@ -58,7 +41,7 @@ public class Lattice {
 	}
 
 	public boolean update() {
-		return Algorithm.update(this);
+		return A.update(this);
 	}
 
 	public Point getRandomPoint() {
@@ -84,25 +67,12 @@ public class Lattice {
 	/**
 	 * Needed for initialization
 	 * 
-	 * @param x
-	 *            Coordinate
-	 * @param y
-	 *            Coordinate
-	 * @param z
-	 *            Coordinate
+	 * @param x_y_z
+	 *            Coordinates
 	 * @return
 	 */
 	public Point getPoint(int x, int y, int z) {
 		return getPoint(getI(x, y, z));
-	}
-
-	private Point getPoint(int[] xyz) {
-		return getPoint(getI(xyz));
-	}
-
-	// TODO DEBUG
-	private int getI(int[] xyz) {
-		return getI(xyz[0], xyz[1], xyz[2]);
 	}
 
 	// TODO 3DIM
@@ -115,7 +85,7 @@ public class Lattice {
 	}
 
 	/**
-	 * String output of the lattice
+	 * String output of the lattice. For debug purposes mainly.
 	 * 
 	 * @author oerpli
 	 */

@@ -9,7 +9,7 @@ import java.util.HashMap;
  * @author oerpli
  * 
  */
-public class A_MetropolisHastings implements A_Interface {
+public class A_MetropolisHastings implements Algorithm {
 
 	public A_MetropolisHastings() {
 		return;
@@ -37,7 +37,7 @@ public class A_MetropolisHastings implements A_Interface {
 	}
 
 	private boolean tryFlip(Lattice L, Point p) {
-		if (p.isWall())
+		if (p.is(0))
 			return false;
 		p.getNewEnergy();
 		boolean flip = A_MetropolisHastings.accept();

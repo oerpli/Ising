@@ -36,7 +36,7 @@ public class IsingRender extends PApplet {
 	private int c;
 	private float sign = 0;
 
-	private long sweeps;
+	public static long sweeps;
 
 	// private XYChart lineChart;
 	public void setup() {
@@ -66,24 +66,13 @@ public class IsingRender extends PApplet {
 	}
 
 	private void setupLattice() {
-		// Physics
-		Point.breite = 14;
-		Point.poren = false;
-		N = 3;
+		N = 5;
 		N2 = N;
 		seed = 0.5;
 		float J = 1;
 		float h = 0;
 		float kT = 2.70F;
 		L = new Lattice(N, N2, 1, seed, J, h, kT);
-		S.file = new File("LOG_" + N + "x" + N2 + J + "-" + kT + "_"
-				+ System.currentTimeMillis() + ".txt");
-		try {
-			S.writer = new FileWriter(S.file, true);
-			S.writer.write("t E M\n");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -148,7 +137,7 @@ public class IsingRender extends PApplet {
 		} else if (event.isFrom("-") && S.speed > 1) {
 			S.speed /= 2;
 		} else if (event.isFrom("log")) {
-			newFile();
+			Log.init(N,N2);
 		} else if (event.isFrom("J")) {
 			Hamilton.setJ(parseFloat(S.cp5.get(Textfield.class, "J").getText()));
 			System.out.println(Hamilton.out());
@@ -163,22 +152,22 @@ public class IsingRender extends PApplet {
 		tab = 0;
 	}
 
-	private void newFile() {
-		try {
-			S.writer.flush();
-			String name = "LOG_" + N + "x" + N2 + Hamilton.J + "-"
-					+ Hamilton.kT + "_" + System.currentTimeMillis() + ".txt";
-			S.file = new File(name);
-			System.out.println("New Logfile:" + name);
-			S.writer = new FileWriter(S.file, true);
-			S.writer.write(N + "x" + N2 + '\n');
-			S.writer.write("J=" + Hamilton.J + ";h=" + Hamilton.h + ";kT="
-					+ Hamilton.kT + '\n');
-			S.writer.write("t E M\n");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	// private void newFile() {
+	// try {
+	// S.writer.flush();
+	// String name = "LOG_" + N + "x" + N2 + Hamilton.J + "-"
+	// + Hamilton.kT + "_" + System.currentTimeMillis() + ".txt";
+	// S.file = new File(name);
+	// System.out.println("New Logfile:" + name);
+	// S.writer = new FileWriter(S.file, true);
+	// S.writer.write(N + "x" + N2 + '\n');
+	// S.writer.write("J=" + Hamilton.J + ";h=" + Hamilton.h + ";kT="
+	// + Hamilton.kT + '\n');
+	// S.writer.write("t E M\n");
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// }
 
 	private void sweep(int n) {
 		time = -System.currentTimeMillis();
@@ -186,35 +175,25 @@ public class IsingRender extends PApplet {
 		for (int i = 0; i < n; i++) {
 			flip(L.N);
 			sweeps += 1;
-			log();
+			Log.log();
 		}
 		time += System.currentTimeMillis();
 
 	}
 
-	@SuppressWarnings("unchecked")
-	private void log() {
-		try {
-			S.writer.write(S.buffer.add(new DataSet(sweeps, Hamilton.E_nn,
-					Hamilton.E_m)));
-			checkTransition();
-			if (sweeps % 1024 == 0) {
-				S.writer.write(new DataSet(sweeps, Hamilton.E_nn, Hamilton.E_m)
-						.toString());
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void checkTransition() {
-		if (Math.signum(Hamilton.E_m) == -sign) {
-			System.out.println("trans");
-			play = false;
-			sign = -sign;
-			S.buffer.event();
-		}
-	}
+	// private void log() {
+	// try {
+	// S.writer.write(S.buffer.add(new DataSet(sweeps, Hamilton.E_nn,
+	// Hamilton.E_m)));
+	// // checkTransition();
+	// if (sweeps % 1024 == 0) {
+	// S.writer.write(new DataSet(sweeps, Hamilton.E_nn, Hamilton.E_m)
+	// .toString());
+	// }
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// }
 
 	private void flip(int n) {
 		for (int i = 0; i < n; i++) {
@@ -224,7 +203,7 @@ public class IsingRender extends PApplet {
 		tab = 0;
 	}
 
-	private String stringFlips() {
+	private String stringFlips() { // TODO
 		String out = "";
 		if (play) {
 			out += "ms/" + c + "F: " + time + " ";
@@ -234,7 +213,7 @@ public class IsingRender extends PApplet {
 		return out;
 	}
 
-	private void drawInfo() {
+	private void drawInfo() {// TODO
 		info.beginDraw();
 		info.noStroke();
 		info.fill(0);
@@ -251,11 +230,11 @@ public class IsingRender extends PApplet {
 		info.endDraw();
 	}
 
-	private String scientific(double x) {
-		int log10 = (int) Math.floor(Math.log10(Math.abs(x)));
-		String out = S.df.format(x / Math.pow(10, log10)) + "x10^" + log10;
-		return out;
-	}
+	// private String scientific(double x) {
+	// int log10 = (int) Math.floor(Math.log10(Math.abs(x)));
+	// String out = S.df.format(x / Math.pow(10, log10)) + "x10^" + log10;
+	// return out;
+	// }
 
 	private void drawLattice(boolean drawAll) {
 		lattice.beginDraw();

@@ -10,13 +10,6 @@ public class Point {
 	private int S; // Sum of nearby v- values.
 	private boolean draw = true; // changed?
 
-	/**
-	 * @return Value of the Point
-	 */
-	public byte getV() {
-		return v;
-	}
-
 	public Point(int index, Lattice L, int[] xyz, byte v) {
 		this.index = index;
 		Point.L = L;
@@ -32,38 +25,41 @@ public class Point {
 			z = 0;
 	}
 
-	// POREN// TODO this part sucks.
-	public static int breite = 9;
-	public static boolean poren = false;
-
-	public void poren() {
-		int tiefe = 30;
-		int abstand = breite * 3;
-		int xoffset = 1;
-
-		if (poren) {
-			if ((y > L.size[1] - tiefe)
-					&& !((x - xoffset) % abstand >= 0 && (x - xoffset)
-							% abstand < breite) || y > L.size[1] - 2) {
-				this.v = 0;
+	/**
+	 * Sets neighbors and nn- energy - only used for initialization.
+	 */
+	public void init() {
+		near[0] = L.getPoint(x - 1, y, z);
+		near[1] = L.getPoint(x + 1, y, z);
+		if (Lattice.D > 1) {
+			near[2] = L.getPoint(x, y - 1, z);
+			near[3] = L.getPoint(x, y + 1, z);
+			if (Lattice.D > 2) {
+				near[4] = L.getPoint(x, y, z + 1);
+				near[5] = L.getPoint(x, y, z - 1);
 			}
 		}
+		this.broadcast(v);
 	}
 
-	@Override
-	/** //TODO
-	 * Renders 1 as + and everything else as -
+	/**
+	 * Calculates the NN- Energy of the point - 0 if it's a wall (v == 0).
+	 * Updates the Hamiltonian accordingly.
 	 */
-	public String toString() {
-		if (v == 1)
-			return "+";// "▲";
-		else if (v == -1)
-			return "-";// "▼";
-		else if (v == 0)
-			return "X";// "█";
-		else
-			return "?";// "¿";
-		// return "" + v;
+	public void initEnergy() {
+		Hamilton.E_m += v;
+		Hamilton.E_nn += v * S;
+	}
+
+	/**
+	 * @return Value of the Point
+	 */
+	public byte getV() {
+		return v;
+	}
+
+	public int getS() {
+		return S;
 	}
 
 	/**
@@ -86,23 +82,6 @@ public class Point {
 		return this.v == p.v;
 	}
 
-	/**
-	 * Sets neighbors and nn- energy - only used for initialization.
-	 */
-	public void init() {
-		near[0] = L.getPoint(x - 1, y, z);
-		near[1] = L.getPoint(x + 1, y, z);
-		if (Lattice.D > 1) {
-			near[2] = L.getPoint(x, y - 1, z);
-			near[3] = L.getPoint(x, y + 1, z);
-			if (Lattice.D > 2) {
-				near[4] = L.getPoint(x, y, z + 1);
-				near[5] = L.getPoint(x, y, z - 1);
-			}
-		}
-		this.broadcast(v);
-	}
-
 	private void broadcast(int v) {
 		for (Point p : near) {
 			p.receive(v);
@@ -114,20 +93,11 @@ public class Point {
 	}
 
 	/**
-	 * Calculates the NN- Energy of the point - 0 if it's a wall (v == 0).
-	 * Updates the Hamiltonian accordingly.
-	 */
-	public void initEnergy() {
-		Hamilton.E_m += v;
-		Hamilton.E_nn += v * S;
-	}
-
-	/**
 	 * Calculates the NN- Energy of the point between flip and acceptance.
 	 * Updates the Hamiltonian accordingly.
 	 */
 	public void getNewEnergy() {
-		L.Algorithm.getNewEnergy(this);
+		L.A.getNewEnergy(this);
 	}
 
 	/**
@@ -158,19 +128,46 @@ public class Point {
 	}
 
 	public boolean bond(int i) {
-		return this.is(near[i]);
+		if (i >= near.length)
+			return false;
+		else
+			return this.is(near[i]);
 	}
 
 	public String getSV() {
 		return (S * v > 0 ? "" : " ") + -(S * v);
 	}
 
-	public boolean isWall() {
-		return v == 0;
+	@Override
+	/** //TODO
+	 * Renders 1 as + and everything else as -
+	 */
+	public String toString() {
+		if (v == 1)
+			return "+";// "▲";
+		else if (v == -1)
+			return "-";// "▼";
+		else if (v == 0)
+			return "X";// "█";
+		else
+			return "?";// "¿";
+		// return "" + v;
 	}
-
-	public int getS() {
-		return S;
-	}
-
 }
+// // POREN// TODO this part sucks.
+// public static int breite = 9;
+// public static boolean poren = false;
+//
+// public void poren() {
+// int tiefe = 30;
+// int abstand = breite * 3;
+// int xoffset = 1;
+//
+// if (poren) {
+// if ((y > L.size[1] - tiefe)
+// && !((x - xoffset) % abstand >= 0 && (x - xoffset)
+// % abstand < breite) || y > L.size[1] - 2) {
+// this.v = 0;
+// }
+// }
+// }

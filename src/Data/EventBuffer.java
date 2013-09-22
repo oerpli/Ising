@@ -26,6 +26,8 @@ public class EventBuffer {
 		return out;
 	}
 
+
+
 	public DataSet[] get(int offset) {
 		int x = pointer + offset;
 		DataSet[] r = new DataSet[size];
@@ -37,7 +39,7 @@ public class EventBuffer {
 
 	public void event() {
 		// epointer++;
-		event = T[(size+pointer - 1)%size].T + size / 2;
+		event = T[(size + pointer - 1) % size].T + size / 2;
 	}
 
 	public String toString() {

@@ -1,6 +1,6 @@
 package Ising;
 
-public interface A_Interface {
+public interface Algorithm {
 	public boolean update(Lattice L);
 	public void getNewEnergy(Point p);
 }
