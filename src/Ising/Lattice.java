@@ -17,6 +17,7 @@ public class Lattice {
 	public final int N;
 	// public final boolean periodic = true; // Periodic boundaries
 	private HashSet<Point> changedPoints = new HashSet<Point>();
+	public A_Interface Algorithm = new A_MetropolisHastings();
 
 	// protected int E_near = 0;
 	// protected int E_sum = 0;
@@ -56,38 +57,12 @@ public class Lattice {
 
 	}
 
-	// public void tryFlip() {
-	// tryFlip(1);
-	// }
-
-	public boolean tryFlip(int count) {
-		int[] indexes = new int[count];
-		for (int i = 0; i < count; i++) {
-			indexes[i] = (int) Math.floor(Math.random() * this.N);
-		}
-		return tryFlip(indexes);
+	public boolean update() {
+		return Algorithm.update(this);
 	}
 
-	private boolean tryFlip(int[] indexes) {
-		for (int i : indexes) {
-			Point p = getPoint(i);
-			if (p.proposeFlip())
-				changedPoints.add(p);
-		}
-		for (Point p : changedPoints)
-			p.getNewEnergy();
-		return acceptFlip();// TODO
-	}
-
-	// POREN// TODO this part is shit
-	private boolean acceptFlip() {
-		boolean flip = A_MetropolisHastings.accept();
-		Hamilton.accept(flip);
-		if (flip)
-			for (Point p : changedPoints)
-				p.acceptFlip();
-		changedPoints.clear();
-		return flip;
+	public Point getRandomPoint() {
+		return getPoint((int) Math.floor(Math.random() * this.N));// Math.floor()?
 	}
 
 	protected int[] getXY(int i) {

@@ -9,9 +9,15 @@ import java.util.HashMap;
  * @author oerpli
  * 
  */
-public abstract class A_MetropolisHastings implements A_Interface {
+public class A_MetropolisHastings implements A_Interface {
+
+	public A_MetropolisHastings() {
+		return;
+	}
+
 	private static HashMap<Double, Double> x = new HashMap<Double, Double>();
 
+	// TODO should be externalized
 	public static boolean accept() {
 		double diffE = Hamilton.getDE();
 		if (diffE <= 0)
@@ -24,5 +30,29 @@ public abstract class A_MetropolisHastings implements A_Interface {
 
 	public static void clearMap() {
 		x.clear();
+	}
+
+	public boolean update(Lattice L) {
+		return tryFlip(L, L.getRandomPoint());
+	}
+
+	private boolean tryFlip(Lattice L, Point p) {
+		if (p.isWall())
+			return false;
+		p.getNewEnergy();
+		boolean flip = A_MetropolisHastings.accept();
+		Hamilton.accept(flip);
+		if (flip)
+			p.acceptFlip();
+		return flip;// TODO
+	}
+
+	/**
+	 * Algorithm- specific method of calculation of new energy. In the long term
+	 * there should be a general approach which can be overriden.
+	 */
+	public void getNewEnergy(Point p) {
+		Hamilton.E_m_new -= 2 * p.getV();
+		Hamilton.E_nn_new -= 4 * p.getV() * p.getS();
 	}
 }

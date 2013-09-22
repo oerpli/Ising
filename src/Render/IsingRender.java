@@ -8,6 +8,7 @@ import processing.core.*;
 import Ising.Hamilton;
 import Ising.Lattice;
 import Ising.Point;
+import Data.*;
 import controlP5.*;
 
 public class IsingRender extends PApplet {
@@ -33,36 +34,13 @@ public class IsingRender extends PApplet {
 
 	private long time;
 	private int c;
+	private float sign = 0;
 
 	private long sweeps;
 
 	// private XYChart lineChart;
 	public void setup() {
-		S.cp5 = new ControlP5(this);
-		int b = 0;
-		S.cp5.addBang("play/pause").setPosition(25 + 100 * b++, 630)
-				.setSize(74, 20).getCaptionLabel()
-				.align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("log").setPosition(50 + 50 * b, 630).setSize(24, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("+").setPosition(75 + 50 * b, 630).setSize(24, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("-").setPosition(100 + 50 * b++, 630).setSize(24, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("reset").setPosition(75 + 50 * b++, 630).setSize(49, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("sweep").setPosition(75 + 50 * b++, 630).setSize(49, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("flip").setPosition(75 + 50 * b++, 630).setSize(49, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("bonds").setPosition(75 + 50 * b++, 630).setSize(49, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("framed").setPosition(75 + 50 * b++, 630).setSize(49, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("energy/J").setPosition(75 + 50 * b++, 630)
-				.setSize(49, 20).getCaptionLabel()
-				.align(ControlP5.CENTER, ControlP5.CENTER);
-
+		S.setup(this);
 		frameRate(60);
 		size(650, 670);
 		lattice = createGraphics(600, 600);
@@ -71,17 +49,18 @@ public class IsingRender extends PApplet {
 		setupLattice();
 		size = 600 / N;
 		S.speed = 1;
-		setupFields(b);
+		setupFields();
+		sign = Math.signum(Hamilton.E_m);
 	}
 
-	private void setupFields(int b) {
-		S.cp5.addTextfield("J").setPosition(75 + 50 * b++, 630).setSize(47, 20)
-				.setAutoClear(false).setValue("" + Hamilton.J)
+	private void setupFields() {
+		S.cp5.addTextfield("J").setPosition(75 + 50 * S.b++, 630)
+				.setSize(47, 20).setAutoClear(false).setValue("" + Hamilton.J)
 				.setInputFilter(0).setFont(createFont("arial", 15));
-		S.cp5.addTextfield("h").setPosition(75 + 50 * b++, 630).setSize(47, 20)
-				.setAutoClear(false).setValue("" + Hamilton.h)
+		S.cp5.addTextfield("h").setPosition(75 + 50 * S.b++, 630)
+				.setSize(47, 20).setAutoClear(false).setValue("" + Hamilton.h)
 				.setInputFilter(0).setFont(createFont("arial", 15));
-		S.cp5.addTextfield("kT").setPosition(75 + 50 * b++, 630)
+		S.cp5.addTextfield("kT").setPosition(75 + 50 * S.b++, 630)
 				.setSize(49, 20).setAutoClear(false).setValue("" + Hamilton.kT)
 				.setInputFilter(0).setFont(createFont("arial", 15));
 	}
@@ -90,7 +69,7 @@ public class IsingRender extends PApplet {
 		// Physics
 		Point.breite = 14;
 		Point.poren = false;
-		N = 2;
+		N = 3;
 		N2 = N;
 		seed = 0.5;
 		float J = 1;
@@ -207,26 +186,39 @@ public class IsingRender extends PApplet {
 		for (int i = 0; i < n; i++) {
 			flip(L.N);
 			sweeps += 1;
-			if (sweeps % 1024 == 0)
-				log();
+			log();
 		}
 		time += System.currentTimeMillis();
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void log() {
-		String s = sweeps + " " + Hamilton.E_nn + " " + Hamilton.E_m + '\n';
 		try {
-			S.writer.write(s);
+			S.writer.write(S.buffer.add(new DataSet(sweeps, Hamilton.E_nn,
+					Hamilton.E_m)));
+			checkTransition();
+			if (sweeps % 1024 == 0) {
+				S.writer.write(new DataSet(sweeps, Hamilton.E_nn, Hamilton.E_m)
+						.toString());
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// System.out.print(s);
+	}
+
+	private void checkTransition() {
+		if (Math.signum(Hamilton.E_m) == -sign) {
+			System.out.println("trans");
+			play = false;
+			sign = -sign;
+			S.buffer.event();
+		}
 	}
 
 	private void flip(int n) {
 		for (int i = 0; i < n; i++) {
-			L.tryFlip(1);
+			L.update();
 			// calced++;
 		}
 		tab = 0;
@@ -270,6 +262,7 @@ public class IsingRender extends PApplet {
 		lattice.noStroke();
 		lattice.textSize(16);
 		for (Point p : L.sites)
+			// list of changed sites
 			if (p.getRedraw() || drawAll)
 				drawPoint(p, true);
 		lattice.endDraw();

@@ -32,7 +32,7 @@ public class Point {
 			z = 0;
 	}
 
-	// POREN// TODO this part is shit
+	// POREN// TODO this part sucks.
 	public static int breite = 9;
 	public static boolean poren = false;
 
@@ -127,17 +127,7 @@ public class Point {
 	 * Updates the Hamiltonian accordingly.
 	 */
 	public void getNewEnergy() {
-		Hamilton.E_m_new -= 2 * v;
-		Hamilton.E_nn_new += -4 * v * S;
-	}
-
-	/**
-	 * Proposes flip - returns false if the Point is part of the wall (v==0).
-	 * 
-	 * @return
-	 */
-	public boolean proposeFlip() {
-		return v != 0;
+		L.Algorithm.getNewEnergy(this);
 	}
 
 	/**
@@ -173,6 +163,14 @@ public class Point {
 
 	public String getSV() {
 		return (S * v > 0 ? "" : " ") + -(S * v);
+	}
+
+	public boolean isWall() {
+		return v == 0;
+	}
+
+	public int getS() {
+		return S;
 	}
 
 }
