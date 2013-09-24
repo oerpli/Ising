@@ -2,6 +2,7 @@ package Dynamics;
 
 import Model.Hamilton;
 import Model.Point;
+import Randoms.R;
 
 public class Kawasaki extends Algorithm {
 	private static Point p, x;
@@ -12,14 +13,16 @@ public class Kawasaki extends Algorithm {
 
 	public boolean update() {
 		p = L.getRandomPoint();
-		x = p.near[(int) Math.floor(Math.random() * 4)];
+		x = p.near[R.nextInt(p.near.length)];
 		if (p.is(x))
 			return true;
-		p.getNewEnergy();
+		getNewEnergy();
 		boolean flip = A().accept();
 		Hamilton.accept(flip);
-		if (flip)
-			p.kawasakiSwitch(x);
+		if (flip) {
+			p.acceptFlip();
+			x.acceptFlip();
+		}
 		return flip;// TODO
 	}
 

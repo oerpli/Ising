@@ -17,7 +17,7 @@ public class IsingRender extends PApplet {
 	private double seed;// Seed
 
 	// Renderparameters
-	private int N, N2;
+	private int N=10, N2;
 	float Jx = 1;
 	float hx = 0;
 	float kTx = 0.5F;
@@ -50,9 +50,9 @@ public class IsingRender extends PApplet {
 	}
 
 	private void setupLattice() {
-		N = 25;
+//		N = 4;
 		N2 = N;
-		seed = 0.5;
+		seed = 0.25;
 
 		L = new Lattice(N, N2, 1, seed, Jx, hx, kTx);
 	}

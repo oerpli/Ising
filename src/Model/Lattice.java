@@ -1,5 +1,6 @@
 package Model;
 
+import Randoms.*;
 import Dynamics.Algorithm;
 
 /**
@@ -32,7 +33,7 @@ public class Lattice {
 		sites = new Point[N];
 		for (int i = 0; i < N; i++) {
 			sites[i] = new Point(i, this, getXY(i),
-					(byte) (Math.random() < seed ? 1 : -1));
+					(byte) (R.nextDouble() < seed ? 1 : -1));
 		}
 		Hamilton.reset();
 		Hamilton.set(J, h, kT);
@@ -48,10 +49,10 @@ public class Lattice {
 	}
 
 	public Point getRandomPoint() {
-		return getPoint((int) Math.floor(Math.random() * this.N));// Math.floor()?
+		return getPoint(R.nextInt(this.N));
 	}
 
-	protected int[] getXY(int i) {
+	private int[] getXY(int i) {
 		int[] xyz = new int[Lattice.D];
 		xyz[0] = i % size[0];
 		if (Lattice.D == 1)
@@ -63,7 +64,7 @@ public class Lattice {
 		return xyz;
 	}
 
-	protected Point getPoint(int i) {
+	private Point getPoint(int i) {
 		return sites[i];
 	}
 
@@ -74,12 +75,12 @@ public class Lattice {
 	 *            Coordinates
 	 * @return
 	 */
-	public Point getPoint(int x, int y, int z) {
+	protected Point getPoint(int x, int y, int z) {
 		return getPoint(getI(x, y, z));
 	}
 
 	// TODO 3DIM
-	protected int getI(int x, int y, int z) {
+	private int getI(int x, int y, int z) {
 		x += size[0];
 		y += size[1];
 		z += size[2];

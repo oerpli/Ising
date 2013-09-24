@@ -21,7 +21,7 @@ public class SingleFlip extends Algorithm {
 		p = L.getRandomPoint();
 		if (p.is(0))
 			return false;
-		p.getNewEnergy();
+		getNewEnergy();
 		boolean flip = A().accept();
 		Hamilton.accept(flip);
 		if (flip)

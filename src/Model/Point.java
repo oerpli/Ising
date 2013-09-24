@@ -1,17 +1,15 @@
 package Model;
 
-import Dynamics.Algorithm;
-
 public class Point {
 	public static Lattice L;
 	private byte v; // value
 	public final int x, y, z;
 	public Point[] near = new Point[Lattice.D * 2];
-	public final int index;
+	private final int index;
 	private int S; // Sum of nearby v- values.
 	private boolean draw = true; // changed
 
-	public Point(int index, Lattice L, int[] xyz, byte v) {
+	protected Point(int index, Lattice L, int[] xyz, byte v) {
 		this.index = index;
 		Point.L = L;
 		this.v = v;
@@ -29,7 +27,7 @@ public class Point {
 	/**
 	 * Sets neighbors and nn- energy - only used for initialization.
 	 */
-	public void init() {
+	protected void init() {
 		near[0] = L.getPoint(x - 1, y, z);
 		near[1] = L.getPoint(x + 1, y, z);
 		if (Lattice.D > 1) {
@@ -47,7 +45,7 @@ public class Point {
 	 * Calculates the NN- Energy of the point - 0 if it's a wall (v == 0).
 	 * Updates the Hamiltonian accordingly.
 	 */
-	public void initEnergy() {
+	protected void initEnergy() {
 		Hamilton.E_m += v;
 		Hamilton.E_nn += v * S;
 	}
@@ -98,26 +96,6 @@ public class Point {
 	}
 
 	/**
-	 * Calculates the NN- Energy of the point between flip and acceptance.
-	 * Updates the Hamiltonian accordingly.
-	 */
-	public void getNewEnergy() {
-		Algorithm.U().getNewEnergy();
-	}
-
-	/**
-	 * If algorithm accepts flip set draw- status to true and add the offset to
-	 * the value. Clear dEnergy and offset afterwards.
-	 * 
-	 * @param accept
-	 */
-	public void acceptFlip() {
-		draw = true;
-		v = (byte) -v;
-		this.broadcast(2 * v);
-	}
-
-	/**
 	 * After point with current value is drawn set draw status to false (draw !=
 	 * drawn)
 	 */
@@ -139,14 +117,16 @@ public class Point {
 			return this.is(near[i]);
 	}
 
-	public void kawasakiSwitch(Point p) {
-		byte save = this.v;
-		this.v = p.v;
-		this.broadcast(2 * this.v);
-		this.draw = true;
-		p.v = save;
-		p.broadcast(2 * p.v);
-		p.draw = true;
+	/**
+	 * If algorithm accepts flip set draw- status to true and add the offset to
+	 * the value. Clear dEnergy and offset afterwards.
+	 * 
+	 * @param accept
+	 */
+	public void acceptFlip() {
+		draw = true;
+		v = (byte) -v;
+		this.broadcast(2 * v);
 	}
 
 	public String getSV() {
@@ -186,4 +166,12 @@ public class Point {
 // this.v = 0;
 // }
 // }
+// }
+
+// /**
+// * Calculates the NN- Energy of the point between flip and acceptance.
+// * Updates the Hamiltonian accordingly.
+// */
+// public void getNewEnergy() {
+// Algorithm.U().getNewEnergy();
 // }
