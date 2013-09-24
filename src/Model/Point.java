@@ -1,14 +1,15 @@
-package Ising;
+package Model;
+
+import Dynamics.Algorithm;
 
 public class Point {
 	public static Lattice L;
 	private byte v; // value
 	public final int x, y, z;
-	// "von neumann"- neighbors
 	public Point[] near = new Point[Lattice.D * 2];
 	public final int index;
 	private int S; // Sum of nearby v- values.
-	private boolean draw = true; // changed?
+	private boolean draw = true; // changed
 
 	public Point(int index, Lattice L, int[] xyz, byte v) {
 		this.index = index;
@@ -62,6 +63,10 @@ public class Point {
 		return S;
 	}
 
+	public int getE() {
+		return -v * S;
+	}
+
 	/**
 	 * Checks if this.v equals the given int value 'i'.
 	 * 
@@ -97,7 +102,7 @@ public class Point {
 	 * Updates the Hamiltonian accordingly.
 	 */
 	public void getNewEnergy() {
-		L.A.getNewEnergy(this);
+		Algorithm.U.getNewEnergy();
 	}
 
 	/**
@@ -134,6 +139,16 @@ public class Point {
 			return this.is(near[i]);
 	}
 
+	public void kawasakiSwitch(Point p) {
+		byte save = this.v;
+		this.v = p.v;
+		this.broadcast(2 * this.v);
+		this.draw = true;
+		p.v = save;
+		p.broadcast(2 * p.v);
+		p.draw = true;
+	}
+
 	public String getSV() {
 		return (S * v > 0 ? "" : " ") + -(S * v);
 	}
@@ -154,6 +169,7 @@ public class Point {
 		// return "" + v;
 	}
 }
+
 // // POREN// TODO this part sucks.
 // public static int breite = 9;
 // public static boolean poren = false;

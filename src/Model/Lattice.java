@@ -1,4 +1,6 @@
-package Ising;
+package Model;
+
+import Dynamics.Algorithm;
 
 /**
  * A lattice as basis for the Ising Algorithm. Only 2D periodic implemented so
@@ -7,16 +9,17 @@ package Ising;
  * @author oerpli
  */
 public class Lattice {
-	public static int D = (int) Math.sqrt(1);
+	public static int D = (int) Math.sqrt(1); // "no" dead code this way
+	public static Lattice L; // ugly workaround
 	public Point[] sites;
 	public final int size[]; // Dimensions
 	public final int N;
-	public Algorithm A = new A_MetropolisHastings();
 
 	// public final boolean periodic = true; // Periodic boundaries
 	// private HashSet<Point> changedPoints = new HashSet<Point>();
 
 	public Lattice(int x, int y, int z, double seed, float J, float h, float kT) {
+		Algorithm.L = this;
 		size = new int[] { x, y, z };
 		Lattice.D = 0;
 		if (x > 0)
@@ -41,7 +44,7 @@ public class Lattice {
 	}
 
 	public boolean update() {
-		return A.update(this);
+		return Algorithm.U.update();
 	}
 
 	public Point getRandomPoint() {

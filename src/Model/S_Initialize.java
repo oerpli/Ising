@@ -1,4 +1,4 @@
-package Ising;
+package Model;
 
 /**
  * Implement this pretty please :3 //TODO

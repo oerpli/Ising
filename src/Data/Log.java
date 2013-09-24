@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import Ising.Hamilton;
+import Model.Hamilton;
 import Render.IsingRender;
 import Render.S;
 
@@ -56,6 +56,9 @@ public abstract class Log {
 		}
 	}
 
+	/**
+	 * Halley's Comment
+	 */
 	private static void checkTransition() {
 		if (Math.signum(Hamilton.E_m) == -sign) {
 			System.out.println("trans");

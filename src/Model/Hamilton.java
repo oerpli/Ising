@@ -1,4 +1,6 @@
-package Ising;
+package Model;
+
+import Dynamics.Algorithm;
 
 /**
  * Static class containing Energy related stuff. For more flexibility
@@ -37,18 +39,18 @@ public abstract class Hamilton {
 
 	public static void setJ(float J) {
 		Hamilton.J = J;
-		A_MetropolisHastings.clearMap();
+		Algorithm.A.clearMap();
 	}
 
 	public static void setH(float h) {
 		Hamilton.h = h;
-		A_MetropolisHastings.clearMap();
+		Algorithm.A.clearMap();
 	}
 
 	public static void setKT(float kT) {
 		Hamilton.kT = kT;
 		Hamilton.Beta = 1 / kT;
-		A_MetropolisHastings.clearMap();
+		Algorithm.A.clearMap();
 	}
 
 	public static void set(float J, float h, float kT) {

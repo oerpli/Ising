@@ -1,13 +1,9 @@
 package Render;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import processing.core.*;
-import Ising.Hamilton;
-import Ising.Lattice;
-import Ising.Point;
+import Model.Hamilton;
+import Model.Lattice;
+import Model.Point;
 import Data.*;
 import controlP5.*;
 
@@ -22,6 +18,9 @@ public class IsingRender extends PApplet {
 
 	// Renderparameters
 	private int N, N2;
+	float Jx = 1;
+	float hx = 0;
+	float kTx = 0.5F;
 	private int size;
 
 	// System
@@ -40,7 +39,6 @@ public class IsingRender extends PApplet {
 
 	// private XYChart lineChart;
 	public void setup() {
-		S.setup(this);
 		frameRate(60);
 		size(650, 670);
 		lattice = createGraphics(600, 600);
@@ -49,30 +47,16 @@ public class IsingRender extends PApplet {
 		setupLattice();
 		size = 600 / N;
 		S.speed = 1;
-		setupFields();
+		S.setup(this);
 		sign = Math.signum(Hamilton.E_m);
 	}
 
-	private void setupFields() {
-		S.cp5.addTextfield("J").setPosition(75 + 50 * S.b++, 630)
-				.setSize(47, 20).setAutoClear(false).setValue("" + Hamilton.J)
-				.setInputFilter(0).setFont(createFont("arial", 15));
-		S.cp5.addTextfield("h").setPosition(75 + 50 * S.b++, 630)
-				.setSize(47, 20).setAutoClear(false).setValue("" + Hamilton.h)
-				.setInputFilter(0).setFont(createFont("arial", 15));
-		S.cp5.addTextfield("kT").setPosition(75 + 50 * S.b++, 630)
-				.setSize(49, 20).setAutoClear(false).setValue("" + Hamilton.kT)
-				.setInputFilter(0).setFont(createFont("arial", 15));
-	}
-
 	private void setupLattice() {
-		N = 5;
+		N = 25;
 		N2 = N;
 		seed = 0.5;
-		float J = 1;
-		float h = 0;
-		float kT = 2.70F;
-		L = new Lattice(N, N2, 1, seed, J, h, kT);
+
+		L = new Lattice(N, N2, 1, seed, Jx, hx, kTx);
 	}
 
 	/**
@@ -137,37 +121,23 @@ public class IsingRender extends PApplet {
 		} else if (event.isFrom("-") && S.speed > 1) {
 			S.speed /= 2;
 		} else if (event.isFrom("log")) {
-			Log.init(N,N2);
+			Log.init(N, N2);
 		} else if (event.isFrom("J")) {
-			Hamilton.setJ(parseFloat(S.cp5.get(Textfield.class, "J").getText()));
+			Jx = parseFloat(S.cp5.get(Textfield.class, "J").getText());
+			Hamilton.setJ(Jx);
 			System.out.println(Hamilton.out());
 		} else if (event.isFrom("h")) {
-			Hamilton.setH(parseFloat(S.cp5.get(Textfield.class, "h").getText()));
+			hx = parseFloat(S.cp5.get(Textfield.class, "h").getText());
+			Hamilton.setH(hx);
 			System.out.println(Hamilton.out());
 		} else if (event.isFrom("kT")) {
-			Hamilton.setKT(Math.max(0.0001F,
-					parseFloat(S.cp5.get(Textfield.class, "kT").getText())));
+			kTx = Math.max(0.0001F, parseFloat(S.cp5.get(Textfield.class, "kT")
+					.getText()));
+			Hamilton.setKT(kTx);
 			System.out.println(Hamilton.out());
 		}
 		tab = 0;
 	}
-
-	// private void newFile() {
-	// try {
-	// S.writer.flush();
-	// String name = "LOG_" + N + "x" + N2 + Hamilton.J + "-"
-	// + Hamilton.kT + "_" + System.currentTimeMillis() + ".txt";
-	// S.file = new File(name);
-	// System.out.println("New Logfile:" + name);
-	// S.writer = new FileWriter(S.file, true);
-	// S.writer.write(N + "x" + N2 + '\n');
-	// S.writer.write("J=" + Hamilton.J + ";h=" + Hamilton.h + ";kT="
-	// + Hamilton.kT + '\n');
-	// S.writer.write("t E M\n");
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// }
-	// }
 
 	private void sweep(int n) {
 		time = -System.currentTimeMillis();
@@ -175,31 +145,17 @@ public class IsingRender extends PApplet {
 		for (int i = 0; i < n; i++) {
 			flip(L.N);
 			sweeps += 1;
-			Log.log();
 		}
 		time += System.currentTimeMillis();
 
 	}
-
-	// private void log() {
-	// try {
-	// S.writer.write(S.buffer.add(new DataSet(sweeps, Hamilton.E_nn,
-	// Hamilton.E_m)));
-	// // checkTransition();
-	// if (sweeps % 1024 == 0) {
-	// S.writer.write(new DataSet(sweeps, Hamilton.E_nn, Hamilton.E_m)
-	// .toString());
-	// }
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// }
-	// }
 
 	private void flip(int n) {
 		for (int i = 0; i < n; i++) {
 			L.update();
 			// calced++;
 		}
+		Log.log();
 		tab = 0;
 	}
 
@@ -208,7 +164,6 @@ public class IsingRender extends PApplet {
 		if (play) {
 			out += "ms/" + c + "F: " + time + " ";
 			out += "(" + (c / (time + 1)) + "F/ms)";
-			// System.out.println("Proposed Flips: " + scientific(calced));
 		}
 		return out;
 	}
