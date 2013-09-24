@@ -17,7 +17,7 @@ public class IsingRender extends PApplet {
 	private double seed;// Seed
 
 	// Renderparameters
-	private int N=10, N2;
+	private int N = 10, N2;
 	float Jx = 1;
 	float hx = 0;
 	float kTx = 0.5F;
@@ -50,10 +50,9 @@ public class IsingRender extends PApplet {
 	}
 
 	private void setupLattice() {
-//		N = 4;
+		// N = 4;
 		N2 = N;
 		seed = 0.25;
-
 		L = new Lattice(N, N2, 1, seed, Jx, hx, kTx);
 	}
 
@@ -95,6 +94,7 @@ public class IsingRender extends PApplet {
 			// calced = 0;
 			Stop();
 			setupLattice();
+			drawLattice(true);
 		} else if (!play && event.isFrom("sweep")) {
 			sweep(1);
 		} else if (!play && event.isFrom("flip")) {
@@ -190,15 +190,17 @@ public class IsingRender extends PApplet {
 		lattice.beginDraw();
 		lattice.noStroke();
 		lattice.textSize(16);
-		for (Point p : L.sites)
-			// list of changed sites
-			if (p.getRedraw() || drawAll)
+		for (Point p : L.sites) {
+			if (S.NUMBERS && (p.drawnumber() || drawAll)) {
+				drawPoint(p, false);
+				drawNumber(p);
+			} else if (p.draw() || drawAll)
 				drawPoint(p, true);
+		}
 		lattice.endDraw();
 	}
 
 	private void drawPoint(Point p, boolean recursive) {
-		p.drawn();
 		int x = p.getV() + 1;// map v-values to color-array (-1,0,1 -> 0,1,2);
 		if (S.BONDS) {
 			lattice.fill(S.c[x][0], S.c[x][1], S.c[x][2]);
@@ -220,14 +222,13 @@ public class IsingRender extends PApplet {
 					if (!p.bond(3))
 						lattice.rect(p.x * size, (p.y + 1) * size, size, -1);
 				}
-
 			}
 		}
 		if (S.FRAMED && recursive)
-			for (Point n : p.near)
+			for (Point n : p.near) {
 				drawPoint(n, false);
-		if (S.NUMBERS)
-			drawNumbers(p, recursive);
+			}
+		p.drawn();
 	}
 
 	private void drawBonds(Point p, boolean recursive) {
@@ -268,12 +269,9 @@ public class IsingRender extends PApplet {
 			lattice.fill(S.boff[0], S.boff[1], S.boff[2]);
 	}
 
-	private void drawNumbers(Point p, boolean recursive) {
+	private void drawNumber(Point p) {
 		lattice.fill(0, 0, 0);
 		lattice.text(p.getSV(), p.x * size + size / 3, p.y * size + size * 0.6F);
-		if (recursive)
-			for (Point x : p.near)
-				drawPoint(x, false);
 	}
 
 	static public void main(String[] passedArgs) {

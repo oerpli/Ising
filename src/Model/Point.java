@@ -7,7 +7,7 @@ public class Point {
 	public Point[] near = new Point[Lattice.D * 2];
 	private final int index;
 	private int S; // Sum of nearby v- values.
-	private boolean draw = true; // changed
+	private boolean draw = true, drawnumber = true; // changed
 
 	protected Point(int index, Lattice L, int[] xyz, byte v) {
 		this.index = index;
@@ -93,21 +93,7 @@ public class Point {
 
 	private void receive(int n) {
 		S += n;
-	}
-
-	/**
-	 * After point with current value is drawn set draw status to false (draw !=
-	 * drawn)
-	 */
-	public void drawn() {
-		draw = false;
-	}
-
-	/**
-	 * @return true if Point needs to be drawn again.
-	 */
-	public boolean getRedraw() {
-		return draw;
+		drawnumber = true;
 	}
 
 	public boolean bond(int i) {
@@ -125,6 +111,7 @@ public class Point {
 	 */
 	public void acceptFlip() {
 		draw = true;
+		drawnumber = true;
 		v = (byte) -v;
 		this.broadcast(2 * v);
 	}
@@ -148,6 +135,27 @@ public class Point {
 			return "?";// "¿";
 		// return "" + v;
 	}
+
+	/**
+	 * @return true if Point needs to be drawn again.
+	 */
+	public boolean draw() {
+		return draw;
+	}
+
+	public boolean drawnumber() {
+		return drawnumber;
+	}
+
+	/**
+	 * After point with current value is drawn set draw status to false (draw !=
+	 * drawn)
+	 */
+	public void drawn() {
+		draw = false;
+		drawnumber = false;
+	}
+
 }
 
 // // POREN// TODO this part sucks.
