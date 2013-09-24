@@ -4,20 +4,19 @@ import Model.Hamilton;
 import Model.Point;
 import Randoms.R;
 
-public class Kawasaki extends Algorithm {
+public class Kawasaki implements I_Update {
 	private static Point p, x;
 
 	public Kawasaki() {
-		super();
 	}
 
 	public boolean update() {
-		p = L.getRandomPoint();
+		p = Algorithm.L.getRandomPoint();
 		x = p.near[R.nextInt(p.near.length)];
 		if (p.is(x))
 			return true;
 		getNewEnergy();
-		boolean flip = A().accept();
+		boolean flip = Algorithm.A().accept();
 		Hamilton.accept(flip);
 		if (flip) {
 			p.acceptFlip();

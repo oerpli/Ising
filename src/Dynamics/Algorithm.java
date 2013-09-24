@@ -9,7 +9,7 @@ public abstract class Algorithm implements I_Update {
 	private static int a = 0;
 	private static int u = 0;
 
-	public Algorithm() {// Algorithm.U = this;
+	public Algorithm() {
 	}
 
 	public static I_Accept A() {
@@ -21,11 +21,11 @@ public abstract class Algorithm implements I_Update {
 	}
 
 	public static void switchAccept() {
-		a = -a + 1;
+		a = 1 - a;
 	}
 
 	public static void switchUpdate() {
-		u = -u + 1;
+		u = 1 - u;
 	}
 
 	public static void L(Lattice L) {

@@ -14,9 +14,9 @@ import Dynamics.Algorithm;
  * 
  */
 public abstract class Hamilton {
-	public static float J, h; // Fieldparameters
-	private static float Beta; // Boltzmann (scaling factor)//TODO
-	public static float kT;
+	protected static float J, h; // Fieldparameters
+	protected static float Beta; // Boltzmann (scaling factor)//TODO
+	protected static float kT;
 
 	// Energy Values
 	public static int E_nn = 0;// nn - interaction
@@ -37,26 +37,24 @@ public abstract class Hamilton {
 		E_m_new = 0;
 	}
 
-	public static void setJ(float J) {
+	private static void setJ(float J) {
 		Hamilton.J = J;
-		Algorithm.A().clearMap();
 	}
 
-	public static void setH(float h) {
+	private static void setH(float h) {
 		Hamilton.h = h;
-		Algorithm.A().clearMap();
 	}
 
-	public static void setKT(float kT) {
+	private static void setKT(float kT) {
 		Hamilton.kT = kT;
 		Hamilton.Beta = 1 / kT;
-		Algorithm.A().clearMap();
 	}
 
 	public static void set(float J, float h, float kT) {
 		Hamilton.setJ(J);
 		Hamilton.setH(h);
 		Hamilton.setKT(kT);
+		Algorithm.A().clearMap();
 	}
 
 	public static double getE() { // Energy
@@ -76,14 +74,26 @@ public abstract class Hamilton {
 		Hamilton.E_m_new = 0;
 	}
 
-	public static String out() {
+	public String toString() {
 		String out = "J=" + J + '\n';
 		out += "h=" + h + '\n';
 		out += "kT=" + kT;
 		return out;
 	}
 
-	public static double getBeta() {
+	public static double Beta() {
 		return Beta;
+	}
+
+	public static double h() {
+		return h;
+	}
+
+	public static double J() {
+		return J;
+	}
+
+	public static double kT() {
+		return kT;
 	}
 }

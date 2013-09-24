@@ -18,15 +18,15 @@ public abstract class Log {
 
 	public static void init(int N, int N2) {
 		if (!log) {
-			String name = "LOG_" + N + "x" + N2 + Hamilton.J + "-"
-					+ Hamilton.kT + "_" + System.currentTimeMillis() + ".txt";
+			String name = "LOG_" + N + "x" + N2 + Hamilton.J() + "-"
+					+ Hamilton.kT() + "_" + System.currentTimeMillis() + ".txt";
 			System.out.println("New Logfile:" + name);
 			try {
 				file = new File(name);
 				W = new FileWriter(file, true);
 				W.write(N + "x" + N2 + '\n');
-				W.write("J=" + Hamilton.J + ";h=" + Hamilton.h + ";kT="
-						+ Hamilton.kT + '\n');
+				W.write("J=" + Hamilton.J() + ";h=" + Hamilton.h() + ";kT="
+						+ Hamilton.kT() + '\n');
 				W.write("t E M\n");
 			} catch (IOException e) {
 				e.printStackTrace();

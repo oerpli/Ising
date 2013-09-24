@@ -57,15 +57,15 @@ public abstract class S {
 				.setSize(49, 20).getCaptionLabel()
 				.align(ControlP5.CENTER, ControlP5.CENTER);
 		S.cp5.addTextfield("J").setPosition(75 + 50 * b++, 630).setSize(47, 20)
-				.setAutoClear(false).setValue("" + Hamilton.J)
+				.setAutoClear(false).setValue("" + Hamilton.J())
 				.setInputFilter(0).setFont(A.createFont("arial", 15))
 				.getCaptionLabel().align(ControlP5.RIGHT, ControlP5.CENTER);
 		S.cp5.addTextfield("h").setPosition(75 + 50 * b++, 630).setSize(47, 20)
-				.setAutoClear(false).setValue("" + Hamilton.h)
+				.setAutoClear(false).setValue("" + Hamilton.h())
 				.setInputFilter(0).setFont(A.createFont("arial", 15))
 				.getCaptionLabel().align(ControlP5.RIGHT, ControlP5.CENTER);
 		S.cp5.addTextfield("kT").setPosition(75 + 50 * b++, 630)
-				.setSize(49, 20).setAutoClear(false).setValue("" + Hamilton.kT)
+				.setSize(49, 20).setAutoClear(false).setValue("" + Hamilton.kT())
 				.setInputFilter(0).setFont(A.createFont("arial", 15))
 				.getCaptionLabel().align(ControlP5.RIGHT, ControlP5.CENTER);
 	}

@@ -10,19 +10,18 @@ import Model.Point;
  * @author oerpli
  * 
  */
-public class SingleFlip extends Algorithm {
+public class SingleFlip implements I_Update {
 	private static Point p;
 
 	public SingleFlip() {
-		super();
 	}
 
 	public boolean update() {
-		p = L.getRandomPoint();
+		p = Algorithm.L.getRandomPoint();
 		if (p.is(0))
 			return false;
 		getNewEnergy();
-		boolean flip = A().accept();
+		boolean flip = Algorithm.A().accept();
 		Hamilton.accept(flip);
 		if (flip)
 			p.acceptFlip();
