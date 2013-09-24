@@ -31,42 +31,55 @@ public abstract class S {
 
 	public static ControlP5 cp5; // buttons
 
+	private static int b = 0;
+	private static int y = 0;
+	private static int y0 = 5;
+	private static int x0 = 755;
+
 	static void setup(IsingRender A) {
-		int b = 0;
 		S.cp5 = new ControlP5(A);
-		S.cp5.addBang("play/pause").setPosition(25 + 100 * b++, 630)
-				.setSize(74, 20).getCaptionLabel()
-				.align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("log").setPosition(50 + 50 * b, 630).setSize(24, 20)
+		S.cp5.addBang("play/pause").setPosition(x0, y0).setSize(74, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("+").setPosition(75 + 50 * b, 630).setSize(24, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("-").setPosition(100 + 50 * b++, 630).setSize(24, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("reset").setPosition(75 + 50 * b++, 630).setSize(49, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("sweep").setPosition(75 + 50 * b++, 630).setSize(49, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("flip").setPosition(75 + 50 * b++, 630).setSize(49, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("bonds").setPosition(75 + 50 * b++, 630).setSize(49, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("framed").setPosition(75 + 50 * b++, 630).setSize(49, 20)
-				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("energy/J").setPosition(75 + 50 * b++, 630)
+		S.cp5.addBang("reset").setPosition(x0 + 75, y0 + 21 * y++)
 				.setSize(49, 20).getCaptionLabel()
 				.align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addTextfield("J").setPosition(75 + 50 * b++, 630).setSize(47, 20)
-				.setAutoClear(false).setValue("" + Hamilton.J())
-				.setInputFilter(0).setFont(A.createFont("arial", 15))
-				.getCaptionLabel().align(ControlP5.RIGHT, ControlP5.CENTER);
-		S.cp5.addTextfield("h").setPosition(75 + 50 * b++, 630).setSize(47, 20)
-				.setAutoClear(false).setValue("" + Hamilton.h())
-				.setInputFilter(0).setFont(A.createFont("arial", 15))
-				.getCaptionLabel().align(ControlP5.RIGHT, ControlP5.CENTER);
-		S.cp5.addTextfield("kT").setPosition(75 + 50 * b++, 630)
-				.setSize(49, 20).setAutoClear(false).setValue("" + Hamilton.kT())
-				.setInputFilter(0).setFont(A.createFont("arial", 15))
-				.getCaptionLabel().align(ControlP5.RIGHT, ControlP5.CENTER);
+		S.cp5.addBang("log").setPosition(x0 + 125, y0).setSize(24, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+
+		S.cp5.addBang("update").setPosition(x0, y0 + 21 * y).setSize(49, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+		S.cp5.addBang("sweep").setPosition(x0 + 50, y0 + 21 * y)
+				.setSize(49, 20).getCaptionLabel()
+				.align(ControlP5.CENTER, ControlP5.CENTER);
+		S.cp5.addBang("+").setPosition(x0 + 100, y0 + 21 * y).setSize(24, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+		S.cp5.addBang("-").setPosition(x0 + 125, y0 + 21 * y++).setSize(24, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+
+		S.cp5.addBang("bonds").setPosition(x0, y0 + 21 * y).setSize(49, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+		S.cp5.addBang("framed").setPosition(x0 + 50, y0 + 21 * y)
+				.setSize(49, 20).getCaptionLabel()
+				.align(ControlP5.CENTER, ControlP5.CENTER);
+		S.cp5.addBang("energy/J").setPosition(x0 + 100, y0 + 21 * y++)
+				.setSize(49, 20).getCaptionLabel()
+				.align(ControlP5.CENTER, ControlP5.CENTER);
+		Field(A, "J");
+		Field(A, "h");
+		Field(A, "kT");
+	}
+
+	public static void Field(IsingRender A, String n) {
+		S.cp5.addTextfield(n + "x").setPosition(x0 + 1, y0 + 21 * ++y)
+				.setSize(97, 20).setAutoClear(false)
+				.setValue("" + Hamilton.kT()).setInputFilter(0)
+				.setFont(A.createFont("arial", 15)).getCaptionLabel()
+				.align(ControlP5.RIGHT, ControlP5.CENTER).set(n);
+		S.cp5.addBang(n + '+').setPosition(x0 + 100, y0 + 21 * y)
+				.setSize(24, 20).getCaptionLabel().set("+")
+				.align(ControlP5.CENTER, ControlP5.CENTER);
+		S.cp5.addBang(n + '-').setPosition(x0 + 125, y0 + 21 * y)
+				.setSize(24, 20).getCaptionLabel().set("-")
+				.align(ControlP5.CENTER, ControlP5.CENTER);
 	}
 }

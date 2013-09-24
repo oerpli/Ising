@@ -18,9 +18,9 @@ public class IsingRender extends PApplet {
 
 	// Renderparameters
 	private int N = 10, N2;
-	float Jx = 1;
-	float hx = 0;
-	float kTx = 0.5F;
+	float J = 1;
+	float h = 0;
+	float kT = 0.5F;
 	private int size;
 
 	// System
@@ -39,12 +39,12 @@ public class IsingRender extends PApplet {
 	// private XYChart lineChart;
 	public void setup() {
 		frameRate(60);
-		size(650, 670);
-		lattice = createGraphics(600, 600);
-		info = createGraphics(600, 20);
+		size(1000, 750);
+		lattice = createGraphics(750, 750);
+		info = createGraphics(600, 750);
 		background(0);
 		setupLattice();
-		size = 600 / N;
+		size = 750 / N;
 		S.speed = 1;
 		S.setup(this);
 	}
@@ -53,7 +53,7 @@ public class IsingRender extends PApplet {
 		// N = 4;
 		N2 = N;
 		seed = 0.25;
-		L = new Lattice(N, N2, 1, seed, Jx, hx, kTx);
+		L = new Lattice(N, N2, 1, seed, J, h, kT);
 	}
 
 	/**
@@ -74,9 +74,9 @@ public class IsingRender extends PApplet {
 		switch (tab) {
 		case 0:
 			drawLattice(false);
-			image(lattice, 25, 25);
+			image(lattice, 0, 0);
 			drawInfo();
-			image(info, 0, 0);
+			image(info, 750, 0);
 			tab = 2;
 			// printFlips(0.0001);
 			break;
@@ -102,17 +102,17 @@ public class IsingRender extends PApplet {
 		} else if (event.isFrom("bonds")) {
 			S.BONDS = !S.BONDS;
 			lattice.fill(0);
-			lattice.rect(0, 0, 600, 600);
+			lattice.rect(0, 0, 750, 750);
 			drawLattice(true);
 		} else if (!S.BONDS && event.isFrom("framed")) {
 			S.FRAMED = !S.FRAMED;
 			lattice.fill(0);
-			lattice.rect(0, 0, 600, 600);
+			lattice.rect(0, 0, 750, 750);
 			drawLattice(true);
 		} else if (event.isFrom("energy/J")) {
 			S.NUMBERS = !S.NUMBERS;
 			lattice.fill(0);
-			lattice.rect(0, 0, 600, 600);
+			lattice.rect(0, 0, 750, 750);
 			drawLattice(true);
 		} else if (event.isFrom("+")) {
 			S.speed *= 2;
@@ -120,18 +120,44 @@ public class IsingRender extends PApplet {
 			S.speed /= 2;
 		} else if (event.isFrom("log")) {
 			Log.init(N, N2);
-		} else if (event.isFrom("J")) {
-			Jx = parseFloat(S.cp5.get(Textfield.class, "J").getText());
-			Hamilton.set(Jx, hx, kTx);
-		} else if (event.isFrom("h")) {
-			hx = parseFloat(S.cp5.get(Textfield.class, "h").getText());
-			Hamilton.set(Jx, hx, kTx);
-		} else if (event.isFrom("kT")) {
-			kTx = Math.max(0.0001F, parseFloat(S.cp5.get(Textfield.class, "kT")
+		} else if (event.isFrom("Jx")) {
+			J = parseFloat(S.cp5.get(Textfield.class, "Jx").getText());
+			updateHamilton();
+		} else if (event.isFrom("hx")) {
+			h = parseFloat(S.cp5.get(Textfield.class, "hx").getText());
+			updateHamilton();
+		} else if (event.isFrom("kTx")) {
+			kT = Math.max(0.0001F, parseFloat(S.cp5.get(Textfield.class, "kTx")
 					.getText()));
-			Hamilton.set(Jx, hx, kTx);
+			updateHamilton();
+		} else if (event.isFrom("J+")) {
+			J += 0.1;
+			updateHamilton();
+		} else if (event.isFrom("J-")) {
+			J -= 0.1;
+			updateHamilton();
+		} else if (event.isFrom("h+")) {
+			h += 0.1;
+			updateHamilton();
+		} else if (event.isFrom("h-")) {
+			h -= 0.1;
+			updateHamilton();
+		} else if (event.isFrom("kT+")) {
+			kT += 0.1;
+			updateHamilton();
+		} else if (event.isFrom("kT-")) {
+			kT -= 0.1;
+			updateHamilton();
 		}
 		tab = 0;
+	}
+
+	private void updateHamilton() {
+		S.cp5.get(Textfield.class, "Jx").setValue("" + J);
+		S.cp5.get(Textfield.class, "hx").setValue("" + h);
+		S.cp5.get(Textfield.class, "kTx").setValue("" + kT);
+		Hamilton.set(J, h, kT);
+
 	}
 
 	private void sweep(int n) {
@@ -157,7 +183,7 @@ public class IsingRender extends PApplet {
 	private String stringFlips() { // TODO
 		String out = "";
 		if (play) {
-			out += "ms/" + c + "F: " + time + " ";
+			out += time + "ms, ";
 			out += "(" + (c / (time + 1)) + "F/ms)";
 		}
 		return out;
@@ -171,11 +197,13 @@ public class IsingRender extends PApplet {
 		info.background(0);
 		info.fill(color(255, 255, 255));
 		// String energy = scientific(Hamilton.getE());
-		String energy = "" + Hamilton.getE(); // 123412521 instead of 1.2*10^x
-		String s = L.size[0] + "x" + L.size[1] + ", ";
-		s += "Speed: " + S.speed + ", " + stringFlips() + ", ";
-		s += "E: " + energy + ", E_m: " + Hamilton.E_m;
-		info.text(s, 25, 17);
+		String energy = "" + Hamilton.getE() + '\n'; // 123412521 instead of
+														// 1.2*10^x
+		String s = L.size[0] + "x" + L.size[1] + '\n';
+		s += "Speed: " + S.speed + '\n' + stringFlips() + '\n';
+		s += "E: " + energy + '\n';
+		s += "E_m: " + Hamilton.E_m + '\n';
+		info.text(s, 5, 350);
 		// info.text("", 206, 20);
 		info.endDraw();
 	}
@@ -223,11 +251,12 @@ public class IsingRender extends PApplet {
 						lattice.rect(p.x * size, (p.y + 1) * size, size, -1);
 				}
 			}
+			if (S.FRAMED && recursive)
+				for (Point n : p.near) {
+					drawPoint(n, false);
+				}
 		}
-		if (S.FRAMED && recursive)
-			for (Point n : p.near) {
-				drawPoint(n, false);
-			}
+
 		p.drawn();
 	}
 

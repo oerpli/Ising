@@ -1,7 +1,7 @@
 package Dynamics;
 
 import java.util.HashMap;
-
+import Randoms.R;
 import Model.Hamilton;
 
 public class Metropolis implements I_Accept {
@@ -21,6 +21,6 @@ public class Metropolis implements I_Accept {
 		if (!x.containsKey(diffE)) {
 			x.put(diffE, Math.exp(-diffE * Hamilton.Beta()));
 		}
-		return Math.random() < x.get(diffE);
+		return R.nextDouble() < x.get(diffE);
 	}
 }
