@@ -102,7 +102,7 @@ public class Point {
 	 * Updates the Hamiltonian accordingly.
 	 */
 	public void getNewEnergy() {
-		Algorithm.U.getNewEnergy();
+		Algorithm.U().getNewEnergy();
 	}
 
 	/**

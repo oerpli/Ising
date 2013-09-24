@@ -19,7 +19,7 @@ public class Lattice {
 	// private HashSet<Point> changedPoints = new HashSet<Point>();
 
 	public Lattice(int x, int y, int z, double seed, float J, float h, float kT) {
-		Algorithm.L = this;
+		Algorithm.L(this);
 		size = new int[] { x, y, z };
 		Lattice.D = 0;
 		if (x > 0)
@@ -44,7 +44,7 @@ public class Lattice {
 	}
 
 	public boolean update() {
-		return Algorithm.U.update();
+		return Algorithm.U().update();
 	}
 
 	public Point getRandomPoint() {

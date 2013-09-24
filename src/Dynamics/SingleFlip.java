@@ -22,7 +22,7 @@ public class SingleFlip extends Algorithm {
 		if (p.is(0))
 			return false;
 		p.getNewEnergy();
-		boolean flip = A.accept();
+		boolean flip = A().accept();
 		Hamilton.accept(flip);
 		if (flip)
 			p.acceptFlip();

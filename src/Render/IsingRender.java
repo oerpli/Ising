@@ -33,7 +33,6 @@ public class IsingRender extends PApplet {
 
 	private long time;
 	private int c;
-	private float sign = 0;
 
 	public static long sweeps;
 
@@ -48,7 +47,6 @@ public class IsingRender extends PApplet {
 		size = 600 / N;
 		S.speed = 1;
 		S.setup(this);
-		sign = Math.signum(Hamilton.E_m);
 	}
 
 	private void setupLattice() {
@@ -124,17 +122,14 @@ public class IsingRender extends PApplet {
 			Log.init(N, N2);
 		} else if (event.isFrom("J")) {
 			Jx = parseFloat(S.cp5.get(Textfield.class, "J").getText());
-			Hamilton.setJ(Jx);
-			System.out.println(Hamilton.out());
+			Hamilton.set(Jx, hx, kTx);
 		} else if (event.isFrom("h")) {
 			hx = parseFloat(S.cp5.get(Textfield.class, "h").getText());
-			Hamilton.setH(hx);
-			System.out.println(Hamilton.out());
+			Hamilton.set(Jx, hx, kTx);
 		} else if (event.isFrom("kT")) {
 			kTx = Math.max(0.0001F, parseFloat(S.cp5.get(Textfield.class, "kT")
 					.getText()));
-			Hamilton.setKT(kTx);
-			System.out.println(Hamilton.out());
+			Hamilton.set(Jx, hx, kTx);
 		}
 		tab = 0;
 	}

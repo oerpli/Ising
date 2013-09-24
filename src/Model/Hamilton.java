@@ -39,18 +39,18 @@ public abstract class Hamilton {
 
 	public static void setJ(float J) {
 		Hamilton.J = J;
-		Algorithm.A.clearMap();
+		Algorithm.A().clearMap();
 	}
 
 	public static void setH(float h) {
 		Hamilton.h = h;
-		Algorithm.A.clearMap();
+		Algorithm.A().clearMap();
 	}
 
 	public static void setKT(float kT) {
 		Hamilton.kT = kT;
 		Hamilton.Beta = 1 / kT;
-		Algorithm.A.clearMap();
+		Algorithm.A().clearMap();
 	}
 
 	public static void set(float J, float h, float kT) {

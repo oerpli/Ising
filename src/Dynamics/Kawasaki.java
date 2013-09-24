@@ -16,7 +16,7 @@ public class Kawasaki extends Algorithm {
 		if (p.is(x))
 			return true;
 		p.getNewEnergy();
-		boolean flip = A.accept();
+		boolean flip = A().accept();
 		Hamilton.accept(flip);
 		if (flip)
 			p.kawasakiSwitch(x);
