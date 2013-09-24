@@ -14,7 +14,7 @@ public class DataSet {
 		return "" + T + " " + E + " " + M + '\n';
 	}
 
-	public String toString() {// TODO
+	public String toString() {// TODO DataSet Textoutput
 		return this.log();
 	}
 }

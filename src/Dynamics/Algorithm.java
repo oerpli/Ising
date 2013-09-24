@@ -5,7 +5,8 @@ import Model.Lattice;
 public abstract class Algorithm implements I_Update {
 	protected static Lattice L = Lattice.L;
 	private static I_Accept[] A = { new Metropolis(), new Glauber() };
-	private static I_Update[] U = { new SingleFlip(), new Kawasaki() };
+	private static I_Update[] U = { new SingleFlip(), new Kawasaki(),
+			new Wolff(), new SwendsenWang() };
 	private static int a = 0;
 	private static int u = 0;
 

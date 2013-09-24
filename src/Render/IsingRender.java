@@ -144,10 +144,10 @@ public class IsingRender extends PApplet {
 			updateHamilton();
 		} else if (event.isFrom("kT+")) {
 			kT += 0.1;
-			updateHamilton();
+			updateKT();
 		} else if (event.isFrom("kT-")) {
 			kT -= 0.1;
-			updateHamilton();
+			updateKT();
 		}
 		tab = 0;
 	}
@@ -155,9 +155,12 @@ public class IsingRender extends PApplet {
 	private void updateHamilton() {
 		S.cp5.get(Textfield.class, "Jx").setValue("" + J);
 		S.cp5.get(Textfield.class, "hx").setValue("" + h);
-		S.cp5.get(Textfield.class, "kTx").setValue("" + kT);
-		Hamilton.set(J, h, kT);
+		Hamilton.set(J, h);
+	}
 
+	private void updateKT() {
+		S.cp5.get(Textfield.class, "kTx").setValue("" + kT);
+		Hamilton.setKT(kT);
 	}
 
 	private void sweep(int n) {
@@ -180,7 +183,7 @@ public class IsingRender extends PApplet {
 		tab = 0;
 	}
 
-	private String stringFlips() { // TODO
+	private String stringFlips() { // TODO new Speed output
 		String out = "";
 		if (play) {
 			out += time + "ms, ";
@@ -189,7 +192,7 @@ public class IsingRender extends PApplet {
 		return out;
 	}
 
-	private void drawInfo() {// TODO
+	private void drawInfo() {// TODO new Stats Output
 		info.beginDraw();
 		info.noStroke();
 		info.fill(0);

@@ -22,7 +22,7 @@ public class Kawasaki implements I_Update {
 			p.acceptFlip();
 			x.acceptFlip();
 		}
-		return flip;// TODO
+		return flip;
 	}
 
 	/**

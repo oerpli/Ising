@@ -25,7 +25,7 @@ public class SingleFlip implements I_Update {
 		Hamilton.accept(flip);
 		if (flip)
 			p.acceptFlip();
-		return flip;// TODO
+		return flip;
 	}
 
 	/**

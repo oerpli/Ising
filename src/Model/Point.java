@@ -121,7 +121,7 @@ public class Point {
 	}
 
 	@Override
-	/** //TODO
+	/** //TODO String output of points
 	 * Renders 1 as + and everything else as -
 	 */
 	public String toString() {

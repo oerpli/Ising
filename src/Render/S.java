@@ -31,10 +31,9 @@ public abstract class S {
 
 	public static ControlP5 cp5; // buttons
 
-	private static int b = 0;
 	private static int y = 0;
-	private static int y0 = 5;
-	private static int x0 = 755;
+	private static final int y0 = 5;
+	private static final int x0 = 755;
 
 	static void setup(IsingRender A) {
 		S.cp5 = new ControlP5(A);

@@ -4,18 +4,17 @@ import Dynamics.Algorithm;
 
 /**
  * Static class containing Energy related stuff. For more flexibility
- * (parallelization)maybe shouldn't be static.. // TODO
- * 
+ * (parallelization)maybe shouldn't be static.. // TODO Hamilton instanceable
  * 
  * Beta shouldn't be here i guess. - it's more algorithm (Metropolis Hastings)
- * related than anything else (including energy). // TODO
+ * related than anything else (including energy). // TODO Move Beta out of Hamiltonian
  * 
  * @author oerpli
  * 
  */
 public abstract class Hamilton {
 	protected static float J, h; // Fieldparameters
-	protected static float Beta; // Boltzmann (scaling factor)//TODO
+	protected static float Beta; // Boltzmann (scaling factor)
 	protected static float kT;
 
 	// Energy Values
@@ -24,7 +23,7 @@ public abstract class Hamilton {
 
 	/**
 	 * Changing Energy Values should be private and updated via calls from the
-	 * Lattice. // TODO
+	 * Lattice. // TODO Better E_x_new 
 	 */
 	// public static int plus = 0;
 	public static int E_nn_new = 0;
@@ -37,24 +36,20 @@ public abstract class Hamilton {
 		E_m_new = 0;
 	}
 
-	private static void setJ(float J) {
+	public static void setKT(float kT) {
+		Hamilton.kT = kT;
+		Hamilton.Beta = 1 / kT;
+		Algorithm.A().clearMap();
+	}
+
+	public static void set(float J, float h) {
+		Hamilton.h = h;
 		Hamilton.J = J;
 	}
 
-	private static void setH(float h) {
-		Hamilton.h = h;
-	}
-
-	private static void setKT(float kT) {
-		Hamilton.kT = kT;
-		Hamilton.Beta = 1 / kT;
-	}
-
 	public static void set(float J, float h, float kT) {
-		Hamilton.setJ(J);
-		Hamilton.setH(h);
+		Hamilton.set(J, h);
 		Hamilton.setKT(kT);
-		Algorithm.A().clearMap();
 	}
 
 	public static double getE() { // Energy
