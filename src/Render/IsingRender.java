@@ -15,7 +15,7 @@ public class IsingRender extends PApplet {
 	private double seed;// Seed
 
 	// Renderparameters
-	private int N = 5, N2;
+	private int N = 3, N2;
 	float J = 1;
 	float h = 0;
 	float kT = 0.5F;

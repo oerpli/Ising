@@ -11,6 +11,7 @@ import Model.Hamiltonian;
 class SwendsenWang implements I_Update {
 	ArrayList<ArrayList<Point>> Clusters = new ArrayList<ArrayList<Point>>();
 	char[] c = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+	Point flip;
 
 	public boolean update() {
 		Clusters.clear();
@@ -41,15 +42,21 @@ class SwendsenWang implements I_Update {
 		for (ArrayList<Point> x : Clusters) {
 			int v = (R.nextDouble() > 0.5 ? -1 : 1);
 			for (Point p : x) {
-				if (!p.is(v))
+				if (!p.is(v)) {
+					flip = p;
+					this.getNewEnergy();
 					p.acceptFlip();
+				}
 			}
 		}
 		Clusters.clear();
-		return false;
+		Hamiltonian.accept(true);
+		return true;
 	}
 
 	public void getNewEnergy() {
+		Hamiltonian.E_m_new -= 2 * flip.getV();
+		Hamiltonian.E_nn_new += 4 * flip.getE();
 	}
 
 	/**
@@ -61,7 +68,6 @@ class SwendsenWang implements I_Update {
 	 */
 	private void find() {
 		int i = -1;
-		// long start = System.currentTimeMillis();
 		for (Point p : Algorithm.L.sites) {
 			if (p.c == null) {
 				i++;
@@ -70,7 +76,6 @@ class SwendsenWang implements I_Update {
 				Clusters.add(x);
 			}
 		}
-		// System.out.println(System.currentTimeMillis() - start);
 		System.out.println(Algorithm.L.toStringCluster());
 		for (Point p : Algorithm.L.sites)
 			p.c = null;
