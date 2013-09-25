@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import Model.Hamilton;
+import Model.Hamiltonian;
 import Render.IsingRender;
 import Render.S;
 
@@ -18,15 +18,15 @@ public abstract class Log {
 
 	public static void init(int N, int N2) {
 		if (!log) {
-			String name = "LOG_" + N + "x" + N2 + Hamilton.J() + "-"
-					+ Hamilton.kT() + "_" + System.currentTimeMillis() + ".txt";
+			String name = "LOG_" + N + "x" + N2 + Hamiltonian.J() + "-"
+					+ Hamiltonian.kT() + "_" + System.currentTimeMillis() + ".txt";
 			System.out.println("New Logfile:" + name);
 			try {
 				file = new File(name);
 				W = new FileWriter(file, true);
 				W.write(N + "x" + N2 + '\n');
-				W.write("J=" + Hamilton.J() + ";h=" + Hamilton.h() + ";kT="
-						+ Hamilton.kT() + '\n');
+				W.write("J=" + Hamiltonian.J() + ";h=" + Hamiltonian.h() + ";kT="
+						+ Hamiltonian.kT() + '\n');
 				W.write("t E M\n");
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -42,7 +42,7 @@ public abstract class Log {
 		if (log) {
 			time = IsingRender.sweeps;
 			try {
-				data = new DataSet(time, Hamilton.E_nn, Hamilton.E_m);
+				data = new DataSet(time, Hamiltonian.E_nn, Hamiltonian.E_m);
 				W.write(S.buffer.add(data));
 				// checkTransition();
 				if (time % 1024 == 0) {
@@ -60,7 +60,7 @@ public abstract class Log {
 	 * Halley's Comment
 	 */
 	private static void checkTransition() {
-		if (Math.signum(Hamilton.E_m) == -sign) {
+		if (Math.signum(Hamiltonian.E_m) == -sign) {
 			System.out.println("trans");
 			sign = -sign;
 			S.buffer.event();

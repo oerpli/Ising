@@ -7,15 +7,16 @@ import Dynamics.Algorithm;
  * (parallelization)maybe shouldn't be static.. // TODO Hamilton instanceable
  * 
  * Beta shouldn't be here i guess. - it's more algorithm (Metropolis Hastings)
- * related than anything else (including energy). // TODO Move Beta out of Hamiltonian
+ * related than anything else (including energy). // TODO Move Beta out of
+ * Hamiltonian
  * 
  * @author oerpli
  * 
  */
-public abstract class Hamilton {
+public abstract class Hamiltonian {
 	protected static float J, h; // Fieldparameters
 	protected static float Beta; // Boltzmann (scaling factor)
-	protected static float kT;
+	private static float kT;
 
 	// Energy Values
 	public static int E_nn = 0;// nn - interaction
@@ -23,7 +24,7 @@ public abstract class Hamilton {
 
 	/**
 	 * Changing Energy Values should be private and updated via calls from the
-	 * Lattice. // TODO Better E_x_new 
+	 * Lattice. // TODO Better E_x_new
 	 */
 	// public static int plus = 0;
 	public static int E_nn_new = 0;
@@ -37,19 +38,19 @@ public abstract class Hamilton {
 	}
 
 	public static void setKT(float kT) {
-		Hamilton.kT = kT;
-		Hamilton.Beta = 1 / kT;
-		Algorithm.A().clearMap();
+		Hamiltonian.kT = kT;
+		Hamiltonian.Beta = 1 / kT;
+		Algorithm.clearMap();
 	}
 
 	public static void set(float J, float h) {
-		Hamilton.h = h;
-		Hamilton.J = J;
+		Hamiltonian.h = h;
+		Hamiltonian.J = J;
 	}
 
 	public static void set(float J, float h, float kT) {
-		Hamilton.set(J, h);
-		Hamilton.setKT(kT);
+		Hamiltonian.set(J, h);
+		Hamiltonian.setKT(kT);
 	}
 
 	public static double getE() { // Energy
@@ -57,16 +58,17 @@ public abstract class Hamilton {
 	}
 
 	public static double getDE() {// Energy Difference
+	// System.out.println(-(J * E_nn_new + h * E_m_new)*Beta + " " + E_nn_new);
 		return -(J * E_nn_new + h * E_m_new);
 	}
 
 	public static void accept(boolean flip) {
 		if (flip) {
-			Hamilton.E_nn += Hamilton.E_nn_new;
-			Hamilton.E_m += Hamilton.E_m_new;
+			Hamiltonian.E_nn += Hamiltonian.E_nn_new;
+			Hamiltonian.E_m += Hamiltonian.E_m_new;
 		}
-		Hamilton.E_nn_new = 0;
-		Hamilton.E_m_new = 0;
+		Hamiltonian.E_nn_new = 0;
+		Hamiltonian.E_m_new = 0;
 	}
 
 	public String toString() {
@@ -89,6 +91,10 @@ public abstract class Hamilton {
 	}
 
 	public static double kT() {
+		return kT;
+	}
+
+	public static float getkT() {
 		return kT;
 	}
 }

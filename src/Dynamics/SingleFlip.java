@@ -1,6 +1,6 @@
 package Dynamics;
 
-import Model.Hamilton;
+import Model.Hamiltonian;
 import Model.Point;
 
 /**
@@ -10,8 +10,8 @@ import Model.Point;
  * @author oerpli
  * 
  */
-public class SingleFlip implements I_Update {
-	private static Point p;
+class SingleFlip implements I_Update {
+	private Point p;
 
 	public SingleFlip() {
 	}
@@ -21,8 +21,8 @@ public class SingleFlip implements I_Update {
 		if (p.is(0))
 			return false;
 		getNewEnergy();
-		boolean flip = Algorithm.A().accept();
-		Hamilton.accept(flip);
+		boolean flip = Algorithm.accept();
+		Hamiltonian.accept(flip);
 		if (flip)
 			p.acceptFlip();
 		return flip;
@@ -33,7 +33,7 @@ public class SingleFlip implements I_Update {
 	 * there should be a general approach which can be overriden.
 	 */
 	public void getNewEnergy() {
-		Hamilton.E_m_new -= 2 * p.getV();
-		Hamilton.E_nn_new += 4 * p.getE();
+		Hamiltonian.E_m_new -= 2 * p.getV();
+		Hamiltonian.E_nn_new += 2 * p.getE();
 	}
 }

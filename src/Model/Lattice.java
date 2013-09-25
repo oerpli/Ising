@@ -35,8 +35,8 @@ public class Lattice {
 			sites[i] = new Point(i, this, getXY(i),
 					(byte) (R.nextDouble() < seed ? 1 : -1));
 		}
-		Hamilton.reset();
-		Hamilton.set(J, h, kT);
+		Hamiltonian.reset();
+		Hamiltonian.set(J, h, kT);
 		for (Point p : sites)
 			p.init();
 		for (Point p : sites)
@@ -45,7 +45,7 @@ public class Lattice {
 	}
 
 	public boolean update() {
-		return Algorithm.U().update();
+		return Algorithm.update();
 	}
 
 	public Point getRandomPoint() {

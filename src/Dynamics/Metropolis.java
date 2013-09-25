@@ -2,10 +2,10 @@ package Dynamics;
 
 import java.util.HashMap;
 import Randoms.R;
-import Model.Hamilton;
+import Model.Hamiltonian;
 
-public class Metropolis implements I_Accept {
-	private static HashMap<Double, Double> x = new HashMap<Double, Double>();
+class Metropolis implements I_Accept {
+	private HashMap<Double, Double> x = new HashMap<Double, Double>();
 
 	public Metropolis() {
 	}
@@ -15,11 +15,12 @@ public class Metropolis implements I_Accept {
 	}
 
 	public boolean accept() {
-		double diffE = Hamilton.getDE();
+		double diffE = Hamiltonian.getDE();
 		if (diffE <= 0)
 			return true;
 		if (!x.containsKey(diffE)) {
-			x.put(diffE, Math.exp(-diffE * Hamilton.Beta()));
+			x.put(diffE, Math.exp(-diffE * Hamiltonian.Beta()));
+			System.out.println(Hamiltonian.getkT() + " " + diffE + " " + x.get(diffE));
 		}
 		return R.nextDouble() < x.get(diffE);
 	}

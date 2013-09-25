@@ -1,15 +1,12 @@
 package Render;
 
 import processing.core.*;
-import Model.Hamilton;
-import Model.Lattice;
-import Model.Point;
+import Model.*;
 import Data.*;
 import controlP5.*;
 
 public class IsingRender extends PApplet {
 	private static final long serialVersionUID = -1664637672574501774L;
-
 	// Physics:
 	// private float J; // Coupling Constant
 	// private float h; // Field
@@ -17,7 +14,7 @@ public class IsingRender extends PApplet {
 	private double seed;// Seed
 
 	// Renderparameters
-	private int N = 10, N2;
+	private int N = 100, N2;
 	float J = 1;
 	float h = 0;
 	float kT = 0.5F;
@@ -97,7 +94,7 @@ public class IsingRender extends PApplet {
 			drawLattice(true);
 		} else if (!play && event.isFrom("sweep")) {
 			sweep(1);
-		} else if (!play && event.isFrom("flip")) {
+		} else if (!play && event.isFrom("update")) {
 			flip(1);
 		} else if (event.isFrom("bonds")) {
 			S.BONDS = !S.BONDS;
@@ -129,7 +126,7 @@ public class IsingRender extends PApplet {
 		} else if (event.isFrom("kTx")) {
 			kT = Math.max(0.0001F, parseFloat(S.cp5.get(Textfield.class, "kTx")
 					.getText()));
-			updateHamilton();
+			updateKT();
 		} else if (event.isFrom("J+")) {
 			J += 0.1;
 			updateHamilton();
@@ -155,12 +152,12 @@ public class IsingRender extends PApplet {
 	private void updateHamilton() {
 		S.cp5.get(Textfield.class, "Jx").setValue("" + J);
 		S.cp5.get(Textfield.class, "hx").setValue("" + h);
-		Hamilton.set(J, h);
+		Hamiltonian.set(J, h);
 	}
 
 	private void updateKT() {
 		S.cp5.get(Textfield.class, "kTx").setValue("" + kT);
-		Hamilton.setKT(kT);
+		Hamiltonian.setKT(kT);
 	}
 
 	private void sweep(int n) {
@@ -200,12 +197,12 @@ public class IsingRender extends PApplet {
 		info.background(0);
 		info.fill(color(255, 255, 255));
 		// String energy = scientific(Hamilton.getE());
-		String energy = "" + Hamilton.getE() + '\n'; // 123412521 instead of
+		String energy = "" + Hamiltonian.getE() + '\n'; // 123412521 instead of
 														// 1.2*10^x
 		String s = L.size[0] + "x" + L.size[1] + '\n';
 		s += "Speed: " + S.speed + '\n' + stringFlips() + '\n';
 		s += "E: " + energy + '\n';
-		s += "E_m: " + Hamilton.E_m + '\n';
+		s += "E_m: " + Hamiltonian.E_m + '\n';
 		info.text(s, 5, 350);
 		// info.text("", 206, 20);
 		info.endDraw();

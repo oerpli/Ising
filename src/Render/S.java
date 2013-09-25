@@ -71,7 +71,7 @@ public abstract class S {
 	public static void Field(IsingRender A, String n) {
 		S.cp5.addTextfield(n + "x").setPosition(x0 + 1, y0 + 21 * ++y)
 				.setSize(97, 20).setAutoClear(false)
-				.setValue("" + Hamilton.kT()).setInputFilter(0)
+				.setValue("" + Hamiltonian.kT()).setInputFilter(0)
 				.setFont(A.createFont("arial", 15)).getCaptionLabel()
 				.align(ControlP5.RIGHT, ControlP5.CENTER).set(n);
 		S.cp5.addBang(n + '+').setPosition(x0 + 100, y0 + 21 * y)

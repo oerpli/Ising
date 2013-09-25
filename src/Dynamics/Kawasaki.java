@@ -1,11 +1,11 @@
 package Dynamics;
 
-import Model.Hamilton;
+import Model.Hamiltonian;
 import Model.Point;
 import Randoms.R;
 
-public class Kawasaki implements I_Update {
-	private static Point p, x;
+class Kawasaki implements I_Update {
+	private Point p, x;
 
 	public Kawasaki() {
 	}
@@ -16,8 +16,8 @@ public class Kawasaki implements I_Update {
 		if (p.is(x))
 			return true;
 		getNewEnergy();
-		boolean flip = Algorithm.A().accept();
-		Hamilton.accept(flip);
+		boolean flip = Algorithm.accept();
+		Hamiltonian.accept(flip);
 		if (flip) {
 			p.acceptFlip();
 			x.acceptFlip();
@@ -30,6 +30,6 @@ public class Kawasaki implements I_Update {
 	 * there should be a general approach which can be overriden.
 	 */
 	public void getNewEnergy() {
-		Hamilton.E_nn_new = 4 * (p.getE() + x.getE()) - 8;
+		Hamiltonian.E_nn_new = 4 * (p.getE() + x.getE()) - 8;
 	}
 }

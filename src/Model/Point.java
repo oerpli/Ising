@@ -46,8 +46,8 @@ public class Point {
 	 * Updates the Hamiltonian accordingly.
 	 */
 	protected void initEnergy() {
-		Hamilton.E_m += v;
-		Hamilton.E_nn += v * S;
+		Hamiltonian.E_m += v;
+		Hamiltonian.E_nn += v * S;
 	}
 
 	/**
