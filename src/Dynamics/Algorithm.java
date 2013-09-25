@@ -8,7 +8,7 @@ public abstract class Algorithm {
 	private static I_Update[] U = { new SingleFlip(), new Kawasaki(),
 			new SwendsenWang() };
 	private static int a = 0;
-	private static int u = 0;
+	private static int u = 2;
 
 	public Algorithm() {
 	}
@@ -16,10 +16,6 @@ public abstract class Algorithm {
 	public static void L(Lattice L) {
 		if (L != null)
 			Algorithm.L = L;
-	}
-
-	public static void find() {
-		U[2].update();
 	}
 
 	public static boolean update() {

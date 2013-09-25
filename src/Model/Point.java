@@ -1,7 +1,5 @@
 package Model;
 
-import java.util.ArrayList;
-
 public class Point {
 	public static Lattice L;
 	private byte v; // value
@@ -12,18 +10,8 @@ public class Point {
 	private boolean draw = true, drawnumber = true; // changed
 
 	public Point c = null;
-
-	public void find(ArrayList<Point> x) {
-		if (c == null)
-			c = this;
-		for (Point p : near) {
-			if (this.is(p) && p.c == null) {
-				p.c = this.c;
-				p.find(x);
-			}
-		}
-		x.add(this);
-	}
+	public boolean[] virtualbonds = new boolean[4];
+	public char cluster;
 
 	protected Point(int index, Lattice L, int[] xyz, byte v) {
 		this.index = index;
@@ -150,6 +138,10 @@ public class Point {
 		else
 			return "?";// "¿";
 		// return "" + v;
+	}
+
+	public char toStringCluster() {
+		return cluster;
 	}
 
 	/**

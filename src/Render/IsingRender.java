@@ -15,7 +15,7 @@ public class IsingRender extends PApplet {
 	private double seed;// Seed
 
 	// Renderparameters
-	private int N = 100, N2;
+	private int N = 5, N2;
 	float J = 1;
 	float h = 0;
 	float kT = 0.5F;
@@ -93,7 +93,6 @@ public class IsingRender extends PApplet {
 			Stop();
 			setupLattice();
 			drawLattice(true);
-			Algorithm.find();
 		} else if (!play && event.isFrom("sweep")) {
 			sweep(1);
 		} else if (!play && event.isFrom("update")) {
