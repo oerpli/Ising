@@ -1,6 +1,6 @@
 package Model;
 
-import Randoms.*;
+import Randoms.R;
 import Dynamics.Algorithm;
 
 /**

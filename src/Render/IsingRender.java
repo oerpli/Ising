@@ -1,5 +1,6 @@
 package Render;
 
+import Dynamics.Algorithm;
 import processing.core.*;
 import Model.*;
 import Data.*;
@@ -92,6 +93,7 @@ public class IsingRender extends PApplet {
 			Stop();
 			setupLattice();
 			drawLattice(true);
+			Algorithm.find();
 		} else if (!play && event.isFrom("sweep")) {
 			sweep(1);
 		} else if (!play && event.isFrom("update")) {

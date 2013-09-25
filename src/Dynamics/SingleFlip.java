@@ -34,6 +34,6 @@ class SingleFlip implements I_Update {
 	 */
 	public void getNewEnergy() {
 		Hamiltonian.E_m_new -= 2 * p.getV();
-		Hamiltonian.E_nn_new += 2 * p.getE();
+		Hamiltonian.E_nn_new += 4 * p.getE();
 	}
 }

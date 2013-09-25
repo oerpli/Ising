@@ -18,6 +18,10 @@ public abstract class Algorithm {
 			Algorithm.L = L;
 	}
 
+	public static void find() {
+		U[2].update();
+	}
+
 	public static boolean update() {
 		return U[u].update();
 	}

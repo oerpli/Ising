@@ -1,13 +1,29 @@
 package Model;
 
+import java.util.ArrayList;
+
 public class Point {
 	public static Lattice L;
 	private byte v; // value
 	public final int x, y, z;
 	public Point[] near = new Point[Lattice.D * 2];
-	private final int index;
+	public final int index;
 	private int S; // Sum of nearby v- values.
 	private boolean draw = true, drawnumber = true; // changed
+
+	public Point c = null;
+
+	public void find(ArrayList<Point> x) {
+		if (c == null)
+			c = this;
+		for (Point p : near) {
+			if (this.is(p) && p.c == null) {
+				p.c = this.c;
+				p.find(x);
+			}
+		}
+		x.add(this);
+	}
 
 	protected Point(int index, Lattice L, int[] xyz, byte v) {
 		this.index = index;
