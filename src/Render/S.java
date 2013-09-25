@@ -45,9 +45,9 @@ public abstract class S {
 		S.cp5.addBang("log").setPosition(x0 + 125, y0).setSize(24, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 
-		S.cp5.addBang("update").setPosition(x0, y0 + 21 * y).setSize(49, 20)
+		S.cp5.addBang("sweep").setPosition(x0, y0 + 21 * y).setSize(49, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("sweep").setPosition(x0 + 50, y0 + 21 * y)
+		S.cp5.addBang("flip").setPosition(x0 + 50, y0 + 21 * y)
 				.setSize(49, 20).getCaptionLabel()
 				.align(ControlP5.CENTER, ControlP5.CENTER);
 		S.cp5.addBang("+").setPosition(x0 + 100, y0 + 21 * y).setSize(24, 20)

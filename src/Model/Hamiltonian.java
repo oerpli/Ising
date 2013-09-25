@@ -58,17 +58,19 @@ public abstract class Hamiltonian {
 	}
 
 	public static double getDE() {// Energy Difference
-	// System.out.println(-(J * E_nn_new + h * E_m_new)*Beta + " " + E_nn_new);
+		// System.out.println(-(J * E_nn_new + h * E_m_new)*Beta + " " +
+		// E_nn_new);
 		return -(J * E_nn_new + h * E_m_new);
 	}
 
-	public static void accept(boolean flip) {
+	public static boolean accept(boolean flip) {
 		if (flip) {
 			Hamiltonian.E_nn += Hamiltonian.E_nn_new;
 			Hamiltonian.E_m += Hamiltonian.E_m_new;
 		}
 		Hamiltonian.E_nn_new = 0;
 		Hamiltonian.E_m_new = 0;
+		return flip;
 	}
 
 	public String toString() {

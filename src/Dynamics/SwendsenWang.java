@@ -9,36 +9,24 @@ import Model.Hamiltonian;
  * Cluster algorithm
  */
 class SwendsenWang implements I_Update {
-	ArrayList<ArrayList<Point>> Clusters = new ArrayList<ArrayList<Point>>();
-	char[] c = "abcdefghijklmnopqrstuvwxyz".toCharArray();
-	Point flip;
+	private ArrayList<ArrayList<Point>> Clusters = new ArrayList<ArrayList<Point>>();
+	private Point flip;
 
 	public boolean update() {
+		long start = System.currentTimeMillis();
 		Clusters.clear();
-		find();
+		findClusters();
 		for (ArrayList<Point> x : Clusters) {
 			for (Point p : x) {
-				if (p.bond(0)) {
-					if (R.nextDouble() > Math.exp(-2 * Hamiltonian.Beta())) {
-						p.virtualbonds[0] = true;
-						p.near[0].virtualbonds[1] = true;
-					} else {
-						p.virtualbonds[0] = false;
-						p.near[0].virtualbonds[1] = false;
-					}
-				}
-				if (p.bond(2)) {// unrolled loop basically
-					if (R.nextDouble() > Math.exp(-2 * Hamiltonian.Beta())) {
-						p.virtualbonds[2] = true;
-						p.near[2].virtualbonds[3] = true;
-					} else {
-						p.virtualbonds[2] = false;
-						p.near[2].virtualbonds[3] = false;
-					}
-				}
+				boolean z = p.bond(0) && Algorithm.accept();
+				p.virtualbonds[0] = z;
+				p.near[0].virtualbonds[1] = z;
+				z = p.bond(2) && Algorithm.accept();
+				p.virtualbonds[2] = z;
+				p.near[2].virtualbonds[3] = z;
 			}
 		}
-		findV();
+		findVirtualClusters();
 		for (ArrayList<Point> x : Clusters) {
 			int v = (R.nextDouble() > 0.5 ? -1 : 1);
 			for (Point p : x) {
@@ -50,7 +38,7 @@ class SwendsenWang implements I_Update {
 			}
 		}
 		Clusters.clear();
-		Hamiltonian.accept(true);
+		System.out.println(System.currentTimeMillis() - start);
 		return true;
 	}
 
@@ -66,57 +54,51 @@ class SwendsenWang implements I_Update {
 	 * BF would be better for huge clusters - currently limited at approx. 20k
 	 * sites due to stacksize.
 	 */
-	private void find() {
-		int i = -1;
+	private void findClusters() {
 		for (Point p : Algorithm.L.sites) {
 			if (p.c == null) {
-				i++;
 				ArrayList<Point> x = new ArrayList<Point>();
-				find(x, p, i);
+				findCluster(x, p);
 				Clusters.add(x);
 			}
 		}
-		System.out.println(Algorithm.L.toStringCluster());
 		for (Point p : Algorithm.L.sites)
 			p.c = null;
 	}
 
-	private void find(ArrayList<Point> x, Point p, int i) {
-		p.cluster = c[i];
+	private void findCluster(ArrayList<Point> x, Point p) {
 		if (p.c == null)
 			p.c = p;
 		for (Point n : p.near) {
 			if (p.is(n) && n.c == null) {
 				n.c = p.c;
-				find(x, n, i);
+				findCluster(x, n);
 			}
 		}
 		x.add(p);
 	}
 
-	private void findV() {
-		int i = -1;
+	// alternativ suche über vorhandene cluster und direkt ändern nach jedem
+	// cluster. wäre schneller. weniger code recycling.
+	private void findVirtualClusters() {
 		for (Point p : Algorithm.L.sites) {
 			if (p.c == null) {
-				i++;
 				ArrayList<Point> x = new ArrayList<Point>();
-				findV(x, p, i);
+				findVirtualCluster(x, p);
 				Clusters.add(x);
 			}
 		}
-		System.out.println(Algorithm.L.toStringCluster());
 		for (Point p : Algorithm.L.sites)
 			p.c = null;
 	}
 
-	private void findV(ArrayList<Point> x, Point p, int C) {
-		p.cluster = c[C];
+	private void findVirtualCluster(ArrayList<Point> x, Point p) {
 		if (p.c == null)
 			p.c = p;
 		for (int i = 0; i < p.near.length; i++) {
 			if (p.virtualbonds[i] && p.near[i].c == null) {
 				p.near[i].c = p.c;
-				findV(x, p.near[i], C);
+				findVirtualCluster(x, p.near[i]);
 			}
 		}
 		x.add(p);

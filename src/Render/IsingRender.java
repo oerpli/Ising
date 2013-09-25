@@ -15,7 +15,7 @@ public class IsingRender extends PApplet {
 	private double seed;// Seed
 
 	// Renderparameters
-	private int N = 3, N2;
+	private int N = 100, N2;
 	float J = 1;
 	float h = 0;
 	float kT = 0.5F;
@@ -95,8 +95,8 @@ public class IsingRender extends PApplet {
 			drawLattice(true);
 		} else if (!play && event.isFrom("sweep")) {
 			sweep(1);
-		} else if (!play && event.isFrom("update")) {
-			flip(1);
+		} else if (!play && event.isFrom("flip")) {
+			Algorithm.flip();
 		} else if (event.isFrom("bonds")) {
 			S.BONDS = !S.BONDS;
 			lattice.fill(0);
@@ -165,9 +165,11 @@ public class IsingRender extends PApplet {
 		time = -System.currentTimeMillis();
 		this.c = L.N * n;
 		for (int i = 0; i < n; i++) {
-			flip(L.N);
+			L.update();
+			Log.log();
 			sweeps += 1;
 		}
+		tab = 0;
 		time += System.currentTimeMillis();
 
 	}

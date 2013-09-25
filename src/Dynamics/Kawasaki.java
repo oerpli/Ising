@@ -17,7 +17,6 @@ class Kawasaki implements I_Update {
 			return true;
 		getNewEnergy();
 		boolean flip = Algorithm.accept();
-		Hamiltonian.accept(flip);
 		if (flip) {
 			p.acceptFlip();
 			x.acceptFlip();
