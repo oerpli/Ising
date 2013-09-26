@@ -10,15 +10,15 @@ import Model.Hamiltonian;
  */
 class SwendsenWang implements I_Update {
 	private ArrayList<ArrayList<Point>> Clusters = new ArrayList<ArrayList<Point>>();
-	private Point flip;
+	private Point g;
 
 	public boolean update() {
-		long start = System.currentTimeMillis();
 		Clusters.clear();
 		findClusters();
+		boolean z;
 		for (ArrayList<Point> x : Clusters) {
 			for (Point p : x) {
-				boolean z = p.bond(0) && Algorithm.accept();
+				z = p.bond(0) && Algorithm.accept();
 				p.virtualbonds[0] = z;
 				p.near[0].virtualbonds[1] = z;
 				z = p.bond(2) && Algorithm.accept();
@@ -31,20 +31,19 @@ class SwendsenWang implements I_Update {
 			int v = (R.nextDouble() > 0.5 ? -1 : 1);
 			for (Point p : x) {
 				if (!p.is(v)) {
-					flip = p;
+					g = p;
 					this.getNewEnergy();
 					p.acceptFlip();
 				}
 			}
 		}
 		Clusters.clear();
-		System.out.println(System.currentTimeMillis() - start);
 		return true;
 	}
 
 	public void getNewEnergy() {
-		Hamiltonian.E_m_new -= 2 * flip.getV();
-		Hamiltonian.E_nn_new += 4 * flip.getE();
+		Hamiltonian.E_m_new -= 2 * g.getV();
+		Hamiltonian.E_nn_new += 4 * g.getE();
 	}
 
 	/**
