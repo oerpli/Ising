@@ -18,10 +18,10 @@ class SwendsenWang implements I_Update {
 		boolean z;
 		for (ArrayList<Point> x : Clusters) {
 			for (Point p : x) {
-				z = p.bond(0) && Algorithm.accept();
+				z = p.bond(0) && Algorithm.accept(2);// 2 = Cluster()
 				p.virtualbonds[0] = z;
 				p.near[0].virtualbonds[1] = z;
-				z = p.bond(2) && Algorithm.accept();
+				z = p.bond(2) && Algorithm.accept(2);// 2 = Cluster()
 				p.virtualbonds[2] = z;
 				p.near[2].virtualbonds[3] = z;
 			}

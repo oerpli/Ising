@@ -18,7 +18,7 @@ class Glauber implements I_Accept {
 	public boolean accept() {
 		double diffE = Hamiltonian.getDE();
 		if (!x.containsKey(diffE)) {
-			x.put(diffE, 1 / (1 + Math.exp(diffE * Hamiltonian.Beta())));
+			x.put(diffE, 1 / (1 + Math.exp(diffE * Hamiltonian.Beta()/2)));
 		}
 		return R.nextDouble() < x.get(diffE);
 	}

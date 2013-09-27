@@ -21,7 +21,6 @@ public abstract class S {
 	public static final float[] bon = new float[] { h, h, h };
 	public static final float[] boff = new float[] { d, d, d };
 
-	public static EventBuffer buffer = new EventBuffer(50);
 	public static boolean BONDS = true;
 	public static boolean NUMBERS = false;
 	public static boolean FRAMED = false; // red frames

@@ -4,13 +4,14 @@ import Model.Hamiltonian;
 import Model.Lattice;
 
 public abstract class Algorithm {
-	protected static Lattice L = Lattice.L;
-	private static I_Accept[] A = { new Metropolis(), new Glauber(),
+	private final static I_Accept[] A = { new Metropolis(), new Glauber(),
 			new Cluster() };
-	private static I_Update[] U = { new SingleFlip(), new Kawasaki(),
+	private final static I_Update[] U = { new SingleFlip(), new Kawasaki(),
 			new SwendsenWang() };
-	private static int a = 2;
-	private static int u = 2;
+
+	protected static Lattice L = Lattice.L;
+	private static int a = 0;
+	private static int u = 0;
 
 	public Algorithm() {
 	}
@@ -37,8 +38,12 @@ public abstract class Algorithm {
 		return true;
 	}
 
-	protected static boolean accept() {
+	protected static boolean accept(int a) {
 		return A[a].accept();
+	}
+
+	protected static boolean accept() {
+		return accept(a);
 	}
 
 	public static void clearMap() {
@@ -46,12 +51,28 @@ public abstract class Algorithm {
 			a.clearMap();
 	}
 
-	public static void switchUpdate() {
-		u = 1 - u;
+	public static String String() {
+		String s = "";
+		switch (u) {
+		case 0:
+			s += "mh";
+			break;
+		case 1:
+			s += "ks";
+			break;
+		case 2:
+			s += "sw";
+			break;
+		}
+		if (u < 2)
+			switch (a) {
+			case 0:
+				s += "-m";
+				break;
+			case 1:
+				s += "-g";
+				break;
+			}
+		return s;
 	}
-
-	public static void switchAccept() {
-		a = 1 - a;
-	}
-
 }

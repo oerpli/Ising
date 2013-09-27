@@ -12,20 +12,22 @@ public class IsingRender extends PApplet {
 	// private float J; // Coupling Constant
 	// private float h; // Field
 	// private float kT;// Temperature
-	private double seed;// Seed
+	private static double seed;// Seed
 
 	// Renderparameters
-	private int N = 100, N2;
-	float J = 1;
-	float h = 0;
-	float kT = 0.5F;
-	private int size;
+	private static int N = 50;
+	private static int N2;
+	static float J = 1;
+	static float h = 0;
+	static float kT = 2F;
+	private static int size;
 
 	// System
-	private PGraphics lattice, info; // chart_bg,chart
-	private boolean play = false;
+	private static PGraphics lattice; // chart_bg,chart
+	private PGraphics info;
+	private static boolean play = false;
 
-	Lattice L;
+	static Lattice L;
 	private int tab = 0;
 	// private long calced = 0;
 
@@ -45,9 +47,11 @@ public class IsingRender extends PApplet {
 		size = 750 / N;
 		S.speed = 1;
 		S.setup(this);
+		updateHamilton();
+		updateKT();
 	}
 
-	private void setupLattice() {
+	private static void setupLattice() {
 		// N = 4;
 		N2 = N;
 		seed = 0.25;
@@ -57,14 +61,14 @@ public class IsingRender extends PApplet {
 	/**
 	 * Stop simulation
 	 */
-	public void Stop() {
+	public static void Stop() {
 		play = false;
 	}
 
 	/**
 	 * Toggle simulation.
 	 */
-	public void Pause() {
+	public void PlayPause() {
 		play = !play;
 	}
 
@@ -83,16 +87,19 @@ public class IsingRender extends PApplet {
 			sweep(S.speed);
 	}
 
+	public static void reset() {
+		Stop();
+		sweeps = 0;
+		setupLattice();
+		setupLattice();
+		drawLattice(true);
+	}
+
 	public void controlEvent(ControlEvent event) {
 		if (event.isFrom("play/pause")) {
-			Pause();
+			PlayPause();
 		} else if (event.isFrom("reset")) {
-			S.speed = 1;
-			sweeps = 0;
-			// calced = 0;
-			Stop();
-			setupLattice();
-			drawLattice(true);
+			reset();
 		} else if (!play && event.isFrom("sweep")) {
 			sweep(1);
 		} else if (!play && event.isFrom("flip")) {
@@ -117,7 +124,7 @@ public class IsingRender extends PApplet {
 		} else if (event.isFrom("-") && S.speed > 1) {
 			S.speed /= 2;
 		} else if (event.isFrom("log")) {
-			Log.init(N, N2);
+			Log.init(L.size[0], L.size[1]);
 		} else if (event.isFrom("Jx")) {
 			J = parseFloat(S.cp5.get(Textfield.class, "Jx").getText());
 			updateHamilton();
@@ -165,9 +172,12 @@ public class IsingRender extends PApplet {
 		time = -System.currentTimeMillis();
 		this.c = L.N * n;
 		for (int i = 0; i < n; i++) {
+			if (!play)
+				break;
 			L.update();
 			Log.log();
 			sweeps += 1;
+
 		}
 		tab = 0;
 		time += System.currentTimeMillis();
@@ -217,7 +227,7 @@ public class IsingRender extends PApplet {
 	// return out;
 	// }
 
-	private void drawLattice(boolean drawAll) {
+	private static void drawLattice(boolean drawAll) {
 		lattice.beginDraw();
 		lattice.noStroke();
 		lattice.textSize(16);
@@ -231,7 +241,7 @@ public class IsingRender extends PApplet {
 		lattice.endDraw();
 	}
 
-	private void drawPoint(Point p, boolean recursive) {
+	private static void drawPoint(Point p, boolean recursive) {
 		int x = p.getV() + 1;// map v-values to color-array (-1,0,1 -> 0,1,2);
 		if (S.BONDS) {
 			lattice.fill(S.c[x][0], S.c[x][1], S.c[x][2]);
@@ -263,7 +273,7 @@ public class IsingRender extends PApplet {
 		p.drawn();
 	}
 
-	private void drawBonds(Point p, boolean recursive) {
+	private static void drawBonds(Point p, boolean recursive) {
 		drawBondColor(p, 0);
 		lattice.rect((p.x - 0.25F) * size, (p.y + 0.45F) * size, size / 2,
 				size / 10);
@@ -294,14 +304,14 @@ public class IsingRender extends PApplet {
 		}
 	}
 
-	private void drawBondColor(Point p, int i) {
+	private static void drawBondColor(Point p, int i) {
 		if (p.bond(i))
 			lattice.fill(S.bon[0], S.bon[1], S.bon[2]);
 		else
 			lattice.fill(S.boff[0], S.boff[1], S.boff[2]);
 	}
 
-	private void drawNumber(Point p) {
+	private static void drawNumber(Point p) {
 		lattice.fill(0, 0, 0);
 		lattice.text(p.getSV(), p.x * size + size / 3, p.y * size + size * 0.6F);
 	}
