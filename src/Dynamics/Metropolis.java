@@ -19,7 +19,7 @@ class Metropolis implements I_Accept {
 		if (diffE <= 0)
 			return true;
 		if (!x.containsKey(diffE)) {
-			x.put(diffE, Math.exp(-diffE * Hamiltonian.Beta()/2));
+			x.put(diffE, Math.exp(-diffE * Hamiltonian.Beta()));
 //			System.out.println(Hamiltonian.getkT() + " " + diffE + " " + x.get(diffE));
 		}
 		return R.nextDouble() < x.get(diffE);

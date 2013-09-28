@@ -11,7 +11,8 @@ public class Point {
 
 	public Point c = null;
 	public boolean[] virtualbonds = new boolean[4];
-	public char cluster;
+
+	// public char cluster;
 
 	protected Point(int index, Lattice L, int[] xyz, byte v) {
 		this.index = index;
@@ -51,7 +52,15 @@ public class Point {
 	 */
 	protected void initEnergy() {
 		Hamiltonian.E_m += v;
-		Hamiltonian.E_nn += v * S;
+		Hamiltonian.E_nn += v * S / 2;
+	}
+
+	public int getE() {
+		return -v * S / 2;
+	}
+
+	public String getSV() {
+		return (S * v > 0 ? "" : " ") + -(v * S / 2);
 	}
 
 	/**
@@ -63,10 +72,6 @@ public class Point {
 
 	public int getS() {
 		return S;
-	}
-
-	public int getE() {
-		return -v * S;
 	}
 
 	/**
@@ -93,6 +98,8 @@ public class Point {
 		for (Point p : near) {
 			p.receive(v);
 		}
+		// near[0].receive(v);
+		// near[2].receive(v);
 	}
 
 	private void receive(int n) {
@@ -120,10 +127,6 @@ public class Point {
 		this.broadcast(2 * v);
 	}
 
-	public String getSV() {
-		return (S * v > 0 ? "" : " ") + -(S * v);
-	}
-
 	@Override
 	/** //TODO String output of points
 	 * Renders 1 as + and everything else as -
@@ -140,9 +143,9 @@ public class Point {
 		// return "" + v;
 	}
 
-	public char toStringCluster() {
-		return cluster;
-	}
+	// public char toStringCluster() {
+	// return cluster;
+	// }
 
 	/**
 	 * @return true if Point needs to be drawn again.

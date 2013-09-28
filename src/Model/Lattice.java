@@ -103,12 +103,12 @@ public class Lattice {
 		return s.toString();
 	}
 
-	public String toStringCluster() {
-		StringBuffer s = new StringBuffer();
-		for (Point p : sites) {
-			s.append(p.toStringCluster());
-			s.append((p.x == size[0] - 1 ? '\n' : ""));
-		}
-		return s.toString();
-	}
+	// public String toStringCluster() {
+	// StringBuffer s = new StringBuffer();
+	// for (Point p : sites) {
+	// s.append(p.toStringCluster());
+	// s.append((p.x == size[0] - 1 ? '\n' : ""));
+	// }
+	// return s.toString();
+	// }
 }

@@ -1,10 +1,15 @@
 package Render;
 
 import java.text.DecimalFormat;
-import Data.*;
-import Model.*;
 
+import processing.core.PApplet;
+import Data.Log;
+import Dynamics.Algorithm;
+import Model.Hamiltonian;
+
+import controlP5.ControlEvent;
 import controlP5.ControlP5;
+import controlP5.Textfield;
 
 public abstract class S {
 	// Text Output
@@ -33,8 +38,10 @@ public abstract class S {
 	private static int y = 0;
 	private static final int y0 = 5;
 	private static final int x0 = 755;
+	public static IsingRender R;
 
 	static void setup(IsingRender A) {
+		R = A;
 		S.cp5 = new ControlP5(A);
 		S.cp5.addBang("play/pause").setPosition(x0, y0).setSize(74, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
@@ -46,9 +53,8 @@ public abstract class S {
 
 		S.cp5.addBang("sweep").setPosition(x0, y0 + 21 * y).setSize(49, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("flip").setPosition(x0 + 50, y0 + 21 * y)
-				.setSize(49, 20).getCaptionLabel()
-				.align(ControlP5.CENTER, ControlP5.CENTER);
+		S.cp5.addBang("flip").setPosition(x0 + 50, y0 + 21 * y).setSize(49, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 		S.cp5.addBang("+").setPosition(x0 + 100, y0 + 21 * y).setSize(24, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 		S.cp5.addBang("-").setPosition(x0 + 125, y0 + 21 * y++).setSize(24, 20)
@@ -62,16 +68,27 @@ public abstract class S {
 		S.cp5.addBang("energy/J").setPosition(x0 + 100, y0 + 21 * y++)
 				.setSize(49, 20).getCaptionLabel()
 				.align(ControlP5.CENTER, ControlP5.CENTER);
-		Field(A, "J");
-		Field(A, "h");
-		Field(A, "kT");
+		Field("J");
+		Field("h");
+		Field("kT");
+		y++;
+		S.cp5.addBang("SF").setPosition(x0, y0 + 21 * ++y).setSize(49, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+		S.cp5.addBang("KS").setPosition(x0 + 50, y0 + 21 * y).setSize(49, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+		S.cp5.addBang("M").setPosition(x0 + 100, y0 + 21 * y).setSize(24, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+		S.cp5.addBang("G").setPosition(x0 + 125, y0 + 21 * y++).setSize(24, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+		S.cp5.addBang("SW").setPosition(x0, y0 + 21 * ++y).setSize(49, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 	}
 
-	public static void Field(IsingRender A, String n) {
+	public static void Field(String n) {
 		S.cp5.addTextfield(n + "x").setPosition(x0 + 1, y0 + 21 * ++y)
 				.setSize(97, 20).setAutoClear(false)
 				.setValue("" + Hamiltonian.kT()).setInputFilter(0)
-				.setFont(A.createFont("arial", 15)).getCaptionLabel()
+				.setFont(R.createFont("arial", 15)).getCaptionLabel()
 				.align(ControlP5.RIGHT, ControlP5.CENTER).set(n);
 		S.cp5.addBang(n + '+').setPosition(x0 + 100, y0 + 21 * y)
 				.setSize(24, 20).getCaptionLabel().set("+")
@@ -79,5 +96,78 @@ public abstract class S {
 		S.cp5.addBang(n + '-').setPosition(x0 + 125, y0 + 21 * y)
 				.setSize(24, 20).getCaptionLabel().set("-")
 				.align(ControlP5.CENTER, ControlP5.CENTER);
+	}
+
+	public static void controlEvent(ControlEvent event) {
+		if (event.isFrom("play/pause")) {
+			R.PlayPause();
+		} else if (event.isFrom("reset")) {
+			R.reset();
+		} else if (!IsingRender.play && event.isFrom("sweep")) {
+			R.sweep(1);
+		} else if (!IsingRender.play && event.isFrom("flip")) {
+			Algorithm.flip();
+		} else if (event.isFrom("bonds")) {
+			S.BONDS = !S.BONDS;
+			R.lattice.fill(0);
+			R.lattice.rect(0, 0, 750, 750);
+			R.drawLattice(true);
+		} else if (!S.BONDS && event.isFrom("framed")) {
+			S.FRAMED = !S.FRAMED;
+			R.lattice.fill(0);
+			R.lattice.rect(0, 0, 750, 750);
+			R.drawLattice(true);
+		} else if (event.isFrom("energy/J")) {
+			S.NUMBERS = !S.NUMBERS;
+			R.lattice.fill(0);
+			R.lattice.rect(0, 0, 750, 750);
+			R.drawLattice(true);
+		} else if (event.isFrom("+")) {
+			S.speed *= 2;
+		} else if (event.isFrom("-") && S.speed > 1) {
+			S.speed /= 2;
+		} else if (event.isFrom("log")) {
+			Log.init(R, R.L.size[0], R.L.size[1]);
+		} else if (event.isFrom("Jx")) {
+			R.J = PApplet
+					.parseFloat(S.cp5.get(Textfield.class, "Jx").getText());
+			R.updateHamilton();
+		} else if (event.isFrom("hx")) {
+			R.h = PApplet
+					.parseFloat(S.cp5.get(Textfield.class, "hx").getText());
+			R.updateHamilton();
+		} else if (event.isFrom("kTx")) {
+			R.kT = Math.max(0.0001F, PApplet.parseFloat(S.cp5.get(
+					Textfield.class, "kTx").getText()));
+			R.updateKT();
+		} else if (event.isFrom("J+")) {
+			R.J += 0.1;
+			R.updateHamilton();
+		} else if (event.isFrom("J-")) {
+			R.J -= 0.1;
+			R.updateHamilton();
+		} else if (event.isFrom("h+")) {
+			R.h += 0.1;
+			R.updateHamilton();
+		} else if (event.isFrom("h-")) {
+			R.h -= 0.1;
+			R.updateHamilton();
+		} else if (event.isFrom("kT+")) {
+			R.kT += 0.1;
+			R.updateKT();
+		} else if (event.isFrom("kT-")) {
+			R.kT -= 0.1;
+			R.updateKT();
+		} else if (event.isFrom("SF")) {
+			Algorithm.u(0);
+		} else if (event.isFrom("KS")) {
+			Algorithm.u(1);
+		} else if (event.isFrom("SW")) {
+			Algorithm.u(2);
+		} else if (event.isFrom("G")) {
+			Algorithm.a(1);
+		} else if (event.isFrom("M")) {
+			Algorithm.a(0);
+		}
 	}
 }

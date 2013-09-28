@@ -29,6 +29,6 @@ class Kawasaki implements I_Update {
 	 * there should be a general approach which can be overriden.
 	 */
 	public void getNewEnergy() {
-		Hamiltonian.E_nn_new = 4 * (p.getE() + x.getE()) - 8;
+		Hamiltonian.E_nn_new = 4 * (p.getE() + x.getE()) - 4;
 	}
 }

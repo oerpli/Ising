@@ -55,7 +55,7 @@ public abstract class Algorithm {
 		String s = "";
 		switch (u) {
 		case 0:
-			s += "mh";
+			s += "sf";
 			break;
 		case 1:
 			s += "ks";
@@ -74,5 +74,15 @@ public abstract class Algorithm {
 				break;
 			}
 		return s;
+	}
+
+	public static void u(int x) {
+		if (x >= 0 && x < U.length)
+			u = x;
+	}
+
+	public static void a(int x) {
+		if (x >= 0 && x < A.length)
+			a = x;
 	}
 }
