@@ -1,4 +1,4 @@
 Ising2D
 =======
-Simple object oriented implementation of the 2D Ising model - has a graphical output (made with Processing).
-No TPS and FFS implemented yet.
+Object oriented implementation of the Ising model - has a graphical output (for 1D and 2D, made with Processing).
+Data Output far from working.
