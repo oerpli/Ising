@@ -5,3 +5,5 @@ Data Output far from complete.
 
 Also 3D not debugged.
 
+Swendsen Wang implementation still pretty bad.
+StackOverflow in the cluster- finding method with more than 20k lattice sites (recursive dfs).
