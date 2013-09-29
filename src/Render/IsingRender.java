@@ -44,18 +44,19 @@ public class IsingRender extends PApplet {
 		info = createGraphics(600, 750);
 		background(0);
 		setupLattice();
-		size = 750 / N1;
-		S.speed = 1;
 		S.setup(this);
+		S.speed = 1;
 		updateHamilton();
 		updateKT();
 	}
 
-	private void setupLattice() {
+	protected void setupLattice() {
 		// N = 4;
 		N2 = N1;
-		seed = 0.25;
+		seed = 0.5;
+		System.out.println(N1 + " " + N2);
 		L = new Lattice(N1, N2, 1, seed, J, h, kT);
+		size = 750 / N1;
 	}
 
 	/**

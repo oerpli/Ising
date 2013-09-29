@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 
 import processing.core.PApplet;
 import Data.Log;
+import Data.Plotter;
 import Dynamics.Algorithm;
 import Model.Hamiltonian;
 
@@ -68,9 +69,11 @@ public abstract class S {
 		S.cp5.addBang("energy/J").setPosition(x0 + 100, y0 + 21 * y++)
 				.setSize(49, 20).getCaptionLabel()
 				.align(ControlP5.CENTER, ControlP5.CENTER);
-		Field("J");
-		Field("h");
-		Field("kT");
+		Field("J", "" + Hamiltonian.J(), 0);
+		Field("h", "" + Hamiltonian.h(), 0);
+		Field("kT", "" + Hamiltonian.kT(), 0);
+		y++;
+		Field("N", "" + IsingRender.N1, 0);
 		y++;
 		S.cp5.addBang("SF").setPosition(x0, y0 + 21 * ++y).setSize(49, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
@@ -80,16 +83,21 @@ public abstract class S {
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 		S.cp5.addBang("G").setPosition(x0 + 125, y0 + 21 * y++).setSize(24, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-		S.cp5.addBang("SW").setPosition(x0, y0 + 21 * ++y).setSize(49, 20)
+		S.cp5.addBang("SW").setPosition(x0, y0 + 21 * y++).setSize(49, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+		S.cp5.addBang("plot").setPosition(x0, y0 + 21 * ++y).setSize(49, 20)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+		S.cp5.addBang("reset mean").setPosition(x0 + 50, y0 + 21 * y)
+				.setSize(49, 20).getCaptionLabel()
+				.align(ControlP5.CENTER, ControlP5.CENTER);
 	}
 
-	public static void Field(String n) {
+	public static void Field(String n, String v, int filter) {
 		S.cp5.addTextfield(n + "x").setPosition(x0 + 1, y0 + 21 * ++y)
-				.setSize(97, 20).setAutoClear(false)
-				.setValue("" + Hamiltonian.kT()).setInputFilter(0)
-				.setFont(R.createFont("arial", 15)).getCaptionLabel()
-				.align(ControlP5.RIGHT, ControlP5.CENTER).set(n);
+				.setSize(97, 20).setAutoClear(false).setValue(v)
+				.setInputFilter(filter).setFont(R.createFont("arial", 15))
+				.getCaptionLabel().align(ControlP5.RIGHT, ControlP5.CENTER)
+				.set(n);
 		S.cp5.addBang(n + '+').setPosition(x0 + 100, y0 + 21 * y)
 				.setSize(24, 20).getCaptionLabel().set("+")
 				.align(ControlP5.CENTER, ControlP5.CENTER);
@@ -109,19 +117,13 @@ public abstract class S {
 			Algorithm.flip();
 		} else if (event.isFrom("bonds")) {
 			S.BONDS = !S.BONDS;
-			R.lattice.fill(0);
-			R.lattice.rect(0, 0, 750, 750);
-			R.drawLattice(true);
+			redraw();
 		} else if (!S.BONDS && event.isFrom("framed")) {
 			S.FRAMED = !S.FRAMED;
-			R.lattice.fill(0);
-			R.lattice.rect(0, 0, 750, 750);
-			R.drawLattice(true);
+			redraw();
 		} else if (event.isFrom("energy/J")) {
 			S.NUMBERS = !S.NUMBERS;
-			R.lattice.fill(0);
-			R.lattice.rect(0, 0, 750, 750);
-			R.drawLattice(true);
+			redraw();
 		} else if (event.isFrom("+")) {
 			S.speed *= 2;
 		} else if (event.isFrom("-") && S.speed > 1) {
@@ -168,6 +170,32 @@ public abstract class S {
 			Algorithm.a(1);
 		} else if (event.isFrom("M")) {
 			Algorithm.a(0);
+		} else if (event.isFrom("reset mean")) {
+			Plotter.resetM();
+		} else if (event.isFrom("plot")) {
+			Log.plot = !Log.plot;
+		} else if (event.isFrom("Nx")) {
+			IsingRender.N1 = Math.max(1, PApplet.parseInt(S.cp5.get(
+					Textfield.class, "Nx").getText()));
+			R.setupLattice();
+			redraw();
+			S.cp5.get(Textfield.class, "Nx").setValue("" + IsingRender.N1);
+		} else if (event.isFrom("N+")) {
+			IsingRender.N1++;
+			R.setupLattice();
+			redraw();
+			S.cp5.get(Textfield.class, "Nx").setValue("" + IsingRender.N1);
+		} else if (event.isFrom("N-") && IsingRender.N1 > 1) {
+			IsingRender.N1--;
+			R.setupLattice();
+			redraw();
+			S.cp5.get(Textfield.class, "Nx").setValue("" + IsingRender.N1);
 		}
+	}
+
+	private static void redraw() {
+		R.lattice.fill(0);
+		R.lattice.rect(0, 0, 750, 750);
+		R.drawLattice(true);
 	}
 }

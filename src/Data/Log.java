@@ -17,9 +17,10 @@ public abstract class Log {
 
 	private static DataSet d;
 	private static IsingRender R;
-	private static int N = 400, N1, N2, steps = 500000, stepsplot = 1000;
+	private static int N, N1, N2, steps = 500000, stepsplot = 1000;
 	public static DataSet[] D = new DataSet[stepsplot];
 	public static Plotter p = new Plotter(D);
+	public static boolean plot = true;
 
 	// public static EventBuffer buffer = new EventBuffer(50);
 
@@ -29,8 +30,8 @@ public abstract class Log {
 			N1 = n;
 			N2 = n2;
 			N = N1 * N2;
-			String name = N1 * N2 + "-" + Hamiltonian.kT() + "-"
-					+ Algorithm.String() + ".txt";
+			String name = N + "-" + Hamiltonian.kT() + "-" + Algorithm.String()
+					+ ".txt";
 			try {
 				if (W != null)
 					W.close();
@@ -72,11 +73,16 @@ public abstract class Log {
 		time++;
 	}
 
+	private static void init() {
+		init(null, 0, 0);
+	}
+
+	// logs "steps" samples from different temperatures.
 	private static void auto() {
 		if (time == steps) {
-			log = false;
-			if (Hamiltonian.getkT() < 10) {
-				R.HamiltonAdd(0, 0, 0.5);
+			init();
+			if (Hamiltonian.getkT() < 5) {
+				R.HamiltonAdd(0, 0, 0.25);
 				init(R, N1, N2);
 			} else
 				IsingRender.Stop();
@@ -91,7 +97,7 @@ public abstract class Log {
 
 	private static void plot() {
 		D[time % stepsplot] = d;
-		if ((time + 1) % stepsplot == 0)
+		if (plot && (time + 1) % stepsplot == 0)
 			if (time < 2 * stepsplot)
 				p.start(D);
 			else

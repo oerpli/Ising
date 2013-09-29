@@ -21,6 +21,7 @@ public class Lattice {
 
 	public Lattice(int x, int y, int z, double seed, float J, float h, float kT) {
 		Algorithm.L(this);
+		Lattice.L = this;
 		size = new int[] { x, y, z };
 		Lattice.D = 0;
 		if (x > 0)
@@ -101,6 +102,10 @@ public class Lattice {
 			s.append((p.x == size[0] - 1 ? '\n' : ""));
 		}
 		return s.toString();
+	}
+
+	public double N() {
+		return N;
 	}
 
 	// public String toStringCluster() {

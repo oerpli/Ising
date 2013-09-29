@@ -5,11 +5,14 @@ import java.awt.font.*;
 import java.awt.geom.*;
 import javax.swing.*;
 
+import Render.S;
+
 public class Plotter extends JPanel {
 	private static final long serialVersionUID = -5078789193930191629L;
 	final int PAD = 20;
 	public DataSet[] D;
-	public double max, min, meanE, meanM;
+	public double max, min, meanE = 0, meanM = 0, meanM2 = 0;
+	private static int mMc = 0;
 
 	JFrame f;
 	Graphics gs;
@@ -27,10 +30,12 @@ public class Plotter extends JPanel {
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		int w = getWidth();
 		int h = getHeight();
-		// Draw ordinate.
+
+		g2.setPaint(Color.BLACK);
+		// draw ordinate
 		g2.draw(new Line2D.Double(PAD, PAD, PAD, h - PAD));
 		// Draw abcissa.
-		// g2.draw(new Line2D.Double(PAD, h - PAD, w - PAD, h - PAD));
+		g2.draw(new Line2D.Double(PAD, h / 2, w - 2 * PAD, h / 2));
 		// Draw labels.
 		Font font = g2.getFont();
 		FontRenderContext frc = g2.getFontRenderContext();
@@ -56,7 +61,7 @@ public class Plotter extends JPanel {
 		g2.drawString(s, sx, sy);
 		// Draw lines.
 
-		double xInc = (double) (w - 2 * PAD) / Math.max(1, (D.length - 1));
+		double xInc = (double) (w - 3 * PAD) / Math.max(1, (D.length - 1));
 		double scale = (double) (h - 2 * PAD) / (max - min);
 
 		if (D.length < 200) {
@@ -85,42 +90,58 @@ public class Plotter extends JPanel {
 			g2.setPaint(Color.red);
 			g2.fill(new Ellipse2D.Double(x - 2, yE - 2, 4, 4));
 		}
+
+		// Mean M
 		g2.setPaint(Color.blue);
+		int my = (int) (h - PAD - scale * meanM);
+		g2.draw(new Line2D.Double(PAD, my, w - 35, my));
+		s = S.df.format(meanM + min);
+		g2.drawString(s, w - 30, (int) (h - PAD - scale * meanM));
 
-		g2.draw(new Line2D.Double(PAD, h - PAD - scale * meanM, w - PAD, h
-				- PAD - scale * meanM));
+		// Mean M2
+		g2.setPaint(Color.MAGENTA.darker());
+		my = (int) (h - PAD - scale * meanM2);
+		g2.draw(new Line2D.Double(PAD, my, w - 35, my));
+
+		s = S.df.format(meanM2 + min);
+		g2.drawString(s, w - 30, (int) (h - PAD - scale * meanM2));
+
+		// Mean E
 		g2.setPaint(Color.red);
-		g2.draw(new Line2D.Double(PAD, h - PAD - scale * meanE, w - PAD, h
+		s = S.df.format(meanE + min);
+		g2.drawString(s, w - 30, (int) (h - PAD - scale * meanE));
+		g2.draw(new Line2D.Double(PAD, h - PAD - scale * meanE, w - 2 * PAD, h
 				- PAD - scale * meanE));
-		g2.setPaint(Color.BLACK);
-		g2.draw(new Line2D.Double(PAD, h / 2, w - PAD, h / 2));
+
+		// Mean labels
+
 	}
 
-	private double getMax() {
-		double max = Double.MIN_VALUE;
-		for (int i = 0; i < D.length; i++) {
-			if (D[i] != null && D[i].M > max)
-				max = D[i].M;
-		}
-		for (int i = 0; i < D.length; i++) {
-			if (D[i] != null && D[i].E > max)
-				max = D[i].E;
-		}
-		return max;
-	}
-
-	private double getMin() {
-		double min = Double.MIN_VALUE;
-		for (int i = 0; i < D.length; i++) {
-			if (D[i] != null && D[i].M < min)
-				min = D[i].M;
-		}
-		for (int i = 0; i < D.length; i++) {
-			if (D[i] != null && D[i].E < min)
-				min = D[i].E;
-		}
-		return min;
-	}
+	// private double getMax() {
+	// double max = Double.MIN_VALUE;
+	// for (int i = 0; i < D.length; i++) {
+	// if (D[i] != null && D[i].M > max)
+	// max = D[i].M;
+	// }
+	// for (int i = 0; i < D.length; i++) {
+	// if (D[i] != null && D[i].E > max)
+	// max = D[i].E;
+	// }
+	// return max;
+	// }
+	//
+	// private double getMin() {
+	// double min = Double.MIN_VALUE;
+	// for (int i = 0; i < D.length; i++) {
+	// if (D[i] != null && D[i].M < min)
+	// min = D[i].M;
+	// }
+	// for (int i = 0; i < D.length; i++) {
+	// if (D[i] != null && D[i].E < min)
+	// min = D[i].E;
+	// }
+	// return min;
+	// }
 
 	// public static void main(String[] args) { }
 
@@ -130,6 +151,7 @@ public class Plotter extends JPanel {
 		f.setSize(800, 400);
 		f.setLocation(200, 200);
 		f.setVisible(true);
+		this.set(x);
 	}
 
 	private double getMean() {
@@ -137,6 +159,15 @@ public class Plotter extends JPanel {
 		for (DataSet i : D) {
 			if (i != null)
 				sum += i.M;
+		}
+		return sum / D.length;
+	}
+
+	private double getMean2() {
+		double sum = 0;
+		for (DataSet i : D) {
+			if (i != null)
+				sum += Math.abs(i.M);
 		}
 		return sum / D.length;
 	}
@@ -153,10 +184,17 @@ public class Plotter extends JPanel {
 	public void set(DataSet[] d2) {
 		max = 2;// getMax();
 		min = -2;// getMin();
-		meanM = getMean() - min;
-		meanE = getMeanE() - min;
+		meanM = (getMean() + (meanM + min) * mMc) / (mMc + 1) - min;
+		meanM2 = (getMean2() + (meanM2 + min) * mMc) / (mMc + 1) - min;
+		mMc++;
+
+		meanE = (getMeanE()) - min;
 		this.D = d2;
 		this.repaint();
 		// f.setVisible(true);
+	}
+
+	public static void resetM() {
+		mMc = 0;
 	}
 }

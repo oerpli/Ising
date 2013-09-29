@@ -1,17 +1,17 @@
 package Data;
 
 import Render.IsingRender;
+import Model.Lattice;
 
 public class DataSet {
 	public final double E, M;
 	public final long T;
-	public static int N = IsingRender.N;
 
 	public DataSet(long t, double e, double m) {
 
 		this.T = t;
-		this.E = e / N;
-		this.M = m / N;
+		this.E = e / Lattice.L.N();
+		this.M = m / Lattice.L.N();
 	}
 
 	public String log() {
