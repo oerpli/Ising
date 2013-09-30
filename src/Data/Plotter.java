@@ -86,9 +86,9 @@ public class Plotter extends JPanel {
 			double yM = h - PAD - scale * (D[i].M - min);
 			double yE = h - PAD - scale * (D[i].E - min);
 			g2.setPaint(Color.blue);
-			g2.fill(new Ellipse2D.Double(x - 2, yM - 2, 4, 4));
+			g2.fill(new Ellipse2D.Double(x - 1, yM - 1, 2, 2));
 			g2.setPaint(Color.red);
-			g2.fill(new Ellipse2D.Double(x - 2, yE - 2, 4, 4));
+			g2.fill(new Ellipse2D.Double(x - 1, yE - 1, 2, 2));
 		}
 
 		// Mean M
@@ -146,7 +146,6 @@ public class Plotter extends JPanel {
 	// public static void main(String[] args) { }
 
 	public void start(DataSet[] x) {
-		// f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.add(this);
 		f.setSize(800, 400);
 		f.setLocation(200, 200);
@@ -185,10 +184,9 @@ public class Plotter extends JPanel {
 		max = 2;// getMax();
 		min = -2;// getMin();
 		meanM = (getMean() + (meanM + min) * mMc) / (mMc + 1) - min;
+		meanE = (getMeanE() + (meanE + min) * mMc) / (mMc + 1) - min;
 		meanM2 = (getMean2() + (meanM2 + min) * mMc) / (mMc + 1) - min;
 		mMc++;
-
-		meanE = (getMeanE()) - min;
 		this.D = d2;
 		this.repaint();
 		// f.setVisible(true);
@@ -196,5 +194,9 @@ public class Plotter extends JPanel {
 
 	public static void resetM() {
 		mMc = 0;
+	}
+
+	public void toggle(boolean x) {
+		f.setVisible(x);
 	}
 }

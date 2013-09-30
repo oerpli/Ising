@@ -87,6 +87,7 @@ public class IsingRender extends PApplet {
 	protected void updateKT() {
 		S.cp5.get(Textfield.class, "kTx").setValue("" + kT);
 		Hamiltonian.setKT(kT);
+		System.out.println("kT: " + kT);
 	}
 
 	public void HamiltonAdd(double dJ, double dh, double dT) {
@@ -121,6 +122,8 @@ public class IsingRender extends PApplet {
 		}
 		tab = 0;
 		time += System.currentTimeMillis();
+		if (time > 1000 && S.speed > 1)
+			S.speed /= 2;
 
 	}
 

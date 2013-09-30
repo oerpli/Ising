@@ -174,8 +174,9 @@ public abstract class S {
 			Plotter.resetM();
 		} else if (event.isFrom("plot")) {
 			Log.plot = !Log.plot;
+			Log.p.toggle(Log.plot);
 		} else if (event.isFrom("Nx")) {
-			IsingRender.N1 = Math.max(1, PApplet.parseInt(S.cp5.get(
+			IsingRender.N1 = Math.max(2, PApplet.parseInt(S.cp5.get(
 					Textfield.class, "Nx").getText()));
 			R.setupLattice();
 			redraw();
@@ -185,7 +186,7 @@ public abstract class S {
 			R.setupLattice();
 			redraw();
 			S.cp5.get(Textfield.class, "Nx").setValue("" + IsingRender.N1);
-		} else if (event.isFrom("N-") && IsingRender.N1 > 1) {
+		} else if (event.isFrom("N-") && IsingRender.N1 > 2) {
 			IsingRender.N1--;
 			R.setupLattice();
 			redraw();
