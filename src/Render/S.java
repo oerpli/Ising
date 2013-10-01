@@ -14,7 +14,7 @@ import controlP5.Textfield;
 
 public abstract class S {
 	// Text Output
-	public static final DecimalFormat df = new DecimalFormat("0.00");
+	public static final DecimalFormat df = new DecimalFormat("0.000");
 	// Colors
 	private static final float[] up = new float[] { 20, 200, 240 };
 	private static final float[] down = new float[] { 30, 50, 220 };

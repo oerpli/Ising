@@ -36,7 +36,7 @@ public class Plotter extends JPanel {
 		g2.draw(new Line2D.Double(PAD, PAD, PAD, h - PAD));
 		// Draw abcissa.
 		g2.draw(new Line2D.Double(PAD, h / 2, w - 2 * PAD, h / 2));
-		// Draw labels.
+		// Draw labels
 		Font font = g2.getFont();
 		FontRenderContext frc = g2.getFontRenderContext();
 		LineMetrics lm = font.getLineMetrics("0", frc);
@@ -96,7 +96,7 @@ public class Plotter extends JPanel {
 		int my = (int) (h - PAD - scale * meanM);
 		g2.draw(new Line2D.Double(PAD, my, w - 35, my));
 		s = S.df.format(meanM + min);
-		g2.drawString(s, w - 30, (int) (h - PAD - scale * meanM));
+		g2.drawString(s, w - 35, (int) (h - PAD - scale * meanM));
 
 		// Mean M2
 		g2.setPaint(Color.MAGENTA.darker());
@@ -104,12 +104,12 @@ public class Plotter extends JPanel {
 		g2.draw(new Line2D.Double(PAD, my, w - 35, my));
 
 		s = S.df.format(meanM2 + min);
-		g2.drawString(s, w - 30, (int) (h - PAD - scale * meanM2));
+		g2.drawString(s, w - 35, (int) (h - PAD - scale * meanM2));
 
 		// Mean E
 		g2.setPaint(Color.red);
 		s = S.df.format(meanE + min);
-		g2.drawString(s, w - 30, (int) (h - PAD - scale * meanE));
+		g2.drawString(s, w - 35, (int) (h - PAD - scale * meanE));
 		g2.draw(new Line2D.Double(PAD, h - PAD - scale * meanE, w - 2 * PAD, h
 				- PAD - scale * meanE));
 
