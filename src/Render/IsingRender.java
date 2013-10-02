@@ -39,9 +39,9 @@ public class IsingRender extends PApplet {
 	// private XYChart lineChart;
 	public void setup() {
 		frameRate(60);
-		size(1000, 750);
-		lattice = createGraphics(750, 750);
-		info = createGraphics(600, 750);
+		size(1000, 700);
+		lattice = createGraphics(700, 700);
+		info = createGraphics(600, 700);
 		background(0);
 		setupLattice();
 		S.setup(this);
@@ -56,7 +56,7 @@ public class IsingRender extends PApplet {
 		seed = 0.5;
 		System.out.println(N1 + " " + N2);
 		L = new Lattice(N1, N2, 1, seed, J, h, kT);
-		size = 750 / N1;
+		size = 700 / N1;
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class IsingRender extends PApplet {
 			drawLattice(false);
 			image(lattice, 0, 0);
 			drawInfo();
-			image(info, 750, 0);
+			image(info, 700, 0);
 			tab = 2;
 			// printFlips(0.0001);
 			break;

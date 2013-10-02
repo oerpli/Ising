@@ -196,7 +196,7 @@ public abstract class S {
 
 	private static void redraw() {
 		R.lattice.fill(0);
-		R.lattice.rect(0, 0, 750, 750);
+		R.lattice.rect(0, 0, 700, 700);
 		R.drawLattice(true);
 	}
 }
