@@ -21,6 +21,9 @@ public abstract class Log {
 	public static DataSet[] D = new DataSet[stepsplot];
 	public static Plotter p = new Plotter(D);
 	public static boolean plot = true;
+	public static int histchan = 7;
+	public static double[] hist = new double[histchan];
+	public static int nhist = 0;
 
 	// public static EventBuffer buffer = new EventBuffer(50);
 
@@ -30,6 +33,7 @@ public abstract class Log {
 			N1 = n;
 			N2 = n2;
 			N = N1 * N2;
+
 			String name = N + "-" + Hamiltonian.kT() + "-" + Algorithm.String()
 					+ ".txt";
 			try {
@@ -59,6 +63,12 @@ public abstract class Log {
 
 	public static void log() {
 		d = new DataSet(time, -Hamiltonian.E_nn, Hamiltonian.E_m);
+		{
+			int x = Math.min((int) ((d.M + 1) / 2 * (histchan + 0.1)),
+					histchan - 1);
+			hist[x] = hist[x] + 1;
+			nhist++;
+		}
 		plot();
 		if (log) {
 			try {

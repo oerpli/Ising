@@ -15,6 +15,8 @@ import controlP5.Textfield;
 public abstract class S {
 	// Text Output
 	public static final DecimalFormat df = new DecimalFormat("0.000");
+	public static final DecimalFormat df2 = new DecimalFormat("0.00");
+
 	// Colors
 	private static final float[] up = new float[] { 20, 200, 240 };
 	private static final float[] down = new float[] { 30, 50, 220 };
@@ -88,6 +90,9 @@ public abstract class S {
 		S.cp5.addBang("plot").setPosition(x0, y0 + 21 * ++y).setSize(49, 20)
 				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 		S.cp5.addBang("reset mean").setPosition(x0 + 50, y0 + 21 * y)
+				.setSize(49, 20).getCaptionLabel()
+				.align(ControlP5.CENTER, ControlP5.CENTER);
+		S.cp5.addBang("hist").setPosition(x0 + 100, y0 + 21 * y)
 				.setSize(49, 20).getCaptionLabel()
 				.align(ControlP5.CENTER, ControlP5.CENTER);
 	}
@@ -191,6 +196,8 @@ public abstract class S {
 			R.setupLattice();
 			redraw();
 			S.cp5.get(Textfield.class, "Nx").setValue("" + IsingRender.N1);
+		} else if (event.isFrom("hist")) {
+			Plotter.hi = !Plotter.hi;
 		}
 	}
 

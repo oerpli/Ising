@@ -1,6 +1,5 @@
 package Data;
 
-import Render.IsingRender;
 import Model.Lattice;
 
 public class DataSet {

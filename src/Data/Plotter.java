@@ -11,9 +11,10 @@ public class Plotter extends JPanel {
 	private static final long serialVersionUID = -5078789193930191629L;
 	final int PAD = 20;
 	public DataSet[] D;
-	public double max, min, meanE = 0, meanM = 0, meanM2 = 0;
+	public double max = 2, min = -2, meanE = 0, meanM = 0, meanM2 = 0;
 	private static int mMc = 0;
-
+	private double[] hist = new double[Log.histchan];
+	public static boolean hi = true;
 	JFrame f;
 	Graphics gs;
 
@@ -43,7 +44,7 @@ public class Plotter extends JPanel {
 		float sh = lm.getAscent() + lm.getDescent();
 
 		// Ordinate label.
-		String s = "M/N b     E/N r";
+		String s = "M b               E r";
 		float sy = PAD + ((h - 2 * PAD) - s.length() * sh) / 2 + lm.getAscent();
 		for (int i = 0; i < s.length(); i++) {
 			String letter = String.valueOf(s.charAt(i));
@@ -91,6 +92,17 @@ public class Plotter extends JPanel {
 			g2.fill(new Ellipse2D.Double(x - 1, yE - 1, 2, 2));
 		}
 
+		// Histogram
+		if (hi) {
+			double hc = (2 * scale) / (Log.histchan - 1);
+			for (int i = 0; i < Log.histchan; i++) {
+				double hy = h / 2 - hc / 2 + scale - hc * i;
+				g2.setPaint(Color.BLACK);
+				g2.fill(new Rectangle2D.Double(PAD, hy, hist[i] * 200, hc));
+				s = S.df2.format(hist[i]);
+				g2.drawString(s, -9, (int) (hy + hc / 2));
+			}
+		}
 		// Mean M
 		g2.setPaint(Color.blue);
 		int my = (int) (h - PAD - scale * meanM);
@@ -150,6 +162,7 @@ public class Plotter extends JPanel {
 		f.setSize(800, 400);
 		f.setLocation(200, 200);
 		f.setVisible(true);
+		hist();
 		this.set(x);
 	}
 
@@ -188,11 +201,23 @@ public class Plotter extends JPanel {
 		meanM2 = (getMean2() + (meanM2 + min) * mMc) / (mMc + 1) - min;
 		mMc++;
 		this.D = d2;
+		hist();
+
 		this.repaint();
 		// f.setVisible(true);
 	}
 
+	private void hist() {
+		this.hist = new double[Log.histchan];
+		for (int i = 0; i < Log.histchan; i++) {
+			this.hist[i] = Log.hist[i] / Log.nhist;
+		}
+	}
+
 	public static void resetM() {
+		Log.nhist = 0;
+		for (int i = 0; i < Log.histchan; i++)
+			Log.hist[i] = 0;
 		mMc = 0;
 	}
 
