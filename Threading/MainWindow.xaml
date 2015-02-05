@@ -1,0 +1,26 @@
+﻿<mui:ModernWindow x:Class="Threading.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+        Title="Sandbox" IsTitleVisible="True"
+        ContentSource="/Pages/Primes.xaml">
+
+    <mui:ModernWindow.MenuLinkGroups>
+        <mui:LinkGroup DisplayName="Threading">
+            <mui:LinkGroup.Links>
+                <mui:Link DisplayName="Primes" Source="/Pages/Primes.xaml" />
+                <mui:Link DisplayName="Weather" Source="/Pages/Weather.xaml" />
+            </mui:LinkGroup.Links>
+        </mui:LinkGroup>
+        <mui:LinkGroup DisplayName="settings" GroupKey="settings">
+            <mui:LinkGroup.Links>
+                <mui:Link DisplayName="software" Source="/Pages/SettingsPage.xaml" />
+            </mui:LinkGroup.Links>
+        </mui:LinkGroup>
+    </mui:ModernWindow.MenuLinkGroups>
+    
+    <mui:ModernWindow.TitleLinks>
+        <mui:Link DisplayName="settings" Source="/Pages/SettingsPage.xaml" />
+        <mui:Link DisplayName="help" Source="http://mui.codeplex.com" />
+    </mui:ModernWindow.TitleLinks>
+</mui:ModernWindow>

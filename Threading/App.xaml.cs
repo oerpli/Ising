@@ -5,8 +5,8 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Threading;
-namespace IsingModern {
+
+namespace Threading {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>

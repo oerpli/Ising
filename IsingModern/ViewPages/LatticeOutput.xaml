@@ -1,8 +1,9 @@
-﻿<UserControl x:Class="Ising.Render.LatticeOutput"
+﻿<UserControl x:Class="IsingModern.Render.LatticeOutput"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="clr-namespace:System.Windows.Interop;assembly=PresentationCore"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="600">
@@ -12,9 +13,16 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
+
                 <UniformGrid MinWidth="200" MinHeight="200" MaxWidth="600" MaxHeight="600" Name="isingGrid" Margin="0,0,0,0" Columns="10" HorizontalAlignment="Left" VerticalAlignment="Top"  />
-                <Button Grid.Column="1" VerticalAlignment="Top" Name="Stuff" MouseEnter="Stuff_Click" Click="Stuff_Click" Content="Randomize!" Width="100" Height="30"/>
+                <StackPanel Grid.Column="1" HorizontalAlignment="Left">
+                    <Button Name="Stuff"  PreviewKeyDown="RandomizeClick" Click="RandomizeClick" Content="Randomize!" Width="100" Height="30" VerticalAlignment="Top"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock TextAlignment="Right" FontSize="15" Name="StatusText" Width="50" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left">Init</TextBlock>
+                </StackPanel>
             </Grid>
         </ScrollViewer>
     </Grid>
