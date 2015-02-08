@@ -1,13 +1,11 @@
-﻿using System;
+﻿using IsingModern.Ising;
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Input;
-using System.Diagnostics;
-using System.Collections.Generic;
-
-using System.Windows.Controls;
-
-using IsingModern.Ising;
 
 namespace IsingModern.ViewModel {
     class IsingRenderModel : Image {
@@ -65,21 +63,21 @@ namespace IsingModern.ViewModel {
             int counter = 0;
             for(int y = 0; y < N; y++) {
                 for(int x = 0; x < N; x++) {
-                    DrawPoint(x, y, model.Points[counter++].Color);
+                    DrawSpin(x, y, model.Spins[counter++].Color);
                 }
             }
             wbmap.Unlock();
         }
 
-        private void DrawPoint(Point p) {
+        private void DrawSpin(Spin p) {
             int left = p.Index % N;
             int top = p.Index / N;
             wbmap.Lock();
-            DrawPoint(left, top, p.Color);
+            DrawSpin(left, top, p.Color);
             wbmap.Unlock();
         }
 
-        private void DrawPoint(int left, int top, Color color) {
+        private void DrawSpin(int left, int top, Color color) {
             left *= pixelsize;
             top *= pixelsize;
             int width = pixelsize, height = pixelsize;
@@ -107,7 +105,7 @@ namespace IsingModern.ViewModel {
                     }
                 }
             }
-            wbmap.AddDirtyRect(new System.Windows.Int32Rect(left, top, width, height));
+            wbmap.AddDirtyRect(new Int32Rect(left, top, width, height));
         }
 
         internal void Refresh() {
@@ -130,14 +128,14 @@ namespace IsingModern.ViewModel {
             y /= (int)cellSize;
 
             Console.WriteLine(x + " " + y);
-            var p = model.Points[model.N * y + x];
+            var p = model.Spins[model.N * y + x];
             if(e.LeftButton == MouseButtonState.Pressed) {
                 p.ToggleSpin();
             }
             if(e.RightButton == MouseButtonState.Pressed) {
                 p.ToggleBoundary(true);
             }
-            DrawPoint(p);
+            DrawSpin(p);
             //var rect = new Rect(x * cellSize, y * cellSize, cellSize, cellSize);
             //_dc.DrawRectangle(p.Color, pen, rect);
         }
@@ -153,9 +151,9 @@ namespace IsingModern.ViewModel {
         }
 
         internal void TopRight() {
-            var p = model.Points[2 * N - 2];
+            var p = model.Spins[2 * N - 2];
             p.ToggleSpin();
-            DrawPoint(p);
+            DrawSpin(p);
         }
     }
 }

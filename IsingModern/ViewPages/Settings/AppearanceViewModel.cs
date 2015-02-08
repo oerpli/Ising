@@ -1,14 +1,10 @@
 ﻿using FirstFloor.ModernUI.Presentation;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-
 using IsingModern.Ising;
 using IsingModern.Render;
+using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows.Media;
 
 namespace IsingModern.Pages.Settings {
     /// <summary>
@@ -152,20 +148,20 @@ namespace IsingModern.Pages.Settings {
             set {
                 int index = Array.IndexOf(this.accentColors, this.selectedAccentColor);
                 if(index != -1) {
-                    Point.PointColors.Remove(1);
-                    Point.PointColors.Remove(-1);
-                    Point.PointColorBrushes.Remove(1);
-                    Point.PointColorBrushes.Remove(-1);
-
-                    var plus = new SolidColorBrush(this.selectedAccentColor);
-                    var minus = new SolidColorBrush(this.accentColorsDarker[index]);
-                    plus.Freeze();
-                    minus.Freeze();
-                    Point.PointColorBrushes.Add(1, plus);
-                    Point.PointColorBrushes.Add(-1, minus);
-                    Point.PointColors.Add(1, selectedAccentColor);
-                    Point.PointColors.Add(-1, accentColorsDarker[index]);
+                    Spin.PointColors.Remove(1);
+                    Spin.PointColors.Remove(-1);
+                    Spin.PointColors.Add(1, selectedAccentColor);
+                    Spin.PointColors.Add(-1, accentColorsDarker[index]);
                     LatticeOutput.RefreshRender();
+
+                    //Point.PointColorBrushes.Remove(1);
+                    //Point.PointColorBrushes.Remove(-1);
+                    //var plus = new SolidColorBrush(this.selectedAccentColor);
+                    //var minus = new SolidColorBrush(this.accentColorsDarker[index]);
+                    //plus.Freeze();
+                    //minus.Freeze();
+                    //Point.PointColorBrushes.Add(1, plus);
+                    //Point.PointColorBrushes.Add(-1, minus);
                 }
                 if(this.selectedAccentColor != value) {
                     this.selectedAccentColor = value;

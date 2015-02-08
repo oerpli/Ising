@@ -63,7 +63,7 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Model\IsingModel.cs" />
-    <Compile Include="Model\Point.cs" />
+    <Compile Include="Model\Spin.cs" />
     <Compile Include="ViewModel\IsingRenderModel.cs" />
     <Compile Include="ViewPages\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

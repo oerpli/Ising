@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Media;
 
 
 namespace IsingModern.Ising {
@@ -8,20 +7,20 @@ namespace IsingModern.Ising {
         public int InstanceNumber { get; private set; }
         public int N;
         public int Count { get; private set; }
-        public Point[] Points { get; private set; }
+        public Spin[] Spins { get; private set; }
 
         private Random r = new Random();
 
         public IsingModel(int n) {
-            Point[,] points;
+            Spin[,] points;
             N = n;
-            points = new Point[N, N];
-            Points = new Point[N * N];
+            points = new Spin[N, N];
+            Spins = new Spin[N * N];
             var r = new Random();
             Count = 0;
             for(int i = 0; i < N; i++) {
                 for(int j = 0; j < N; j++) {
-                    Points[Count] = points[i, j] = new Point(r.Next(2) * 2 - 1, Count);
+                    Spins[Count] = points[i, j] = new Spin(-1, Count);
                     Count++;
                 }
             }
@@ -29,10 +28,10 @@ namespace IsingModern.Ising {
             //Current = this;
             InitializeNeighbours(points);
         }
-        private void InitializeNeighbours(Point[,] points) {
+        private void InitializeNeighbours(Spin[,] points) {
             for(int i = 0; i < N; i++) {
                 for(int j = 0; j < N; j++) {
-                    Point n, e, s, w;
+                    Spin n, e, s, w;
                     n = points[(i - 1 + N) % N, j];
                     e = points[i, (j + 1) % N];
                     s = points[(i + 1) % N, j];
@@ -46,16 +45,16 @@ namespace IsingModern.Ising {
         public void SetBoundary(bool periodic) {
             var r = new Random();
             foreach(var p in Boundary) {
-                p.Value = periodic ? r.Next(2) * 2 - 1 : 0;
+                p.Value = periodic ? -1 : 0;
             }
         }
 
-        private IEnumerable<Point> Boundary {
+        private IEnumerable<Spin> Boundary {
             get {
                 for(int i = 0; i < N; i++) {
                     for(int j = 0; j < N; j++) {
                         if(i == 0 || j == 0 || i == N - 1 || j == N - 1) {
-                            yield return Points[N * j + i];
+                            yield return Spins[N * j + i];
                         }
                     }
                 }
@@ -63,30 +62,12 @@ namespace IsingModern.Ising {
         }
 
         public virtual void Randomize() {
-            foreach(var p in Points) {
+            foreach(var p in Spins) {
                 if(p.Value != 0) {
                     p.Value = r.NextDouble() > 0.5 ? -1 : 1;
                 }
             }
         }
-
-
-
-        #region rendering
-        //public static IsingModel Current;
-
-        public IEnumerable<Color> RenderColors {
-            get {
-                foreach(var p in Points) {
-                    yield return p.Color;
-                }
-            }
-        }
-
-
-
-        public String TestString { get { return "TEST"; } }
-        #endregion
     }
 }
 

@@ -12,12 +12,12 @@ namespace IsingModern.Render {
     public partial class LatticeOutput : UserControl {
         static LatticeOutput Current;
         private IsingRenderModel viewmodel;
+        
         private bool PeriodicBoundary = false;
-        private int currentN = maximalN;
         private int rndCounter = 0;
 
         private const int maximalN = 300, minimalN = 3; //both should divide 600. 
-
+        private int currentN = maximalN;
 
         #region Initialization
 
@@ -38,8 +38,6 @@ namespace IsingModern.Render {
         #endregion
 
         #region LatticeManipulation
-
-
         private void maingrid_KeyDown(object sender, KeyEventArgs e) {
             if(e.Key == Key.R) {
                 RandomizeClick(null, null);
@@ -84,7 +82,6 @@ namespace IsingModern.Render {
             _changeLatticeSize(e.Delta > 0 ? 1 : -1, true);
         }
 
-
         //if using scrollwheel increase/decrase to next divisor of 600 (to avoid ugly rendering) - can be finetuned with left/right keys if necessary
         private void _changeLatticeSize(int diff, bool mouse = false) {
             do {
@@ -103,7 +100,6 @@ namespace IsingModern.Render {
         #region Rendering
         static internal void RefreshRender() {
             Current.viewmodel.Refresh();
-
         }
 
         #endregion
