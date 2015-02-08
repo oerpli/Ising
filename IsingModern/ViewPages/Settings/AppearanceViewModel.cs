@@ -125,6 +125,16 @@ namespace IsingModern.Pages.Settings {
                     this.selectedTheme = value;
                     OnPropertyChanged("SelectedTheme");
 
+
+                    //Update Lattice
+                    Spin.PointColors.Remove(0);
+                    if(value.DisplayName == "dark") {
+                        Spin.PointColors.Add(0, Colors.White);
+                    } else {
+                        Spin.PointColors.Add(0, Colors.Black);
+                    }
+                    LatticeOutput.RefreshRender();
+
                     // and update the actual theme
                     AppearanceManager.Current.ThemeSource = value.Source;
                 }

@@ -16,7 +16,7 @@ namespace IsingModern.Render {
         private bool PeriodicBoundary = false;
         private int rndCounter = 0;
 
-        private const int maximalN = 300, minimalN = 3; //both should divide 600. 
+        private const int maximalN = 600, minimalN = 3; //both should divide 600. 
         private int currentN = maximalN;
 
         #region Initialization
@@ -57,7 +57,7 @@ namespace IsingModern.Render {
         }
 
         private void TopRight_Click(object sender, RoutedEventArgs e) {
-            viewmodel.TopRight();
+            viewmodel.ToggleTopRight();
         }
 
         #endregion

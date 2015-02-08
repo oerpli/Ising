@@ -5,8 +5,6 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsingModern", "IsingModern\IsingModern.csproj", "{869D17F7-5702-4148-9465-F1AA4644A8DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Threading", "Threading\Threading.csproj", "{E03BB595-95D3-4881-8E45-929053819C69}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{869D17F7-5702-4148-9465-F1AA4644A8DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{869D17F7-5702-4148-9465-F1AA4644A8DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{869D17F7-5702-4148-9465-F1AA4644A8DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E03BB595-95D3-4881-8E45-929053819C69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E03BB595-95D3-4881-8E45-929053819C69}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E03BB595-95D3-4881-8E45-929053819C69}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E03BB595-95D3-4881-8E45-929053819C69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
