@@ -68,7 +68,7 @@ namespace IsingModern.Ising {
         public static Dictionary<int, SolidColorBrush> PointColors = new Dictionary<int, SolidColorBrush>() 
             {   { -1 , new SolidColorBrush(Colors.DeepSkyBlue) }
             ,   { 1, new SolidColorBrush(Colors.DarkBlue)  } 
-            ,   { 0 , new SolidColorBrush(Colors.Black)}};
+            ,   { 0 , new SolidColorBrush(Colors.White)}};
         private static SolidColorBrush failColor = new SolidColorBrush(Colors.Gold);
 
         public SolidColorBrush Color {
@@ -88,11 +88,13 @@ namespace IsingModern.Ising {
 
 
         internal void ToggleSpin() {
+            if(this.Value == 0)
+                this.Value = 1;
             this.Value *= -1;
         }
 
-        internal void ToggleBoundary() {
-            this.Value = Value == 0 ? 1 : 0;
+        internal void ToggleBoundary(bool? boundary = null) {
+            this.Value = boundary ?? Value != 0 ? 0 : -1;
         }
     }
 }

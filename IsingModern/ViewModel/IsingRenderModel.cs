@@ -34,9 +34,9 @@ namespace IsingModern.ViewModel {
         }
 
 
-        DrawingContext _dc;
         protected override void OnRender(DrawingContext dc) {
-            _dc = dc;
+            var sw = new Stopwatch();
+            sw.Start();
             int counter = 0;
             var rect = new Rect(0 * cellSize, 0 * cellSize, cellSize, cellSize);
             foreach(var x in model.Points) {
@@ -45,6 +45,8 @@ namespace IsingModern.ViewModel {
                 dc.DrawRectangle(x.Color, pen, rect);
                 counter++;
             }
+            sw.Stop();
+            Console.WriteLine(sw.ElapsedMilliseconds + "ms " + sw.ElapsedTicks);
         }
 
 
@@ -59,10 +61,10 @@ namespace IsingModern.ViewModel {
 
             var p = model.Points[model.N * y + x];
             if(e.LeftButton == MouseButtonState.Pressed) {
-                p.Value *= -1;
+                p.ToggleSpin();
             }
             if(e.RightButton == MouseButtonState.Pressed) {
-                p.Value = p.Value != 0 ? 0 : 1;
+                p.ToggleBoundary(true);
             }
             //var rect = new Rect(x * cellSize, y * cellSize, cellSize, cellSize);
             //_dc.DrawRectangle(p.Color, pen, rect);
