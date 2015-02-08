@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Input;
-using System.Windows.Shapes;
 using System.Windows;
 using System.Diagnostics;
 
@@ -35,8 +30,10 @@ namespace IsingModern.ViewModel {
 
 
         protected override void OnRender(DrawingContext dc) {
+#if DEBUG
             var sw = new Stopwatch();
             sw.Start();
+#endif
             int counter = 0;
             var rect = new Rect(0 * cellSize, 0 * cellSize, cellSize, cellSize);
             foreach(var x in model.Points) {
@@ -45,10 +42,11 @@ namespace IsingModern.ViewModel {
                 dc.DrawRectangle(x.Color, pen, rect);
                 counter++;
             }
+#if DEBUG
             sw.Stop();
             Console.WriteLine(sw.ElapsedMilliseconds + "ms " + sw.ElapsedTicks);
+#endif
         }
-
 
 
         protected override void OnMouseDown(MouseButtonEventArgs e) {

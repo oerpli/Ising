@@ -1,11 +1,8 @@
-﻿using IsingModern.Ising;
-using IsingModern.ViewModel;
+﻿using IsingModern.ViewModel;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Shapes;
-using System.Windows.Media;
 
 
 namespace IsingModern.Render {
