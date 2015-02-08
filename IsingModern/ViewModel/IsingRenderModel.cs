@@ -11,7 +11,7 @@ namespace IsingModern.ViewModel {
     class IsingRenderModel : Image {
         private IsingModel model;
         private WriteableBitmap wbmap;
-        private double cellSize,viewsize = 600;// this should be dynamic, yo.
+        private double cellSize, viewsize = 600;// this should be dynamic, yo.
         private int rectangleSize;
         public int N { get { return model.N; } }
 
@@ -19,9 +19,8 @@ namespace IsingModern.ViewModel {
             this.SnapsToDevicePixels = false;
             this.Height = this.Width = viewsize; //only square lattices currently
 
-
+            //some options - whatever
             {
-                //some options - whatever
                 RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.NearestNeighbor);
                 RenderOptions.SetEdgeMode(this, EdgeMode.Aliased);
                 //this.Stretch = Stretch.None;
@@ -34,7 +33,7 @@ namespace IsingModern.ViewModel {
                 wbmap = new WriteableBitmap(600, 600, 96, 96, PixelFormats.Bgr24, null);
                 this.Source = wbmap;
                 rectangleSize = (int)viewsize / n;
-                cellSize = viewsize / n; //casting once may be enough. idgaf though.
+                cellSize = viewsize / n;
             }
             //initializing model
             {
@@ -43,16 +42,64 @@ namespace IsingModern.ViewModel {
             }
 
             //rendering:
+            {
 #if DEBUG
-            var sw = new Stopwatch();
-            sw.Start();
+                var sw = new Stopwatch();
+                sw.Start();
 #endif
-            DrawLattice();
+                DrawLattice();
 #if DEBUG
-            sw.Stop();
-            Console.WriteLine(sw.ElapsedMilliseconds + "ms " + sw.ElapsedTicks);
+                sw.Stop();
+                Console.WriteLine(sw.ElapsedMilliseconds + "ms " + sw.ElapsedTicks);
+            }
 #endif
         }
+
+        #region Manipulation
+        public void ChangeSize(int newSize) {
+            model = new IsingModel(newSize);
+            cellSize = viewsize / newSize;
+            rectangleSize = (int)viewsize / newSize;
+            DrawLattice();
+        }
+        protected override void OnMouseDown(MouseButtonEventArgs e) {
+            base.OnMouseDown(e);
+            var pos = e.GetPosition(this);
+            int x = (int)pos.X;
+            int y = (int)pos.Y;
+            x /= (int)cellSize;
+            y /= (int)cellSize;
+
+            Console.WriteLine(x + " " + y);
+            var p = model.Spins[model.N * y + x];
+            if(e.LeftButton == MouseButtonState.Pressed) {
+                p.ToggleSpin();
+            }
+            if(e.RightButton == MouseButtonState.Pressed) {
+                p.ToggleBoundary(true);
+            }
+            DrawSpin(p);
+            //var rect = new Rect(x * cellSize, y * cellSize, cellSize, cellSize);
+            //_dc.DrawRectangle(p.Color, pen, rect);
+        }
+
+        internal void SetBoundary(bool PeriodicBoundary) {
+            model.SetBoundary(PeriodicBoundary);
+            DrawLattice();
+        }
+
+        internal void Randomize() {
+            model.Randomize();
+            DrawLattice();
+        }
+
+        internal void ToggleTopRight() {
+            var p = model.Spins[2 * N - 2];
+            p.ToggleSpin();
+            DrawSpin(p);
+        }
+
+        #endregion
 
         #region Rendering
         private void DrawLattice() {
@@ -110,52 +157,6 @@ namespace IsingModern.ViewModel {
             DrawLattice();
         }
 
-
-        #endregion
-
-        #region Manipulation
-        public void ChangeSize(int newSize) {
-            model = new IsingModel(newSize);
-            cellSize = viewsize / newSize;
-            rectangleSize = (int)viewsize / newSize;
-            DrawLattice();
-        }
-        protected override void OnMouseDown(MouseButtonEventArgs e) {
-            base.OnMouseDown(e);
-            var pos = e.GetPosition(this);
-            int x = (int)pos.X;
-            int y = (int)pos.Y;
-            x /= (int)cellSize;
-            y /= (int)cellSize;
-
-            Console.WriteLine(x + " " + y);
-            var p = model.Spins[model.N * y + x];
-            if(e.LeftButton == MouseButtonState.Pressed) {
-                p.ToggleSpin();
-            }
-            if(e.RightButton == MouseButtonState.Pressed) {
-                p.ToggleBoundary(true);
-            }
-            DrawSpin(p);
-            //var rect = new Rect(x * cellSize, y * cellSize, cellSize, cellSize);
-            //_dc.DrawRectangle(p.Color, pen, rect);
-        }
-
-        internal void SetBoundary(bool PeriodicBoundary) {
-            model.SetBoundary(PeriodicBoundary);
-            DrawLattice();
-        }
-
-        internal void Randomize() {
-            model.Randomize();
-            DrawLattice();
-        }
-
-        internal void ToggleTopRight() {
-            var p = model.Spins[2 * N - 2];
-            p.ToggleSpin();
-            DrawSpin(p);
-        }
 
         #endregion
     }
