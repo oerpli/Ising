@@ -18,25 +18,17 @@ namespace IsingModern.Ising {
     public abstract class Settings {
         static public bool DEBUG = false;
     }
-    public class Point : INotifyPropertyChanged {
+    public class Point {
         private int _value;
         public int Value {
             get {
                 return _value;
             }
             internal set {
-                //if(_value != value) {
-                //rectangle.Fill = Color;
-                //text.Text = value.ToString();
                 _value = value;
-                OnPropertyChanged("Color");
-                //OnPropertyChanged("Color");
-                //OnPropertyChanged("Text");
-                //}
             }
         }
 
-        //public int Value { get; internal set; }
         public Point[] Neighbours { get; private set; } //North East South West
 
 
@@ -63,39 +55,6 @@ namespace IsingModern.Ising {
             }
         }
 
-
-        //private Rectangle rectangle;
-        //private TextBlock text;
-        //public Grid RenderElement { get; private set; }
-        //private void InitDraw() {
-        //    if(RenderElement == null) {
-        //        RenderElement = new Grid() {
-        //            Width = 600,
-        //            Height = 600
-        //        };
-        //    }
-        //    if(rectangle == null) {
-        //        rectangle = new Rectangle() {
-        //            Fill = this.ColorX,
-        //            MinWidth = 1,
-        //            MinHeight = 1,
-        //            Margin = new Thickness(0),
-        //            Stretch = Stretch.UniformToFill
-        //        };
-        //        RenderElement.Children.Add(rectangle);
-
-        //    }
-        //    if(Settings.DEBUG && text == null) {
-        //        text = new TextBlock() {
-        //            Text = this.Text,
-        //            FontSize = 20,
-        //            TextAlignment = TextAlignment.Center,
-        //            VerticalAlignment = VerticalAlignment.Center,
-        //            HorizontalAlignment = HorizontalAlignment.Center
-        //        };
-        //        RenderElement.Children.Add(text);
-        //    }
-        //}
 
         static Point() {
             var brushes = PointColors.Values.AsEnumerable();
@@ -125,16 +84,15 @@ namespace IsingModern.Ising {
             get { return Value.ToString(); }
         }
 
-        //private int _lastvalue = int.MinValue;
-        //internal void Redraw(bool force = false) {
-        //    if(Value != _lastvalue || force) {
-        //        if(Settings.DEBUG) text.Text = Text;
-        //        rectangle.Fill = ColorX;
-        //        ColorX.Freeze();
-        //        _lastvalue = Value;
-        //    }
-        //}
         #endregion
 
+
+        internal void ToggleSpin() {
+            this.Value *= -1;
+        }
+
+        internal void ToggleBoundary() {
+            this.Value = Value == 0 ? 1 : 0;
+        }
     }
 }

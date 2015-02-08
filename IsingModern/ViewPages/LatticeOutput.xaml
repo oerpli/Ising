@@ -9,7 +9,7 @@
              d:DesignHeight="600" d:DesignWidth="600">
 
 
-    <Grid Style="{StaticResource ContentRoot}" Name="maingrid" >
+    <Grid Style="{StaticResource ContentRoot}" Name="maingrid" KeyDown="maingrid_KeyDown" >
         <ScrollViewer>
             <Grid MinWidth="300" MinHeight="300"  VerticalAlignment="Top" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
@@ -19,61 +19,21 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Column="0" Name="rmtest" Width="600" Height="600" Background="Beige"/>
-
-                <!--<ItemsControl Grid.Column="0" Name="IsingLattice" ItemsSource="{Binding Points}" >
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Name="isingGrid"
-                                Columns="{Binding N}"
-                                MinWidth="200" MaxWidth="600"
-                                MinHeight="200" MaxHeight="600"
-                                Margin="0,0,0,0"
-                                Focusable="True"
-                                         RenderOptions.BitmapScalingMode="LowQuality"
-                                         RenderOptions.ClearTypeHint="Auto"
-                                         RenderOptions.EdgeMode="Aliased"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Top">
-                            </UniformGrid>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-
-                    -->
-                <!-- ItemTemplate -->
-                <!--
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Rectangle
-                                    MouseLeftButtonDown="Rectangle_MouseLeftButtonDown"
-                                    MouseRightButtonDown="Rectangle_MouseRightButtonDown"
-                                    Fill="{Binding Color}"
-                                    MinHeight="1"
-                                    MinWidth="1"
-                                    Stretch="UniformToFill"
-                                     Margin = "0"
-                                    />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>-->
-
+                <Grid Grid.Column="0" Name="modelParentElement" Width="600" Height="600" Background="Transparent"/>
                 <StackPanel Grid.Column="2" HorizontalAlignment="Left">
                     <Button Name="ToggleBoundary" 
                             Click="ToggleBoundary_Click"
                             Content="Boundary!" 
                            Height="30" VerticalAlignment="Top"/>
                     <Button Name="Randomize" 
-                            Click="RandomizeClick" PreviewKeyDown="RandomizeClick"  
+                            Click="RandomizeClick" 
                             Content="Randomize!"
                             Height="30" VerticalAlignment="Top"/>
                     <Button Name="LatticeSize" 
-                            Click="LatticeSize_Click"  MouseWheel="LatticeSize_MouseWheel" 
+                            Click="LatticeSize_Click"  MouseWheel="LatticeSize_MouseWheel"  KeyDown="LatticeSize_KeyDown" 
                             Content="Set Size"
                            Height="30" VerticalAlignment="Top"/>
-                    <Button Name="UpdateSingle" 
-                            Click="UpdateCorner" 
-                            Content="Update Corner"
-                           Height="30" VerticalAlignment="Top"/>
+                  
                 </StackPanel>
                 <StackPanel Grid.Column="3">
                     <TextBlock Name="BoundaryText"

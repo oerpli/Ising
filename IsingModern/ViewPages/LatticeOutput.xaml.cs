@@ -13,100 +13,91 @@ namespace IsingModern.Render {
     /// Interaction logic for LatticeOutput.xaml
     /// </summary>
     public partial class LatticeOutput : UserControl {
-        IsingRenderModel rmtestmodel;
-        bool PeriodicBoundary = false;
-        int currentN = 100;
+        private IsingRenderModel m;
+        private bool PeriodicBoundary = false;
+        private int currentN = 50;
+        private int rndCounter = 0;
+
+        private const int maximalN = 150, minimalN = 3; //both should divide 600. 
+
+
+        #region Initialization
 
         public LatticeOutput() {
             InitializeComponent();
-            rmtestmodel = new IsingRenderModel(50);
-            rmtest.Children.Add(rmtestmodel);
+            m = new IsingRenderModel(currentN, PeriodicBoundary);
+            BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
+            modelParentElement.Children.Add(m);
             LatticeSizeInput.Text = currentN.ToString();
-            //NewLattice(currentN);
-            maingrid.DataContext = IsingModel.Current;
         }
 
         private void NewLattice(int n) {
-            IsingModel.Current = new IsingModel(n);
-            ToggleBoundary_Click();
-            IsingModel.Redraw();
+            m.ChangeSize(n);
+            m.SetBoundary(PeriodicBoundary);
+            m.InvalidateVisual();
         }
-        private int count = 0;
+
+        #endregion
+
+        #region LatticeManipulation
+
+
+        private void maingrid_KeyDown(object sender, KeyEventArgs e) {
+            if(e.Key == Key.R) {
+                RandomizeClick(null, null);
+                e.Handled = true;
+            }
+        }
+
         private void RandomizeClick(object sender, RoutedEventArgs e) {
-            IsingModel.Current.Randomize();
-            StatusText.Text = "Count: " + (++count).ToString();
-            rmtestmodel.InvalidateVisual();
-            //Stopwatch watch = new Stopwatch();
-            //watch.Start();
-            //Stuff.Dispatcher.BeginInvoke(
-            //   DispatcherPriority.Normal,
-            //   new UpdateLatticeDelegate());
-            //watch.Stop();
-            //Console.WriteLine(watch.ElapsedMilliseconds);
-            //IsingModel.Redraw();
+            m.Randomize();
+            StatusText.Text = "Count: " + (++rndCounter).ToString();
+            m.InvalidateVisual();
         }
+
         private void ToggleBoundary_Click(object sender = null, RoutedEventArgs e = null) {
             if(sender != null) PeriodicBoundary = !PeriodicBoundary;
-            IsingModel.Current.SetBoundary(PeriodicBoundary);
+            m.SetBoundary(PeriodicBoundary);
             BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
-            IsingModel.Redraw();
+            m.InvalidateVisual();
         }
+
+        #endregion
+
+        #region LatticeSize
         private void LatticeSize_Click(object sender, RoutedEventArgs e) {
-            //NewLattice(currentN);
+            NewLattice(currentN);
+            _updateLatticeSizeText();
+            e.Handled = true;
         }
+        private void LatticeSize_KeyDown(object sender, KeyEventArgs e) {
+            if(e.Key == Key.Left) {
+                _changeLatticeSize(-1);
+                e.Handled = true;
+            } else if(e.Key == Key.Right) {
+                _changeLatticeSize(1);
+                e.Handled = true;
+            }
+        }
+
         private void LatticeSize_MouseWheel(object sender, MouseWheelEventArgs e) {
-            int diff = e.Delta > 0 ? 1 : -1;
-            currentN = Math.Min(80, Math.Max(3, currentN + diff));
-            LatticeSizeInput.Text = currentN.ToString();
+            _changeLatticeSize(e.Delta > 0 ? 1 : -1, true);
         }
 
-        private void Rectangle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-            var s = (Ising.Point)(((Rectangle)sender).DataContext);
-            s.Value *= -1;
-            Console.WriteLine(s.Value.ToString());
+
+        //if using scrollwheel increase/decrase to next divisor of 600 (to avoid ugly rendering) - can be finetuned with left/right keys if necessary
+        private void _changeLatticeSize(int diff, bool mouse = false) {
+            do {
+                Console.WriteLine(600 % currentN);
+                currentN = Math.Min(maximalN, Math.Max(minimalN, currentN + diff));
+            } while(mouse && 600 % currentN != 0);
+            _updateLatticeSizeText();
+
         }
 
-        private void Rectangle_MouseRightButtonDown(object sender, MouseButtonEventArgs e) {
-            var s = (Ising.Point)(((Rectangle)sender).DataContext);
-            s.Value = s.Value == 0 ? 1 : 0;//s.Value*s.Value -1;
-            Console.WriteLine(s.Value.ToString());
+        private void _updateLatticeSizeText() {
+            LatticeSizeInput.Text = (currentN != m.N ? "(" + m.N + ") " : "") + currentN.ToString();
         }
-
-        private void UpdateCorner(object sender, RoutedEventArgs e) {
-            IsingModel.Current.Points[currentN * 2 - 2].Value *= -1;
-        }
+        #endregion
     }
-
-
-
-
-    //public override void DoStuff() {
-    //     Stopwatch watch = new Stopwatch();
-    //     watch.Start();
-    //     base.DoStuff();
-    //     var thread = new Thread(new ThreadStart(delegate() {
-    //         Parallel.For(0, N - 1, i => {
-    //             Parallel.For(0, N - 1, j => {
-    //                 var op = rects[i, j].Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
-    //                     new Action(delegate() {
-    //                     rects[i, j].Fill = Color(model[i, j]);
-    //                     var x = rects[i, j].Fill;
-    //                     var y = x;
-    //                 }));
-    //                 //rects[i, j].Fill = Color(model[i, j]);
-    //                 op.Completed += new EventHandler(WriteStatus);
-    //             });
-    //         });
-    //         watch.Stop();
-    //         Console.WriteLine("base: " + watch.ElapsedMilliseconds); model[0, 0] = 3;
-    //     }));
-    //     thread.Start();
-    //     //// The Work to perform on another thread 
-    //     //ThreadStart start = delegate() { // ... 
-    //     //    // Sets the Text on a TextBlock Control.
-    //     //    // This will work as its using the dispatcher
-    //     //    Dispatcher.Invoke(DispatcherPriority.Normal, new Action<string>(SetStatus), "From Other Thread");
-    //     //}; // Create the thread and kick it started! 
-    //     //new Thread(start).Start();
-    // }
 }

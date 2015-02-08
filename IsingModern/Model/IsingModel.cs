@@ -35,11 +35,11 @@ namespace IsingModern.Ising {
             Count = 0;
             for(int i = 0; i < N; i++) {
                 for(int j = 0; j < N; j++) {
-                    Points[Count++] = points[i, j] = new Point(r.NextDouble() > 0.5 ? 1 : -1);
+                    Points[Count++] = points[i, j] = new Point(r.Next(2) * 2 - 1);
                 }
             }
             SetBoundary(true);
-            Current = this;
+            //Current = this;
             InitializeNeighbours(points);
         }
         private void InitializeNeighbours(Point[,] points) {
@@ -57,8 +57,9 @@ namespace IsingModern.Ising {
         }
 
         public void SetBoundary(bool periodic) {
+            var r = new Random();
             foreach(var p in Boundary) {
-                p.Value = periodic ? 1 : 0;
+                p.Value = periodic ? r.Next(2)*2-1 : 0;
             }
         }
 
@@ -85,20 +86,7 @@ namespace IsingModern.Ising {
 
 
         #region rendering
-        public static IsingModel Current;
-
-        static public void Redraw(bool force = false) {
-            foreach(var p in Current.Points) {
-                //  p.Redraw(force);
-            }
-        }
-        //public IEnumerable<UIElement> RenderElements {
-        //    get {
-        //        foreach(var p in Points) {
-        //            yield return p.RenderElement;
-        //        }
-        //    }
-        //}
+        //public static IsingModel Current;
 
         public IEnumerable<SolidColorBrush> RenderColors {
             get {
