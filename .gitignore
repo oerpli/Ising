@@ -1,7 +1,7 @@
 #################
 ## Eclipse
 #################
-
+Threading/*
 *.pydevproject
 .project
 .metadata
