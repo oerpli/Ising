@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 
 using IsingModern.Ising;
+using IsingModern.Render;
 
 namespace IsingModern.Pages.Settings {
     /// <summary>
@@ -164,6 +165,7 @@ namespace IsingModern.Pages.Settings {
                     Point.PointColorBrushes.Add(-1, minus);
                     Point.PointColors.Add(1, selectedAccentColor);
                     Point.PointColors.Add(-1, accentColorsDarker[index]);
+                    LatticeOutput.RefreshRender();
                 }
                 if(this.selectedAccentColor != value) {
                     this.selectedAccentColor = value;

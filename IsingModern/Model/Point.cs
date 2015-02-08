@@ -10,6 +10,7 @@ namespace IsingModern.Ising {
     }
     public class Point {
         private int _value;
+        public int Index { get; private set; }
         public int Value {
             get {
                 return _value;
@@ -22,7 +23,8 @@ namespace IsingModern.Ising {
         public Point[] Neighbours { get; private set; } //North East South West
 
 
-        public Point(int val) {
+        public Point(int val, int index) {
+            Index = index;
             //_value = val;
             //InitDraw();
             Value = val;

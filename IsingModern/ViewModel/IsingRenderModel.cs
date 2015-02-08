@@ -2,7 +2,6 @@
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Input;
-using System.Windows;
 using System.Diagnostics;
 using System.Collections.Generic;
 
@@ -15,35 +14,40 @@ namespace IsingModern.ViewModel {
         private IsingModel model;
         private double viewsize = 600;// this should be dynamic, yo.
         private double cellSize;
+        private int pixelsize;
         private Pen pen = new Pen() { Thickness = 0 };
         public int N { get { return model.N; } }
-
-
-        //private VisualCollection children;
-        //private DrawingVisual visual = new DrawingVisual();
-        public WriteableBitmap wbmap;
+        private WriteableBitmap wbmap;
 
         public IsingRenderModel(int n = 50, bool periodicBoundary = false) {
             pen.Freeze(); // increases performance of rendering
-            model = new IsingModel(n);
-            cellSize = viewsize / n; //casting once may be enough. idgaf though.
             this.SnapsToDevicePixels = false;
             this.Height = this.Width = viewsize; //only square lattices currently
-            this.SetBoundary(periodicBoundary);
 
 
+            {
+                //some options - whatever
+                RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.HighQuality);
+                RenderOptions.SetEdgeMode(this, EdgeMode.Aliased);
+                //this.Stretch = Stretch.None;
+                //this.HorizontalAlignment = HorizontalAlignment.Left;
+                //this.VerticalAlignment = VerticalAlignment.Top;
+            }
+            //setting rendering up
+            {
+                //fixing the scaling at 96dpi works so far. "It's not as dumb as it looks" - Magnus Carlsen
+                wbmap = new WriteableBitmap(600, 600, 96, 96, PixelFormats.Bgr24, null);
+                this.Source = wbmap;
+                pixelsize = (int)viewsize / n;
+                cellSize = viewsize / n; //casting once may be enough. idgaf though.
+            }
+            //initializing model
+            {
+                model = new IsingModel(n);
+                this.SetBoundary(periodicBoundary);
+            }
 
-            //some options - whatever
-            RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.HighQuality);
-            RenderOptions.SetEdgeMode(this, EdgeMode.Aliased);
-            //this.Stretch = Stretch.None;
-            //this.HorizontalAlignment = HorizontalAlignment.Left;
-            //this.VerticalAlignment = VerticalAlignment.Top;
-
-            //fixing the scaling at 96dpi works so far. "It's not as dumb as it looks" - Magnus Carlsen
-            wbmap = new WriteableBitmap(600, 600, 96, 96, PixelFormats.Bgr24, null);
-            this.Source = wbmap;
-
+            //rendering:
 #if DEBUG
             var sw = new Stopwatch();
             sw.Start();
@@ -57,18 +61,28 @@ namespace IsingModern.ViewModel {
 
         private void DrawLattice() {
             wbmap.Lock();
-            int size = (int)viewsize / N;
             Random rnd = new Random(DateTime.Now.Millisecond);
             int counter = 0;
-            for(int y = 0; y < N; y += 1) {
-                for(int x = 0; x < N; x += 1) {
-                    DrawRectangle(size * x, size * y, size, size, model.Points[counter++].Color);
+            for(int y = 0; y < N; y++) {
+                for(int x = 0; x < N; x++) {
+                    DrawPoint(x, y, model.Points[counter++].Color);
                 }
             }
             wbmap.Unlock();
         }
 
-        private void DrawRectangle(int left, int top, int width, int height, Color color) {
+        private void DrawPoint(Point p) {
+            int left = p.Index % N;
+            int top = p.Index / N;
+            wbmap.Lock();
+            DrawPoint(left, top, p.Color);
+            wbmap.Unlock();
+        }
+
+        private void DrawPoint(int left, int top, Color color) {
+            left *= pixelsize;
+            top *= pixelsize;
+            int width = pixelsize, height = pixelsize;
             // Compute the pixel's color
             int colorData = color.R << 16; // R
             colorData |= color.G << 8; // G
@@ -93,40 +107,19 @@ namespace IsingModern.ViewModel {
                     }
                 }
             }
-            wbmap.AddDirtyRect(new Int32Rect(left, top, width, height));
+            wbmap.AddDirtyRect(new System.Windows.Int32Rect(left, top, width, height));
         }
 
-
+        internal void Refresh() {
+            DrawLattice();
+        }
 
         public void ChangeSize(int newSize) {
             model = new IsingModel(newSize);
             cellSize = viewsize / newSize;
+            pixelsize = (int)viewsize / newSize;
+            DrawLattice();
         }
-
-
-
-        //this method is useful when only rendering up to 100 elements -- afterwards it's to slow
-        //        protected override void OnRender(DrawingContext dc) {
-        //#if DEBUG
-        //            var sw = new Stopwatch();
-        //            sw.Start();
-        //#endif
-
-
-        //            //int counter = 0;
-        //            //var rect = new Rect(0 * cellSize, 0 * cellSize, cellSize, cellSize);
-        //            //foreach(var x in model.Points) {
-        //            //    if(counter % model.N != 0) rect.Offset(cellSize, 0);
-        //            //    else if(counter > 0) rect.Offset(-(model.N - 1) * cellSize, cellSize);
-        //            //    dc.DrawRectangle(x.Color, pen, rect);
-        //            //    counter++;
-        //            //}
-        //#if DEBUG
-        //            sw.Stop();
-        //            Console.WriteLine(sw.ElapsedMilliseconds + "ms " + sw.ElapsedTicks);
-        //#endif
-        //        }
-
 
         protected override void OnMouseDown(MouseButtonEventArgs e) {
             base.OnMouseDown(e);
@@ -136,6 +129,7 @@ namespace IsingModern.ViewModel {
             x /= (int)cellSize;
             y /= (int)cellSize;
 
+            Console.WriteLine(x + " " + y);
             var p = model.Points[model.N * y + x];
             if(e.LeftButton == MouseButtonState.Pressed) {
                 p.ToggleSpin();
@@ -143,26 +137,25 @@ namespace IsingModern.ViewModel {
             if(e.RightButton == MouseButtonState.Pressed) {
                 p.ToggleBoundary(true);
             }
+            DrawPoint(p);
             //var rect = new Rect(x * cellSize, y * cellSize, cellSize, cellSize);
             //_dc.DrawRectangle(p.Color, pen, rect);
-            this.InvalidateVisual();
         }
 
         internal void SetBoundary(bool PeriodicBoundary) {
             model.SetBoundary(PeriodicBoundary);
-            this.InvalidateVisual();
+            DrawLattice();
         }
 
         internal void Randomize() {
             model.Randomize();
-            this.InvalidateVisual();
+            DrawLattice();
         }
 
         internal void TopRight() {
             var p = model.Points[2 * N - 2];
             p.ToggleSpin();
-            this.InvalidateVisual();
-
+            DrawLattice();
             //using(var dc = visual.RenderOpen()) {
             //    var rect = new Rect((N - 2) * cellSize, cellSize, cellSize, cellSize);
             //    dc.DrawRectangle(p.Color, pen, rect);

@@ -5,7 +5,6 @@ using System.Windows.Media;
 
 namespace IsingModern.Ising {
     public partial class IsingModel {
-        static private int instanceNumber = 0;
         public int InstanceNumber { get; private set; }
         public int N;
         public int Count { get; private set; }
@@ -14,7 +13,6 @@ namespace IsingModern.Ising {
         private Random r = new Random();
 
         public IsingModel(int n) {
-            InstanceNumber = instanceNumber++;
             Point[,] points;
             N = n;
             points = new Point[N, N];
@@ -23,7 +21,8 @@ namespace IsingModern.Ising {
             Count = 0;
             for(int i = 0; i < N; i++) {
                 for(int j = 0; j < N; j++) {
-                    Points[Count++] = points[i, j] = new Point(r.Next(2) * 2 - 1);
+                    Points[Count] = points[i, j] = new Point(r.Next(2) * 2 - 1, Count);
+                    Count++;
                 }
             }
             SetBoundary(true);
@@ -47,7 +46,7 @@ namespace IsingModern.Ising {
         public void SetBoundary(bool periodic) {
             var r = new Random();
             foreach(var p in Boundary) {
-                p.Value = periodic ? r.Next(2)*2-1 : 0;
+                p.Value = periodic ? r.Next(2) * 2 - 1 : 0;
             }
         }
 

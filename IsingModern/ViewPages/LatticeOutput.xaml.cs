@@ -10,18 +10,20 @@ namespace IsingModern.Render {
     /// Interaction logic for LatticeOutput.xaml
     /// </summary>
     public partial class LatticeOutput : UserControl {
+        static LatticeOutput Current;
         private IsingRenderModel viewmodel;
         private bool PeriodicBoundary = false;
-        private int currentN = 600;
+        private int currentN = maximalN;
         private int rndCounter = 0;
 
-        private const int maximalN = 600, minimalN = 3; //both should divide 600. 
+        private const int maximalN = 300, minimalN = 3; //both should divide 600. 
 
 
         #region Initialization
 
         public LatticeOutput() {
             InitializeComponent();
+            Current = this;
             viewmodel = new IsingRenderModel(currentN, PeriodicBoundary);
             BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
             modelParentElement.Children.Add(viewmodel);
@@ -54,6 +56,10 @@ namespace IsingModern.Render {
             if(sender != null) PeriodicBoundary = !PeriodicBoundary;
             viewmodel.SetBoundary(PeriodicBoundary);
             BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
+        }
+
+        private void TopRight_Click(object sender, RoutedEventArgs e) {
+            viewmodel.TopRight();
         }
 
         #endregion
@@ -94,8 +100,12 @@ namespace IsingModern.Render {
         }
         #endregion
 
-        private void TopRight_Click(object sender, RoutedEventArgs e) {
-            viewmodel.TopRight();
+        #region Rendering
+        static internal void RefreshRender() {
+            Current.viewmodel.Refresh();
+
         }
+
+        #endregion
     }
 }
