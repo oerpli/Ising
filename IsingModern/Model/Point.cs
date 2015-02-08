@@ -47,7 +47,7 @@ namespace IsingModern.Ising {
 
 
         static Point() {
-            var brushes = PointColors.Values.AsEnumerable();
+            var brushes = PointColorBrushes.Values.AsEnumerable();
             foreach(var x in brushes) {
                 if(x.CanFreeze) {
                     x.Freeze();
@@ -55,13 +55,29 @@ namespace IsingModern.Ising {
             }
         }
 
-        public static Dictionary<int, SolidColorBrush> PointColors = new Dictionary<int, SolidColorBrush>() 
+        public static Dictionary<int, SolidColorBrush> PointColorBrushes = new Dictionary<int, SolidColorBrush>() 
             {   { -1 , new SolidColorBrush(Colors.DeepSkyBlue) }
             ,   { 1, new SolidColorBrush(Colors.DarkBlue)  } 
             ,   { 0 , new SolidColorBrush(Colors.White)}};
-        private static SolidColorBrush failColor = new SolidColorBrush(Colors.Gold);
 
-        public SolidColorBrush Color {
+        public static Dictionary<int, Color> PointColors = new Dictionary<int, Color>() 
+            {   { -1 , Colors.DeepSkyBlue }
+            ,   { 1, Colors.DarkBlue  } 
+            ,   { 0 , Colors.White}};
+        private static SolidColorBrush failColorBrush = new SolidColorBrush(Colors.Gold);
+        private static Color failColor = Colors.Gold;
+
+        public SolidColorBrush ColorBrush {
+            get {
+                if(PointColorBrushes.ContainsKey(Value)) {
+                    return PointColorBrushes[Value];
+                } else {
+                    return failColorBrush;
+                }
+            }
+        }
+
+        public Color Color {
             get {
                 if(PointColors.ContainsKey(Value)) {
                     return PointColors[Value];

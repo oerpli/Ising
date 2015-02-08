@@ -12,10 +12,10 @@ namespace IsingModern.Render {
     public partial class LatticeOutput : UserControl {
         private IsingRenderModel viewmodel;
         private bool PeriodicBoundary = false;
-        private int currentN = 50;
+        private int currentN = 600;
         private int rndCounter = 0;
 
-        private const int maximalN = 150, minimalN = 3; //both should divide 600. 
+        private const int maximalN = 600, minimalN = 3; //both should divide 600. 
 
 
         #region Initialization
@@ -31,7 +31,6 @@ namespace IsingModern.Render {
         private void NewLattice(int n) {
             viewmodel.ChangeSize(n);
             viewmodel.SetBoundary(PeriodicBoundary);
-            viewmodel.InvalidateVisual();
         }
 
         #endregion
@@ -49,14 +48,12 @@ namespace IsingModern.Render {
         private void RandomizeClick(object sender, RoutedEventArgs e) {
             viewmodel.Randomize();
             StatusText.Text = "Count: " + (++rndCounter).ToString();
-            viewmodel.InvalidateVisual();
         }
 
         private void ToggleBoundary_Click(object sender = null, RoutedEventArgs e = null) {
             if(sender != null) PeriodicBoundary = !PeriodicBoundary;
             viewmodel.SetBoundary(PeriodicBoundary);
             BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
-            viewmodel.InvalidateVisual();
         }
 
         #endregion
@@ -99,7 +96,6 @@ namespace IsingModern.Render {
 
         private void TopRight_Click(object sender, RoutedEventArgs e) {
             viewmodel.TopRight();
-            viewmodel.InvalidateVisual();
         }
     }
 }

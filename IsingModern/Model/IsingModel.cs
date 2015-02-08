@@ -76,7 +76,7 @@ namespace IsingModern.Ising {
         #region rendering
         //public static IsingModel Current;
 
-        public IEnumerable<SolidColorBrush> RenderColors {
+        public IEnumerable<Color> RenderColors {
             get {
                 foreach(var p in Points) {
                     yield return p.Color;

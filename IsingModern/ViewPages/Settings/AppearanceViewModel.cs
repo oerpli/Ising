@@ -153,12 +153,17 @@ namespace IsingModern.Pages.Settings {
                 if(index != -1) {
                     Point.PointColors.Remove(1);
                     Point.PointColors.Remove(-1);
+                    Point.PointColorBrushes.Remove(1);
+                    Point.PointColorBrushes.Remove(-1);
+
                     var plus = new SolidColorBrush(this.selectedAccentColor);
                     var minus = new SolidColorBrush(this.accentColorsDarker[index]);
                     plus.Freeze();
                     minus.Freeze();
-                    Point.PointColors.Add(1, plus);
-                    Point.PointColors.Add(-1, minus);
+                    Point.PointColorBrushes.Add(1, plus);
+                    Point.PointColorBrushes.Add(-1, minus);
+                    Point.PointColors.Add(1, selectedAccentColor);
+                    Point.PointColors.Add(-1, accentColorsDarker[index]);
                 }
                 if(this.selectedAccentColor != value) {
                     this.selectedAccentColor = value;
