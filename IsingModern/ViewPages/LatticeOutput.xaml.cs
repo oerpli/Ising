@@ -10,7 +10,7 @@ namespace IsingModern.Render {
     /// Interaction logic for LatticeOutput.xaml
     /// </summary>
     public partial class LatticeOutput : UserControl {
-        private IsingRenderModel m;
+        private IsingRenderModel viewmodel;
         private bool PeriodicBoundary = false;
         private int currentN = 50;
         private int rndCounter = 0;
@@ -22,16 +22,16 @@ namespace IsingModern.Render {
 
         public LatticeOutput() {
             InitializeComponent();
-            m = new IsingRenderModel(currentN, PeriodicBoundary);
+            viewmodel = new IsingRenderModel(currentN, PeriodicBoundary);
             BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
-            modelParentElement.Children.Add(m);
+            modelParentElement.Children.Add(viewmodel);
             LatticeSizeInput.Text = currentN.ToString();
         }
 
         private void NewLattice(int n) {
-            m.ChangeSize(n);
-            m.SetBoundary(PeriodicBoundary);
-            m.InvalidateVisual();
+            viewmodel.ChangeSize(n);
+            viewmodel.SetBoundary(PeriodicBoundary);
+            viewmodel.InvalidateVisual();
         }
 
         #endregion
@@ -47,16 +47,16 @@ namespace IsingModern.Render {
         }
 
         private void RandomizeClick(object sender, RoutedEventArgs e) {
-            m.Randomize();
+            viewmodel.Randomize();
             StatusText.Text = "Count: " + (++rndCounter).ToString();
-            m.InvalidateVisual();
+            viewmodel.InvalidateVisual();
         }
 
         private void ToggleBoundary_Click(object sender = null, RoutedEventArgs e = null) {
             if(sender != null) PeriodicBoundary = !PeriodicBoundary;
-            m.SetBoundary(PeriodicBoundary);
+            viewmodel.SetBoundary(PeriodicBoundary);
             BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
-            m.InvalidateVisual();
+            viewmodel.InvalidateVisual();
         }
 
         #endregion
@@ -93,8 +93,13 @@ namespace IsingModern.Render {
         }
 
         private void _updateLatticeSizeText() {
-            LatticeSizeInput.Text = (currentN != m.N ? "(" + m.N + ") " : "") + currentN.ToString();
+            LatticeSizeInput.Text = (currentN != viewmodel.N ? "(" + viewmodel.N + ") " : "") + currentN.ToString();
         }
         #endregion
+
+        private void TopRight_Click(object sender, RoutedEventArgs e) {
+            viewmodel.TopRight();
+            viewmodel.InvalidateVisual();
+        }
     }
 }

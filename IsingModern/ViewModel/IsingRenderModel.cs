@@ -9,7 +9,7 @@ using IsingModern.Ising;
 namespace IsingModern.ViewModel {
     class IsingRenderModel : FrameworkElement {
         private IsingModel model;
-        private int viewsize = 600;// this should be dynamic, yo.
+        private double viewsize = 600;// this should be dynamic, yo.
         private double cellSize;
         private Pen pen = new Pen() { Thickness = 0 };
         public int N { get { return model.N; } }
@@ -17,7 +17,7 @@ namespace IsingModern.ViewModel {
         public IsingRenderModel(int n = 50, bool periodicBoundary = false) {
             pen.Freeze(); // increases performance of rendering
             model = new IsingModel(n);
-            cellSize = ((double)viewsize) / ((double)n); //casting once may be enough. idgaf though.
+            cellSize = viewsize / n; //casting once may be enough. idgaf though.
             this.SnapsToDevicePixels = false;
             this.Height = this.Width = viewsize; //only square lattices currently
             this.SetBoundary(periodicBoundary);
@@ -25,7 +25,7 @@ namespace IsingModern.ViewModel {
 
         public void ChangeSize(int newSize) {
             model = new IsingModel(newSize);
-            cellSize = ((double)viewsize) / ((double)newSize);
+            cellSize = viewsize / newSize;
         }
 
 
@@ -76,6 +76,10 @@ namespace IsingModern.ViewModel {
 
         internal void Randomize() {
             model.Randomize();
+        }
+
+        internal void TopRight() {
+            model.Points[2 * N - 2].ToggleSpin();
         }
     }
 }
