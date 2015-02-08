@@ -155,11 +155,7 @@ namespace IsingModern.ViewModel {
         internal void TopRight() {
             var p = model.Points[2 * N - 2];
             p.ToggleSpin();
-            DrawLattice();
-            //using(var dc = visual.RenderOpen()) {
-            //    var rect = new Rect((N - 2) * cellSize, cellSize, cellSize, cellSize);
-            //    dc.DrawRectangle(p.Color, pen, rect);
-            //}
+            DrawPoint(p);
         }
     }
 }
