@@ -12,28 +12,38 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using System.ComponentModel;
 
 namespace IsingModern.Ising {
-    public class Point {
+    public abstract class Settings {
+        static public bool DEBUG = false;
+    }
+    public class Point : INotifyPropertyChanged {
         private int _value;
         public int Value {
             get {
                 return _value;
             }
             internal set {
-                if(_value != value) {
-                    Rectangle.Fill = Color;
-                    _value = value;
-                }
+                //if(_value != value) {
+                //rectangle.Fill = Color;
+                //text.Text = value.ToString();
+                _value = value;
+                OnPropertyChanged("Color");
+                //OnPropertyChanged("Color");
+                //OnPropertyChanged("Text");
+                //}
             }
         }
+
+        //public int Value { get; internal set; }
         public Point[] Neighbours { get; private set; } //North East South West
 
 
         public Point(int val) {
-            _value = val;
-            InitRectangle();
+            //_value = val;
+            //InitDraw();
+            Value = val;
         }
 
         public void SetNeighbours(Point North, Point East, Point South, Point West) {
@@ -43,21 +53,52 @@ namespace IsingModern.Ising {
 
 
         #region Rendering
-        public Rectangle Rectangle { get; private set; }
-        private void InitRectangle() {
-            if(Rectangle == null) {
-                Rectangle = new Rectangle() {
-                    Fill = Color,
-                    MinWidth = 1,
-                    MinHeight = 1,
-                    Margin = new Thickness(0),
-                    Stretch = Stretch.UniformToFill
-                };
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string info) {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if(handler != null) {
+                handler(this, new PropertyChangedEventArgs(info));
             }
         }
 
+
+        //private Rectangle rectangle;
+        //private TextBlock text;
+        //public Grid RenderElement { get; private set; }
+        //private void InitDraw() {
+        //    if(RenderElement == null) {
+        //        RenderElement = new Grid() {
+        //            Width = 600,
+        //            Height = 600
+        //        };
+        //    }
+        //    if(rectangle == null) {
+        //        rectangle = new Rectangle() {
+        //            Fill = this.ColorX,
+        //            MinWidth = 1,
+        //            MinHeight = 1,
+        //            Margin = new Thickness(0),
+        //            Stretch = Stretch.UniformToFill
+        //        };
+        //        RenderElement.Children.Add(rectangle);
+
+        //    }
+        //    if(Settings.DEBUG && text == null) {
+        //        text = new TextBlock() {
+        //            Text = this.Text,
+        //            FontSize = 20,
+        //            TextAlignment = TextAlignment.Center,
+        //            VerticalAlignment = VerticalAlignment.Center,
+        //            HorizontalAlignment = HorizontalAlignment.Center
+        //        };
+        //        RenderElement.Children.Add(text);
+        //    }
+        //}
+
         static Point() {
-            var brushes = colors.Values.AsEnumerable();
+            var brushes = PointColors.Values.AsEnumerable();
             foreach(var x in brushes) {
                 if(x.CanFreeze) {
                     x.Freeze();
@@ -65,21 +106,35 @@ namespace IsingModern.Ising {
             }
         }
 
-        private static readonly Dictionary<int, SolidColorBrush> colors = new Dictionary<int, SolidColorBrush>() 
-            {   { -1, new SolidColorBrush(Colors.DodgerBlue)  } 
-            ,   { 1 , new SolidColorBrush(Colors.DeepSkyBlue) }
+        public static Dictionary<int, SolidColorBrush> PointColors = new Dictionary<int, SolidColorBrush>() 
+            {   { -1 , new SolidColorBrush(Colors.DeepSkyBlue) }
+            ,   { 1, new SolidColorBrush(Colors.DarkBlue)  } 
             ,   { 0 , new SolidColorBrush(Colors.Black)}};
         private static SolidColorBrush failColor = new SolidColorBrush(Colors.Gold);
 
-        private SolidColorBrush Color {
+        public SolidColorBrush Color {
             get {
-                if(colors.ContainsKey(Value)) {
-                    return colors[Value];
+                if(PointColors.ContainsKey(Value)) {
+                    return PointColors[Value];
                 } else {
                     return failColor;
                 }
             }
         }
+        public String Text {
+            get { return Value.ToString(); }
+        }
+
+        //private int _lastvalue = int.MinValue;
+        //internal void Redraw(bool force = false) {
+        //    if(Value != _lastvalue || force) {
+        //        if(Settings.DEBUG) text.Text = Text;
+        //        rectangle.Fill = ColorX;
+        //        ColorX.Freeze();
+        //        _lastvalue = Value;
+        //    }
+        //}
         #endregion
+
     }
 }

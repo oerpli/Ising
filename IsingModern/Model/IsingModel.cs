@@ -3,32 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using System.ComponentModel;
 
 
 namespace IsingModern.Ising {
     public partial class IsingModel {
+        static private int instanceNumber = 0;
+        public int InstanceNumber { get; private set; }
         public int N;
-        public readonly Point[,] points;
+        public int Count { get; private set; }
+        public Point[] Points { get; private set; }
+
         private Random r = new Random();
 
         public IsingModel(int n) {
+            InstanceNumber = instanceNumber++;
+            Point[,] points;
             N = n;
             points = new Point[N, N];
+            Points = new Point[N * N];
             var r = new Random();
+            Count = 0;
             for(int i = 0; i < N; i++) {
                 for(int j = 0; j < N; j++) {
-                    points[i, j] = new Point(-1);
-                    if(i == 0 || j == 0 || i == N - 1 || j == N - 1) {
-                        points[i, j] = new Point(0); ;
-                    }
+                    Points[Count++] = points[i, j] = new Point(r.NextDouble() > 0.5 ? 1 : -1);
                 }
             }
-            points[0, 1].Value = 5;
+            SetBoundary(true);
+            Current = this;
+            InitializeNeighbours(points);
         }
-
-        private void InitializeNeighbours() {
+        private void InitializeNeighbours(Point[,] points) {
             for(int i = 0; i < N; i++) {
                 for(int j = 0; j < N; j++) {
                     Point n, e, s, w;
@@ -42,21 +56,62 @@ namespace IsingModern.Ising {
             }
         }
 
-        public virtual void Randomize() {
-            for(int i = 1; i < N - 1; i++) {
-                for(int j = 1; j < N - 1; j++) {
-                    points[i, j].Value = r.NextDouble() > 0.5 ? -1 : 1;
+        public void SetBoundary(bool periodic) {
+            foreach(var p in Boundary) {
+                p.Value = periodic ? 1 : 0;
+            }
+        }
+
+        private IEnumerable<Point> Boundary {
+            get {
+                for(int i = 0; i < N; i++) {
+                    for(int j = 0; j < N; j++) {
+                        if(i == 0 || j == 0 || i == N - 1 || j == N - 1) {
+                            yield return Points[N * j + i];
+                        }
+                    }
                 }
             }
         }
 
-        internal IEnumerable<Rectangle> GetRectangles() {
-            for(int j = 0; j < N; j++) {
-                for(int i = 0; i < N; i++) {
-                    yield return points[i, j].Rectangle;
+        public virtual void Randomize() {
+            foreach(var p in Points) {
+                if(p.Value != 0) {
+                    p.Value = r.NextDouble() > 0.5 ? -1 : 1;
                 }
             }
         }
+
+
+
+        #region rendering
+        public static IsingModel Current;
+
+        static public void Redraw(bool force = false) {
+            foreach(var p in Current.Points) {
+                //  p.Redraw(force);
+            }
+        }
+        //public IEnumerable<UIElement> RenderElements {
+        //    get {
+        //        foreach(var p in Points) {
+        //            yield return p.RenderElement;
+        //        }
+        //    }
+        //}
+
+        public IEnumerable<SolidColorBrush> RenderColors {
+            get {
+                foreach(var p in Points) {
+                    yield return p.Color;
+                }
+            }
+        }
+
+
+
+        public String TestString { get { return "TEST"; } }
+        #endregion
     }
 }
 

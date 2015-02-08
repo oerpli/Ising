@@ -1,49 +1,79 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IsingModern.Ising;
+using IsingModern.ViewModel;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Windows.Threading;
-using System.Threading;
-using IsingModern.Ising;
-using System.Diagnostics;
+using System.Windows.Media;
+
 
 namespace IsingModern.Render {
     /// <summary>
     /// Interaction logic for LatticeOutput.xaml
     /// </summary>
     public partial class LatticeOutput : UserControl {
-        IsingModel model = new IsingModel(30);
+        IsingRenderModel rmtestmodel;
+        bool PeriodicBoundary = false;
+        int currentN = 100;
+
         public LatticeOutput() {
             InitializeComponent();
-            isingGrid.Columns = model.N;
-            foreach(var elem in model.GetRectangles()) {
-                isingGrid.Children.Add(elem);
-            }
-
+            rmtestmodel = new IsingRenderModel(50);
+            rmtest.Children.Add(rmtestmodel);
+            LatticeSizeInput.Text = currentN.ToString();
+            //NewLattice(currentN);
+            maingrid.DataContext = IsingModel.Current;
         }
 
-        private delegate void UpdateLatticeDelegate();
+        private void NewLattice(int n) {
+            IsingModel.Current = new IsingModel(n);
+            ToggleBoundary_Click();
+            IsingModel.Redraw();
+        }
         private int count = 0;
         private void RandomizeClick(object sender, RoutedEventArgs e) {
-            model.Randomize();
+            IsingModel.Current.Randomize();
+            StatusText.Text = "Count: " + (++count).ToString();
+            rmtestmodel.InvalidateVisual();
             //Stopwatch watch = new Stopwatch();
             //watch.Start();
             //Stuff.Dispatcher.BeginInvoke(
             //   DispatcherPriority.Normal,
             //   new UpdateLatticeDelegate());
-            StatusText.Text = (++count).ToString() + " " + model.points[1, 1].Value + " " + model.points[1, 2].Value;
             //watch.Stop();
             //Console.WriteLine(watch.ElapsedMilliseconds);
+            //IsingModel.Redraw();
+        }
+        private void ToggleBoundary_Click(object sender = null, RoutedEventArgs e = null) {
+            if(sender != null) PeriodicBoundary = !PeriodicBoundary;
+            IsingModel.Current.SetBoundary(PeriodicBoundary);
+            BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
+            IsingModel.Redraw();
+        }
+        private void LatticeSize_Click(object sender, RoutedEventArgs e) {
+            //NewLattice(currentN);
+        }
+        private void LatticeSize_MouseWheel(object sender, MouseWheelEventArgs e) {
+            int diff = e.Delta > 0 ? 1 : -1;
+            currentN = Math.Min(80, Math.Max(3, currentN + diff));
+            LatticeSizeInput.Text = currentN.ToString();
+        }
+
+        private void Rectangle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+            var s = (Ising.Point)(((Rectangle)sender).DataContext);
+            s.Value *= -1;
+            Console.WriteLine(s.Value.ToString());
+        }
+
+        private void Rectangle_MouseRightButtonDown(object sender, MouseButtonEventArgs e) {
+            var s = (Ising.Point)(((Rectangle)sender).DataContext);
+            s.Value = s.Value == 0 ? 1 : 0;//s.Value*s.Value -1;
+            Console.WriteLine(s.Value.ToString());
+        }
+
+        private void UpdateCorner(object sender, RoutedEventArgs e) {
+            IsingModel.Current.Points[currentN * 2 - 2].Value *= -1;
         }
     }
 
@@ -71,8 +101,6 @@ namespace IsingModern.Render {
     //         Console.WriteLine("base: " + watch.ElapsedMilliseconds); model[0, 0] = 3;
     //     }));
     //     thread.Start();
-
-
     //     //// The Work to perform on another thread 
     //     //ThreadStart start = delegate() { // ... 
     //     //    // Sets the Text on a TextBlock Control.
@@ -81,7 +109,4 @@ namespace IsingModern.Render {
     //     //}; // Create the thread and kick it started! 
     //     //new Thread(start).Start();
     // }
-
-
-
 }

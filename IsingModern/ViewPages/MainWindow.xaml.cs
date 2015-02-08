@@ -14,6 +14,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using FirstFloor.ModernUI.Presentation;
+
+
 namespace IsingModern {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -21,6 +24,8 @@ namespace IsingModern {
     public partial class MainWindow : ModernWindow {
         public MainWindow() {
             InitializeComponent();
+            AppearanceManager.Current.ThemeSource = AppearanceManager.DarkThemeSource;
+            AppearanceManager.Current.AccentColor = Colors.DeepSkyBlue;
         }
     }
 }

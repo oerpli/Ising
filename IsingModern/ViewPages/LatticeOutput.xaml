@@ -7,21 +7,89 @@
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="600">
-    <Grid Style="{StaticResource ContentRoot}">
+
+
+    <Grid Style="{StaticResource ContentRoot}" Name="maingrid" >
         <ScrollViewer>
             <Grid MinWidth="300" MinHeight="300"  VerticalAlignment="Top" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="600"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="150"/>
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <UniformGrid MinWidth="200" MinHeight="200" MaxWidth="600" MaxHeight="600" Name="isingGrid" Margin="0,0,0,0" Columns="10" HorizontalAlignment="Left" VerticalAlignment="Top"  />
-                <StackPanel Grid.Column="1" HorizontalAlignment="Left">
-                    <Button Name="Stuff"  PreviewKeyDown="RandomizeClick" Click="RandomizeClick" Content="Randomize!" Width="100" Height="30" VerticalAlignment="Top"/>
+                <Grid Grid.Column="0" Name="rmtest" Width="600" Height="600" Background="Beige"/>
+
+                <!--<ItemsControl Grid.Column="0" Name="IsingLattice" ItemsSource="{Binding Points}" >
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Name="isingGrid"
+                                Columns="{Binding N}"
+                                MinWidth="200" MaxWidth="600"
+                                MinHeight="200" MaxHeight="600"
+                                Margin="0,0,0,0"
+                                Focusable="True"
+                                         RenderOptions.BitmapScalingMode="LowQuality"
+                                         RenderOptions.ClearTypeHint="Auto"
+                                         RenderOptions.EdgeMode="Aliased"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top">
+                            </UniformGrid>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    -->
+                <!-- ItemTemplate -->
+                <!--
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Rectangle
+                                    MouseLeftButtonDown="Rectangle_MouseLeftButtonDown"
+                                    MouseRightButtonDown="Rectangle_MouseRightButtonDown"
+                                    Fill="{Binding Color}"
+                                    MinHeight="1"
+                                    MinWidth="1"
+                                    Stretch="UniformToFill"
+                                     Margin = "0"
+                                    />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>-->
+
+                <StackPanel Grid.Column="2" HorizontalAlignment="Left">
+                    <Button Name="ToggleBoundary" 
+                            Click="ToggleBoundary_Click"
+                            Content="Boundary!" 
+                           Height="30" VerticalAlignment="Top"/>
+                    <Button Name="Randomize" 
+                            Click="RandomizeClick" PreviewKeyDown="RandomizeClick"  
+                            Content="Randomize!"
+                            Height="30" VerticalAlignment="Top"/>
+                    <Button Name="LatticeSize" 
+                            Click="LatticeSize_Click"  MouseWheel="LatticeSize_MouseWheel" 
+                            Content="Set Size"
+                           Height="30" VerticalAlignment="Top"/>
+                    <Button Name="UpdateSingle" 
+                            Click="UpdateCorner" 
+                            Content="Update Corner"
+                           Height="30" VerticalAlignment="Top"/>
                 </StackPanel>
-                <StackPanel Grid.Column="2">
-                    <TextBlock TextAlignment="Right" FontSize="15" Name="StatusText" Width="50" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left">Init</TextBlock>
+                <StackPanel Grid.Column="3">
+                    <TextBlock Name="BoundaryText"
+                               TextAlignment="Right" FontSize="15"
+                               Width="70" Height="30"
+                               VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock Name="StatusText" 
+                               TextAlignment="Right" FontSize="15" 
+                               Width="70" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"
+                               Text="Init"/>
+                    <TextBlock Name="LatticeSizeInput" 
+                               MouseWheel="LatticeSize_MouseWheel" 
+                               TextAlignment="Right" FontSize="15" 
+                               Width="70" Height="30" 
+                               VerticalAlignment="Top" HorizontalAlignment="Left"
+                               Text="Init Failed"/>
                 </StackPanel>
             </Grid>
         </ScrollViewer>

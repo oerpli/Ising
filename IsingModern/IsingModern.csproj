@@ -63,6 +63,7 @@
     </Page>
     <Compile Include="Model\IsingModel.cs" />
     <Compile Include="Model\Point.cs" />
+    <Compile Include="ViewModel\IsingRenderModel.cs" />
     <Compile Include="ViewPages\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -108,9 +109,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="View\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
