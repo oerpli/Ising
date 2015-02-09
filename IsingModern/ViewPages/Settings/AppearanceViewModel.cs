@@ -160,8 +160,8 @@ namespace IsingModern.Pages.Settings {
                 if(index != -1) {
                     Spin.PointColors.Remove(1);
                     Spin.PointColors.Remove(-1);
-                    Spin.PointColors.Add(1, selectedAccentColor);
-                    Spin.PointColors.Add(-1, accentColorsDarker[index]);
+                    Spin.PointColors.Add(1, accentColorsDarker[index]);
+                    Spin.PointColors.Add(-1, selectedAccentColor);
                     IsingRender.RefreshRender();
 
                     //Point.PointColorBrushes.Remove(1);

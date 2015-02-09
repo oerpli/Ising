@@ -54,8 +54,8 @@ namespace IsingModern.ViewModel {
 #if DEBUG
                 sw.Stop();
                 Console.WriteLine(sw.ElapsedMilliseconds + "ms " + sw.ElapsedTicks);
-            }
 #endif
+            }
         }
 
         #region Manipulation
@@ -224,7 +224,6 @@ namespace IsingModern.ViewModel {
                     for(int x = 0; x < width; x++) {
                         // Assign the color data to the pixel
                         *((int*)pBackBuffer) = colorData;
-
                         // Increment the address of the pixel to draw
                         pBackBuffer += bpp;
                     }
