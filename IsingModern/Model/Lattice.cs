@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 
 namespace IsingModern.Ising {
-    public partial class IsingModel {
+    public partial class Lattice {
         public int InstanceNumber { get; private set; }
         public int N;
         public int Count { get; private set; }
@@ -11,7 +11,7 @@ namespace IsingModern.Ising {
 
         private Random r = new Random();
 
-        public IsingModel(int n) {
+        public Lattice(int n) {
             Spin[,] points;
             N = n;
             points = new Spin[N, N];

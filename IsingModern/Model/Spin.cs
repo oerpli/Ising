@@ -36,15 +36,16 @@ namespace IsingModern.Ising {
         #region Manipulation
 
         internal void ToggleSpin() {
-            if(this.Value == 0)
-                this.Value = 1;
             this.Value *= -1;
+        }
+
+        internal void SetSpin() {
+            this.Value = -1;
         }
 
         internal void ToggleBoundary(bool? boundary = null) {
             this.Value = boundary ?? Value != 0 ? 0 : -1;
         }
-
         #endregion
 
         #region Rendering

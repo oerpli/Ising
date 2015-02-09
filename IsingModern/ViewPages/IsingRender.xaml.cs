@@ -9,19 +9,19 @@ namespace IsingModern.Render {
     /// <summary>
     /// Interaction logic for LatticeOutput.xaml
     /// </summary>
-    public partial class LatticeOutput : UserControl {
-        static LatticeOutput Current;
+    public partial class IsingRender : UserControl {
+        static IsingRender Current;
         private IsingRenderModel viewmodel;
-        
+
         private bool PeriodicBoundary = false;
         private int rndCounter = 0;
 
         private const int maximalN = 600, minimalN = 3; //both should divide 600. 
-        private int currentN = maximalN;
+        private int currentN = 20;
 
         #region Initialization
 
-        public LatticeOutput() {
+        public IsingRender() {
             InitializeComponent();
             Current = this;
             viewmodel = new IsingRenderModel(currentN, PeriodicBoundary);
@@ -102,6 +102,9 @@ namespace IsingModern.Render {
             Current.viewmodel.Refresh();
         }
 
+        #endregion
+
+        #region SomeTesting
         #endregion
     }
 }

@@ -6,23 +6,26 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace IsingModern.ViewModel {
-    class IsingRenderModel : Image {
-        private IsingModel model;
+    class IsingRenderModel : Canvas {
+        private Image image = new Image();
+        private Lattice model;
         private WriteableBitmap wbmap;
         private double cellSize, viewsize = 600;// this should be dynamic, yo.
-        private int rectangleSize;
+        private int rectangleSize; //to convert mouseclicks
         public int N { get { return model.N; } }
 
         public IsingRenderModel(int n = 50, bool periodicBoundary = false) {
+            this.Children.Add(image);
             this.SnapsToDevicePixels = false;
-            this.Height = this.Width = viewsize; //only square lattices currently
+            image.Height = image.Width = viewsize; //only square lattices currently
 
             //some options - whatever
             {
-                RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.NearestNeighbor);
-                RenderOptions.SetEdgeMode(this, EdgeMode.Aliased);
+                RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
+                RenderOptions.SetEdgeMode(image, EdgeMode.Aliased);
                 //this.Stretch = Stretch.None;
                 //this.HorizontalAlignment = HorizontalAlignment.Left;
                 //this.VerticalAlignment = VerticalAlignment.Top;
@@ -31,13 +34,13 @@ namespace IsingModern.ViewModel {
             {
                 //fixing the scaling at 96dpi works so far. "It's not as dumb as it looks" - Magnus Carlsen
                 wbmap = new WriteableBitmap(600, 600, 96, 96, PixelFormats.Bgr24, null);
-                this.Source = wbmap;
+                image.Source = wbmap;
                 rectangleSize = (int)viewsize / n;
                 cellSize = viewsize / n;
             }
             //initializing model
             {
-                model = new IsingModel(n);
+                model = new Lattice(n);
                 this.SetBoundary(periodicBoundary);
             }
 
@@ -57,30 +60,10 @@ namespace IsingModern.ViewModel {
 
         #region Manipulation
         public void ChangeSize(int newSize) {
-            model = new IsingModel(newSize);
+            model = new Lattice(newSize);
             cellSize = viewsize / newSize;
             rectangleSize = (int)viewsize / newSize;
             DrawLattice();
-        }
-        protected override void OnMouseDown(MouseButtonEventArgs e) {
-            base.OnMouseDown(e);
-            var pos = e.GetPosition(this);
-            int x = (int)pos.X;
-            int y = (int)pos.Y;
-            x /= (int)cellSize;
-            y /= (int)cellSize;
-
-            Console.WriteLine(x + " " + y);
-            var p = model.Spins[model.N * y + x];
-            if(e.LeftButton == MouseButtonState.Pressed) {
-                p.ToggleSpin();
-            }
-            if(e.RightButton == MouseButtonState.Pressed) {
-                p.ToggleBoundary(true);
-            }
-            DrawSpin(p);
-            //var rect = new Rect(x * cellSize, y * cellSize, cellSize, cellSize);
-            //_dc.DrawRectangle(p.Color, pen, rect);
         }
 
         internal void SetBoundary(bool PeriodicBoundary) {
@@ -97,6 +80,111 @@ namespace IsingModern.ViewModel {
             var p = model.Spins[2 * N - 2];
             p.ToggleSpin();
             DrawSpin(p);
+        }
+
+        #endregion
+
+        #region Selection
+        private Point mouseDownPoint;
+        private Shape selectionShape = new Rectangle() {
+            Opacity = 0.5,
+            Stroke = new SolidColorBrush(Colors.Black),
+            StrokeThickness = 5,
+            //StrokeDashArray = new Stroke { 2,1};
+        };
+        private int mouseState = 0;
+        private int[] coords = new int[4];
+        private SolidColorBrush[] selectionColors = new SolidColorBrush[]{
+            new SolidColorBrush(Colors.DeepSkyBlue),
+            new SolidColorBrush(Colors.White),
+            new SolidColorBrush(Colors.Gold),
+        };
+
+        protected override void OnMouseDown(MouseButtonEventArgs e) {
+            base.OnMouseDown(e);
+            mouseDownPoint = e.GetPosition(this);
+            if(mouseState != 0) {
+                mouseState = 0;
+                this.Children.Remove(selectionShape);
+                for(int i = 0; i < 4; i++) coords[i] = 0;
+                return;
+            }
+            if(e.LeftButton == MouseButtonState.Pressed) {
+                mouseState = 1;
+            } else if(e.RightButton == MouseButtonState.Pressed) {
+                mouseState = 2;
+            } else if(e.MiddleButton == MouseButtonState.Pressed) {
+                mouseState = 3;
+            } else {
+                return;
+            }
+            // clean up mess left behind from previous selections
+            {
+                selectionShape.Width = selectionShape.Height = 0;
+                this.Children.Remove(selectionShape);
+            }
+            selectionShape.Fill = selectionColors[mouseState - 1];
+            this.Children.Add(selectionShape);
+            Mouse.Capture(this);
+        }
+        protected override void OnMouseMove(MouseEventArgs e) {
+            base.OnMouseMove(e);
+            if(mouseState != 0) {
+                Point currentPoint = e.GetPosition(image);
+                coords[0] = (int)(Math.Min(currentPoint.X, mouseDownPoint.X) + 0.5 * cellSize) / (int)cellSize; //x1
+                coords[1] = (int)(Math.Max(currentPoint.X, mouseDownPoint.X) + 0.5 * cellSize) / (int)cellSize; //x2
+                coords[2] = (int)(Math.Min(currentPoint.Y, mouseDownPoint.Y) + 0.5 * cellSize) / (int)cellSize; //y1
+                coords[3] = (int)(Math.Max(currentPoint.Y, mouseDownPoint.Y) + 0.5 * cellSize) / (int)cellSize; //y2
+
+                for(int i = 0; i < 4; i++) {
+                    coords[i] = Math.Min(N, Math.Max(0, coords[i]));
+                }
+
+                double w = cellSize * (coords[1] - coords[0]);
+                double h = cellSize * (coords[3] - coords[2]);
+                double l = cellSize * coords[0];
+                double t = cellSize * coords[2];
+
+                selectionShape.Width = w;
+                selectionShape.Height = h;
+                Canvas.SetLeft(selectionShape, l);
+                Canvas.SetTop(selectionShape, t);
+
+            }
+        }
+        protected override void OnMouseUp(MouseButtonEventArgs e) {
+            base.OnMouseUp(e);
+            if(mouseState != 0) {
+                int maxx = coords[1], maxy = coords[3];
+                wbmap.Lock();
+                for(int x = coords[0]; x < maxx; x++) {
+                    for(int y = coords[2]; y < maxy; y++) {
+                        MouseAction(model.Spins[y * N + x]);
+                    }
+                }
+                //if no area is selected change the Spin under the mouse
+                if(coords[0] == coords[1] && coords[2] == coords[3]) {
+                    var pos = e.GetPosition(image);
+                    int x = (int)pos.X / (int)cellSize;
+                    int y = (int)pos.Y / (int)cellSize;
+                    MouseAction(model.Spins[y * N + x]);
+                }
+                wbmap.Unlock();
+            }
+            mouseState = 0;
+            for(int i = 0; i < 4; i++) coords[i] = 0;
+            this.Children.Remove(selectionShape);
+            Mouse.Capture(null);
+        }
+
+        private void MouseAction(Spin spin) {
+            if(mouseState == 1)
+                spin.SetSpin();
+            if(mouseState == 2)
+                spin.ToggleBoundary(true);
+            if(mouseState == 3)
+                spin.ToggleSpin();
+            DrawSpin(spin);
         }
 
         #endregion
@@ -159,5 +247,6 @@ namespace IsingModern.ViewModel {
 
 
         #endregion
+
     }
 }

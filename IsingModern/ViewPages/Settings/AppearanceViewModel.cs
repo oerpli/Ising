@@ -133,7 +133,7 @@ namespace IsingModern.Pages.Settings {
                     } else {
                         Spin.PointColors.Add(0, Colors.Black);
                     }
-                    LatticeOutput.RefreshRender();
+                    IsingRender.RefreshRender();
 
                     // and update the actual theme
                     AppearanceManager.Current.ThemeSource = value.Source;
@@ -162,7 +162,7 @@ namespace IsingModern.Pages.Settings {
                     Spin.PointColors.Remove(-1);
                     Spin.PointColors.Add(1, selectedAccentColor);
                     Spin.PointColors.Add(-1, accentColorsDarker[index]);
-                    LatticeOutput.RefreshRender();
+                    IsingRender.RefreshRender();
 
                     //Point.PointColorBrushes.Remove(1);
                     //Point.PointColorBrushes.Remove(-1);

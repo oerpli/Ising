@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="IsingModern.Pages.Settings.Help"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <ScrollViewer>
+            <StackPanel MinWidth="200">
+                <TextBlock Text="HELP" Style="{StaticResource Heading2}" />
+
+                <ItemsControl>
+                    <ListViewItem>
+                        <TextBlock Margin="0,0,0,8" TextWrapping="Wrap">
+                    To change the state of certain elements draw a rectangle over the lattice or click on a spin - the performed action will depend on the used mousebutton.
+                        </TextBlock>
+                    </ListViewItem>
+                    <ItemsControl Margin="20,0,0,8">
+                        <ListViewItem>Left: Set Spin to -1</ListViewItem>
+                        <ListViewItem>Right: Set to Boundary (Spin 0)</ListViewItem>
+                        <ListViewItem>Middle: Toggle Spin (x to -x)</ListViewItem>
+                    </ItemsControl>
+
+
+                    <ListViewItem>
+                        <TextBlock Margin="0,0,0,8" TextWrapping="Wrap">
+                                Adjust the Size of the Lattice by hovering over the Size Controls and turning the mousewheel - press "Set Size" afterwards.
+                        </TextBlock>
+                    </ListViewItem>
+                    <ListViewItem>
+                        <TextBlock Margin="0,0,0,8" TextWrapping="Wrap">
+                                To Randomize the Lattice press the "Randomize" Button or press "r".
+                        </TextBlock>
+                    </ListViewItem>
+                </ItemsControl>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

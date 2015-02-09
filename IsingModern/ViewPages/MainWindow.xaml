@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mui="http://firstfloorsoftware.com/ModernUI"
         Title="Ising Model" IsTitleVisible="True"
-        ContentSource="/ViewPages/LatticeOutput.xaml"
+        ContentSource="/ViewPages/IsingRender.xaml"
                   Height="800"
                   Width="950"
                   MinHeight="800"
@@ -13,12 +13,12 @@
     <mui:ModernWindow.MenuLinkGroups>
         <mui:LinkGroup DisplayName="Main">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="Testing" Source="/ViewPages/LatticeOutput.xaml" />
+                <mui:Link DisplayName="Ising Model" Source="/ViewPages/IsingRender.xaml" />
                 <mui:Link DisplayName="Doing stuff" Source="/ViewPages/Home.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
-    
-    
+
+
         <!--<mui:LinkGroup DisplayName="welcome">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="home" Source="/ViewPages/Home.xaml" />
@@ -30,12 +30,14 @@
         <mui:LinkGroup DisplayName="settings" GroupKey="settings">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="software" Source="/ViewPages/SettingsPage.xaml" />
+                <mui:Link DisplayName="help" Source="/ViewPages/Settings/Help.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
     </mui:ModernWindow.MenuLinkGroups>
-    
+
     <mui:ModernWindow.TitleLinks>
+        <mui:Link DisplayName="main" Source="/ViewPages/IsingRender.xaml" />
         <mui:Link DisplayName="settings" Source="/ViewPages/SettingsPage.xaml" />
-        <!--<mui:Link DisplayName="help" Source="http://mui.codeplex.com" />-->
+        <mui:Link DisplayName="help" Source="/ViewPages/Settings/Help.xaml" />
     </mui:ModernWindow.TitleLinks>
 </mui:ModernWindow>

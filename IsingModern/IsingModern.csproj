@@ -84,26 +84,33 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Model\IsingModel.cs" />
+    <Compile Include="Model\Lattice.cs" />
     <Compile Include="Model\Spin.cs" />
     <Compile Include="ViewModel\IsingRenderModel.cs" />
     <Compile Include="ViewPages\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ViewPages\LatticeOutput.xaml">
+    <Page Include="ViewPages\IsingRender.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ViewPages\Settings\About.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ViewPages\Settings\Help.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="ViewPages\LatticeOutput.xaml.cs">
-      <DependentUpon>LatticeOutput.xaml</DependentUpon>
+    <Compile Include="ViewPages\IsingRender.xaml.cs">
+      <DependentUpon>IsingRender.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewPages\Settings\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewPages\Settings\Help.xaml.cs">
+      <DependentUpon>Help.xaml</DependentUpon>
     </Compile>
     <Page Include="ViewPages\Settings\Appearance.xaml">
       <SubType>Designer</SubType>
