@@ -9,6 +9,13 @@ namespace IsingModern.Ising {
         public int Count { get; private set; }
         public Spin[] Spins { get; private set; }
 
+        /*Field parameters*/
+        public float J;
+        public float h;
+
+        public float Beta; /*inverse temperature*/
+        public float TotalEnergy; 
+
         private Random r = new Random();
 
         public Lattice(int n) {
@@ -68,6 +75,63 @@ namespace IsingModern.Ising {
                 }
             }
         }
+
+        #region Hamiltonian
+
+        public double CalculateLocalEnergy(Spin Chosen)
+        {
+            double LocalEnergy = 0.0;
+            foreach (var Neighbour in Chosen.Neighbours)
+            {
+                LocalEnergy -= Chosen.Value * Neighbour.Value; 
+            }
+            LocalEnergy *= J;
+            LocalEnergy -= h * Chosen.Value;
+            return LocalEnergy; 
+        }
+        #endregion
+
+        #region Dynamics
+        public void SingleFlip()
+        {
+            int X = (int)(r.NextDouble() * N);
+            int Y = (int)(r.NextDouble() * N);
+
+            Spin Chosen = Spins[Y*N+X];
+            double EnergyOld = CalculateLocalEnergy(Chosen); 
+            Chosen.ToggleSpin();
+            double EnergyNew = CalculateLocalEnergy(Chosen);
+            double EnergyDifference = EnergyNew - EnergyOld;
+            Metropolis(Chosen, EnergyDifference);
+        }
+
+        public void Sweep()
+        {
+            for (int i = 0; i < N; i++)
+            {
+                SingleFlip(); 
+            }
+        }
+
+        public void Metropolis(Spin Flipped, double DeltaE)
+        {
+            if (DeltaE > 0.0)
+            {
+                if (r.NextDouble() > Math.Exp(DeltaE * Beta))
+                {
+                    Flipped.ToggleSpin(); 
+                }
+            }
+        }
+
+        public void Glauber(Spin Flipped, double DeltaE)
+        {
+            if (r.NextDouble() > (1.0 / (1.0 + Math.Exp(DeltaE * Beta))))
+            {
+                Flipped.ToggleSpin();
+            } 
+        }
+        #endregion
     }
 }
 

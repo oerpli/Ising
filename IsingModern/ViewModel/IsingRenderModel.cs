@@ -84,7 +84,8 @@ namespace IsingModern.ViewModel {
 
         internal void NextStep()
         {
-            
+            model.SingleFlip();
+            DrawLattice();
         }
 
         #endregion
