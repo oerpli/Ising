@@ -88,7 +88,7 @@ namespace IsingModern.ViewModel {
         private Point mouseDownPoint;
         private Shape selectionShape = new Rectangle() {
             Opacity = 0.5,
-            Stroke = new SolidColorBrush(Colors.Black),
+            Stroke = new SolidColorBrush(Colors.DarkCyan),
             StrokeThickness = 5,
             //StrokeDashArray = new Stroke { 2,1};
         };
