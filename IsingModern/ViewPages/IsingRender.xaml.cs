@@ -60,6 +60,11 @@ namespace IsingModern.Render {
             viewmodel.ToggleTopRight();
         }
 
+        private void Time_Click(object sender, RoutedEventArgs e)
+        {
+            viewmodel.NextStep(); 
+        }
+
         #endregion
 
         #region LatticeSize
@@ -103,6 +108,8 @@ namespace IsingModern.Render {
         }
 
         #endregion
+
+
 
         #region SomeTesting
         #endregion

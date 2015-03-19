@@ -82,6 +82,11 @@ namespace IsingModern.ViewModel {
             DrawSpin(p);
         }
 
+        internal void NextStep()
+        {
+            
+        }
+
         #endregion
 
         #region Selection
@@ -246,6 +251,8 @@ namespace IsingModern.ViewModel {
 
 
         #endregion
+
+
 
     }
 }
