@@ -101,19 +101,46 @@ namespace IsingModern.Ising {
             LocalEnergy -= h * Chosen.Value;
             return LocalEnergy;
         }
+
+        public double CalculateLocalEnergy(Spin Chosen1, Spin Chosen2)
+        {
+            double LocalEnergy = 0.0;
+            
+            foreach (var Neighbour in Chosen1.Neighbours)
+            {
+                LocalEnergy -= J*Chosen1.Value * Neighbour.Value;
+            }
+
+            foreach (var Neighbour in Chosen2.Neighbours)
+            {
+                LocalEnergy -= J * Chosen2.Value * Neighbour.Value;
+            }
+
+            LocalEnergy += J * Chosen1.Value * Chosen2.Value; 
+
+            return LocalEnergy;
+        }
+
+
         #endregion
 
         #region Dynamics
         public void SingleFlip() {
-            int X = (int)(r.NextDouble() * N);
-            int Y = (int)(r.NextDouble() * N);
-
-            Spin Chosen = Spins[Y * N + X];
-            double EnergyOld = CalculateLocalEnergy(Chosen);
+            Spin Chosen = Spins[r.Next(N*N)];
+            
+            double EnergyDifference = 0.0 - CalculateLocalEnergy(Chosen);
+            
             Chosen.ToggleSpin();
-            double EnergyNew = CalculateLocalEnergy(Chosen);
-            double EnergyDifference = EnergyNew - EnergyOld;
-            Metropolis(Chosen, EnergyDifference);
+
+            EnergyDifference += CalculateLocalEnergy(Chosen); 
+            if (!Metropolis(EnergyDifference)) /* or Glauber(..,..) */
+            {
+                Chosen.ToggleSpin(); 
+            }
+            else
+            {
+                TotalEnergy += EnergyDifference; 
+            }
         }
 
         public void Sweep() {
@@ -122,18 +149,44 @@ namespace IsingModern.Ising {
             }
         }
 
-        public void Metropolis(Spin Flipped, double DeltaE) {
-            if(DeltaE > 0.0) {
-                if(r.NextDouble() > Math.Exp(DeltaE * Beta)) {
-                    Flipped.ToggleSpin();
+        public void Kawasaki()
+        {
+            Spin Chosen = Spins[r.Next(N*N)];
+            Spin Exchange = Chosen.Neighbours[r.Next(4)];
+            if (Chosen.Value != Exchange.Value)
+            {
+                double EnergyDifference = 0.0 - CalculateLocalEnergy(Chosen, Exchange);
+                Chosen.ToggleSpin();
+                Exchange.ToggleSpin();
+                EnergyDifference += CalculateLocalEnergy(Chosen, Exchange);
+                if (!Metropolis(EnergyDifference))
+                {
+                    Chosen.ToggleSpin();
+                    Exchange.ToggleSpin();
+                }
+                else
+                {
+                    TotalEnergy += EnergyDifference; 
                 }
             }
         }
 
-        public void Glauber(Spin Flipped, double DeltaE) {
-            if(r.NextDouble() > (1.0 / (1.0 + Math.Exp(DeltaE * Beta)))) {
-                Flipped.ToggleSpin();
+        public bool Metropolis(double DeltaE) {
+            bool accept = true;
+            if(DeltaE > 0.0) {
+                if(r.NextDouble() > Math.Exp(DeltaE * Beta)) {
+                    accept = false;
+                }
             }
+            return accept;
+        }
+
+        public bool Glauber(double DeltaE) {
+            bool accept = true; 
+            if(r.NextDouble() > (1.0 / (1.0 + Math.Exp(DeltaE * Beta)))) {
+                accept = false;
+            }
+            return accept; 
         }
         #endregion
     }
