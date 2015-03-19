@@ -34,6 +34,10 @@ namespace IsingModern.Ising {
             SetBoundary(true);
             //Current = this;
             InitializeNeighbours(points);
+            h = 0.0; 
+            J = 1.0; 
+            Beta = 1.0; 
+            TotalEnergy = 0.0; 
         }
         private void InitializeNeighbours(Spin[,] points) {
             for(int i = 0; i < N; i++) {
@@ -74,6 +78,7 @@ namespace IsingModern.Ising {
                     p.Value = r.NextDouble() > 0.5 ? -1 : 1;
                 }
             }
+            UpdateTotalEnergy(); 
         }
 
         #region Hamiltonian
