@@ -43,6 +43,10 @@ namespace IsingModern.Render {
                 RandomizeClick(null, null);
                 e.Handled = true;
             }
+            if(e.Key == Key.N) {
+                viewmodel.NextStep();
+                e.Handled = true;
+            }
         }
 
         private void RandomizeClick(object sender, RoutedEventArgs e) {

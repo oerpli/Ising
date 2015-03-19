@@ -82,9 +82,8 @@ namespace IsingModern.ViewModel {
             DrawSpin(p);
         }
 
-        internal void NextStep()
-        {
-            model.SingleFlip();
+        internal void NextStep() {
+            model.Sweep();
             DrawLattice();
         }
 
