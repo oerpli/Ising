@@ -10,11 +10,11 @@ namespace IsingModern.Ising {
         public Spin[] Spins { get; private set; }
 
         /*Field parameters*/
-        public float J;
-        public float h;
+        public double J;
+        public double h;
 
-        public float Beta; /*inverse temperature*/
-        public float TotalEnergy; 
+        public double Beta; /*inverse temperature*/
+        public double TotalEnergy; 
 
         private Random r = new Random();
 
@@ -77,6 +77,18 @@ namespace IsingModern.Ising {
         }
 
         #region Hamiltonian
+        public void UpdateTotalEnergy()
+        {
+            TotalEnergy = 0.0;
+            for (int i = 0; i < N; i++)
+            {
+                TotalEnergy -= h * Spins[i].Value; 
+                foreach (var Spin in Spins[i].Neighbours)
+                {
+                    TotalEnergy -= 0.5 * J * Spins[i].Value * Spin.Value;
+                }
+            }
+        }
 
         public double CalculateLocalEnergy(Spin Chosen)
         {
