@@ -30,7 +30,7 @@
         <mui:LinkGroup DisplayName="settings" GroupKey="settings">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="software" Source="/ViewPages/SettingsPage.xaml" />
-                <mui:Link DisplayName="help" Source="/ViewPages/Settings/Help.xaml" />
+                <!--<mui:Link DisplayName="help" Source="/ViewPages/Settings/Help.xaml" />-->
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
     </mui:ModernWindow.MenuLinkGroups>
@@ -38,6 +38,6 @@
     <mui:ModernWindow.TitleLinks>
         <mui:Link DisplayName="main" Source="/ViewPages/IsingRender.xaml" />
         <mui:Link DisplayName="settings" Source="/ViewPages/SettingsPage.xaml" />
-        <mui:Link DisplayName="help" Source="/ViewPages/Settings/Help.xaml" />
+        <!--<mui:Link DisplayName="help" Source="/ViewPages/Settings/Help.xaml" />-->
     </mui:ModernWindow.TitleLinks>
 </mui:ModernWindow>

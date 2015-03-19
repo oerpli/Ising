@@ -11,6 +11,7 @@
             <mui:ModernTab.Links>
                 <mui:Link DisplayName="appearance" Source="/ViewPages/Settings/Appearance.xaml" />
                 <mui:Link DisplayName="about" Source="/ViewPages/Settings/About.xaml" />
+                <mui:Link DisplayName="help" Source="ViewPages/Settings/Help.xaml"/>
             </mui:ModernTab.Links>
         </mui:ModernTab>
     </Grid>
