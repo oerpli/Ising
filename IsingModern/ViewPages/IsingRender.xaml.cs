@@ -69,6 +69,10 @@ namespace IsingModern.Render {
             viewmodel.NextStep(); 
         }
 
+        private void TemperatureSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            viewmodel.ChangeTemperature(Temperature.Value); 
+        }
         #endregion
 
         #region LatticeSize
@@ -112,6 +116,8 @@ namespace IsingModern.Render {
         }
 
         #endregion
+
+
 
 
 
