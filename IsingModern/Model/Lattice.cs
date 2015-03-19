@@ -14,7 +14,7 @@ namespace IsingModern.Ising {
         public double h;
 
         public double Beta; /*inverse temperature*/
-        public double TotalEnergy; 
+        public double TotalEnergy;
 
         private Random r = new Random();
 
@@ -82,71 +82,58 @@ namespace IsingModern.Ising {
         }
 
         #region Hamiltonian
-        public void UpdateTotalEnergy()
-        {
+        public void UpdateTotalEnergy() {
             TotalEnergy = 0.0;
-            for (int i = 0; i < N; i++)
-            {
-                TotalEnergy -= h * Spins[i].Value; 
-                foreach (var Spin in Spins[i].Neighbours)
-                {
+            for(int i = 0; i < N; i++) {
+                TotalEnergy -= h * Spins[i].Value;
+                foreach(var Spin in Spins[i].Neighbours) {
                     TotalEnergy -= 0.5 * J * Spins[i].Value * Spin.Value;
                 }
             }
         }
 
-        public double CalculateLocalEnergy(Spin Chosen)
-        {
+        public double CalculateLocalEnergy(Spin Chosen) {
             double LocalEnergy = 0.0;
-            foreach (var Neighbour in Chosen.Neighbours)
-            {
-                LocalEnergy -= Chosen.Value * Neighbour.Value; 
+            foreach(var Neighbour in Chosen.Neighbours) {
+                LocalEnergy -= Chosen.Value * Neighbour.Value;
             }
             LocalEnergy *= J;
             LocalEnergy -= h * Chosen.Value;
-            return LocalEnergy; 
+            return LocalEnergy;
         }
         #endregion
 
         #region Dynamics
-        public void SingleFlip()
-        {
+        public void SingleFlip() {
             int X = (int)(r.NextDouble() * N);
             int Y = (int)(r.NextDouble() * N);
 
-            Spin Chosen = Spins[Y*N+X];
-            double EnergyOld = CalculateLocalEnergy(Chosen); 
+            Spin Chosen = Spins[Y * N + X];
+            double EnergyOld = CalculateLocalEnergy(Chosen);
             Chosen.ToggleSpin();
             double EnergyNew = CalculateLocalEnergy(Chosen);
             double EnergyDifference = EnergyNew - EnergyOld;
             Metropolis(Chosen, EnergyDifference);
         }
 
-        public void Sweep()
-        {
-            for (int i = 0; i < N; i++)
-            {
-                SingleFlip(); 
+        public void Sweep() {
+            for(int i = 0; i < N; i++) {
+                SingleFlip();
             }
         }
 
-        public void Metropolis(Spin Flipped, double DeltaE)
-        {
-            if (DeltaE > 0.0)
-            {
-                if (r.NextDouble() > Math.Exp(DeltaE * Beta))
-                {
-                    Flipped.ToggleSpin(); 
+        public void Metropolis(Spin Flipped, double DeltaE) {
+            if(DeltaE > 0.0) {
+                if(r.NextDouble() > Math.Exp(DeltaE * Beta)) {
+                    Flipped.ToggleSpin();
                 }
             }
         }
 
-        public void Glauber(Spin Flipped, double DeltaE)
-        {
-            if (r.NextDouble() > (1.0 / (1.0 + Math.Exp(DeltaE * Beta))))
-            {
+        public void Glauber(Spin Flipped, double DeltaE) {
+            if(r.NextDouble() > (1.0 / (1.0 + Math.Exp(DeltaE * Beta)))) {
                 Flipped.ToggleSpin();
-            } 
+            }
         }
         #endregion
     }
