@@ -92,55 +92,48 @@ namespace IsingModern.Ising {
             }
         }
 
-        public double CalculateLocalEnergy(Spin Chosen) {
-            double LocalEnergy = 0.0;
-            foreach(var Neighbour in Chosen.Neighbours) {
-                LocalEnergy -= Chosen.Value * Neighbour.Value;
+        public double CalculateEnergyChange(Spin Chosen)
+        {
+            double EnergyChange = 0.0;
+            int SameSpins = 0; 
+            foreach (var Neighbour in Chosen.Neighbours)
+            {
+                SameSpins = (Neighbour.Value == Chosen.Value) ? SameSpins+1 : SameSpins; 
             }
-            LocalEnergy *= J;
-            LocalEnergy -= h * Chosen.Value;
-            return LocalEnergy;
+            EnergyChange = -8.0 * J + 4.0 * J * (double)SameSpins + 2.0 * h * Chosen.Value;
+            return EnergyChange; 
         }
 
-        public double CalculateLocalEnergy(Spin Chosen1, Spin Chosen2)
+        public double CalculateEnergyChangeKawasaki(Spin Chosen1, Spin Chosen2)
         {
-            double LocalEnergy = 0.0;
-            
+            double EnergyChange = 0.0;
+            int SameSpins = 0;
             foreach (var Neighbour in Chosen1.Neighbours)
             {
-                LocalEnergy -= J*Chosen1.Value * Neighbour.Value;
+                SameSpins = (Neighbour.Value == Chosen1.Value) ? SameSpins + 1 : SameSpins;
             }
-
             foreach (var Neighbour in Chosen2.Neighbours)
             {
-                LocalEnergy -= J * Chosen2.Value * Neighbour.Value;
+                SameSpins = (Neighbour.Value == Chosen2.Value) ? SameSpins + 1 : SameSpins;
             }
-
-            LocalEnergy += J * Chosen1.Value * Chosen2.Value; 
-
-            return LocalEnergy;
+            EnergyChange = -12.0 * J + 4.0 * J * (double)SameSpins;
+            return EnergyChange;
         }
-
 
         #endregion
 
         #region Dynamics
         public void SingleFlip() {
             Spin Chosen = Spins[r.Next(N*N)];
-            
-            double EnergyDifference = 0.0 - CalculateLocalEnergy(Chosen);
-            
-            Chosen.ToggleSpin();
 
-            EnergyDifference += CalculateLocalEnergy(Chosen); 
-            if (!Metropolis(EnergyDifference)) /* or Glauber(..,..) */
+            double EnergyDifference = CalculateEnergyChange(Chosen);
+ 
+            if (Metropolis(EnergyDifference)) /* or Glauber(..,..) */
             {
-                Chosen.ToggleSpin(); 
-            }
-            else
-            {
+                Chosen.ToggleSpin();
                 TotalEnergy += EnergyDifference; 
             }
+
         }
 
         public void Sweep() {
@@ -155,17 +148,11 @@ namespace IsingModern.Ising {
             Spin Exchange = Chosen.Neighbours[r.Next(4)];
             if (Chosen.Value != Exchange.Value)
             {
-                double EnergyDifference = 0.0 - CalculateLocalEnergy(Chosen, Exchange);
-                Chosen.ToggleSpin();
-                Exchange.ToggleSpin();
-                EnergyDifference += CalculateLocalEnergy(Chosen, Exchange);
-                if (!Metropolis(EnergyDifference))
+                double EnergyDifference = CalculateEnergyChangeKawasaki(Chosen, Exchange);
+                if (Metropolis(EnergyDifference))
                 {
                     Chosen.ToggleSpin();
                     Exchange.ToggleSpin();
-                }
-                else
-                {
                     TotalEnergy += EnergyDifference; 
                 }
             }
