@@ -8,10 +8,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace IsingModern.ViewModel
-{
-    class IsingRenderModel : Canvas
-    {
+namespace IsingModern.ViewModel {
+    class IsingRenderModel : Canvas {
         private Image image = new Image();
         private Lattice model;
         private WriteableBitmap wbmap;
@@ -19,8 +17,7 @@ namespace IsingModern.ViewModel
         private int rectangleSize; //to convert mouseclicks
         public int N { get { return model.N; } }
 
-        public IsingRenderModel(int n = 50, bool periodicBoundary = false)
-        {
+        public IsingRenderModel(int n = 50, bool periodicBoundary = false) {
             this.Children.Add(image);
             this.SnapsToDevicePixels = false;
             image.Height = image.Width = viewsize; //only square lattices currently
@@ -62,22 +59,19 @@ namespace IsingModern.ViewModel
         }
 
         #region Manipulation
-        public void ChangeSize(int newSize)
-        {
+        public void ChangeSize(int newSize) {
             model = new Lattice(newSize);
             cellSize = viewsize / newSize;
             rectangleSize = (int)viewsize / newSize;
             DrawLattice();
         }
 
-        internal void SetBoundary(bool PeriodicBoundary)
-        {
+        internal void SetBoundary(bool PeriodicBoundary) {
             model.SetBoundary(PeriodicBoundary);
             DrawLattice();
         }
 
-        internal void Randomize()
-        {
+        internal void Randomize() {
             model.Randomize();
             DrawLattice();
         }
@@ -85,19 +79,17 @@ namespace IsingModern.ViewModel
         internal void ToggleTopRight()
         {
             var p = model.Spins[2 * N - 2];
-            p.ToggleSpin();
+            Dynamics.dynamic(p);
             DrawSpin(p);
         }
 
-        internal void NextStep()
-        {
-            model.Sweep();
+        internal void NextStep() {
+            Dynamics.Sweep();
             DrawLattice();
         }
 
-        internal void ChangeTemperature(double T)
-        {
-            model.Beta = T;
+        internal void ChangeTemperature(double T) {
+            Dynamics.Beta = Math.Max(1.0 / T, 0.00001); //prevent division by zero.
         }
 
 
@@ -105,8 +97,7 @@ namespace IsingModern.ViewModel
 
         #region Selection
         private Point mouseDownPoint;
-        private Shape selectionShape = new Rectangle()
-        {
+        private Shape selectionShape = new Rectangle() {
             Opacity = 0.5,
             Stroke = new SolidColorBrush(Colors.DarkCyan),
             StrokeThickness = 5,
@@ -120,31 +111,22 @@ namespace IsingModern.ViewModel
             new SolidColorBrush(Colors.Gold),
         };
 
-        protected override void OnMouseDown(MouseButtonEventArgs e)
-        {
+        protected override void OnMouseDown(MouseButtonEventArgs e) {
             base.OnMouseDown(e);
             mouseDownPoint = e.GetPosition(this);
-            if (mouseState != 0)
-            {
+            if(mouseState != 0) {
                 mouseState = 0;
                 this.Children.Remove(selectionShape);
-                for (int i = 0; i < 4; i++) coords[i] = 0;
+                for(int i = 0; i < 4; i++) coords[i] = 0;
                 return;
             }
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
+            if(e.LeftButton == MouseButtonState.Pressed) {
                 mouseState = 1;
-            }
-            else if (e.RightButton == MouseButtonState.Pressed)
-            {
+            } else if(e.RightButton == MouseButtonState.Pressed) {
                 mouseState = 2;
-            }
-            else if (e.MiddleButton == MouseButtonState.Pressed)
-            {
+            } else if(e.MiddleButton == MouseButtonState.Pressed) {
                 mouseState = 3;
-            }
-            else
-            {
+            } else {
                 return;
             }
             // clean up mess left behind from previous selections
@@ -156,19 +138,16 @@ namespace IsingModern.ViewModel
             this.Children.Add(selectionShape);
             Mouse.Capture(this);
         }
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
+        protected override void OnMouseMove(MouseEventArgs e) {
             base.OnMouseMove(e);
-            if (mouseState != 0)
-            {
+            if(mouseState != 0) {
                 Point currentPoint = e.GetPosition(image);
                 coords[0] = (int)(Math.Min(currentPoint.X, mouseDownPoint.X) + 0.5 * cellSize) / (int)cellSize; //x1
                 coords[1] = (int)(Math.Max(currentPoint.X, mouseDownPoint.X) + 0.5 * cellSize) / (int)cellSize; //x2
                 coords[2] = (int)(Math.Min(currentPoint.Y, mouseDownPoint.Y) + 0.5 * cellSize) / (int)cellSize; //y1
                 coords[3] = (int)(Math.Max(currentPoint.Y, mouseDownPoint.Y) + 0.5 * cellSize) / (int)cellSize; //y2
 
-                for (int i = 0; i < 4; i++)
-                {
+                for(int i = 0; i < 4; i++) {
                     coords[i] = Math.Min(N, Math.Max(0, coords[i]));
                 }
 
@@ -184,23 +163,18 @@ namespace IsingModern.ViewModel
 
             }
         }
-        protected override void OnMouseUp(MouseButtonEventArgs e)
-        {
+        protected override void OnMouseUp(MouseButtonEventArgs e) {
             base.OnMouseUp(e);
-            if (mouseState != 0)
-            {
+            if(mouseState != 0) {
                 int maxx = coords[1], maxy = coords[3];
                 wbmap.Lock();
-                for (int x = coords[0]; x < maxx; x++)
-                {
-                    for (int y = coords[2]; y < maxy; y++)
-                    {
+                for(int x = coords[0]; x < maxx; x++) {
+                    for(int y = coords[2]; y < maxy; y++) {
                         MouseAction(model.Spins[y * N + x]);
                     }
                 }
                 //if no area is selected change the Spin under the mouse
-                if (coords[0] == coords[1] && coords[2] == coords[3])
-                {
+                if(coords[0] == coords[1] && coords[2] == coords[3]) {
                     var pos = e.GetPosition(image);
                     int x = (int)pos.X / (int)cellSize;
                     int y = (int)pos.Y / (int)cellSize;
@@ -209,18 +183,17 @@ namespace IsingModern.ViewModel
                 wbmap.Unlock();
             }
             mouseState = 0;
-            for (int i = 0; i < 4; i++) coords[i] = 0;
+            for(int i = 0; i < 4; i++) coords[i] = 0;
             this.Children.Remove(selectionShape);
             Mouse.Capture(null);
         }
 
-        private void MouseAction(Spin spin)
-        {
-            if (mouseState == 1)
+        private void MouseAction(Spin spin) {
+            if(mouseState == 1)
                 spin.SetSpin();
-            if (mouseState == 2)
+            if(mouseState == 2)
                 spin.ToggleBoundary(true);
-            if (mouseState == 3)
+            if(mouseState == 3)
                 spin.ToggleSpin();
             DrawSpin(spin);
         }
@@ -228,23 +201,19 @@ namespace IsingModern.ViewModel
         #endregion
 
         #region Rendering
-        private void DrawLattice()
-        {
+        private void DrawLattice() {
             wbmap.Lock();
             Random rnd = new Random(DateTime.Now.Millisecond);
             int counter = 0;
-            for (int y = 0; y < N; y++)
-            {
-                for (int x = 0; x < N; x++)
-                {
+            for(int y = 0; y < N; y++) {
+                for(int x = 0; x < N; x++) {
                     DrawSpin(x, y, model.Spins[counter++].Color);
                 }
             }
             wbmap.Unlock();
         }
 
-        private void DrawSpin(int left, int top, Color color)
-        {
+        private void DrawSpin(int left, int top, Color color) {
             left *= rectangleSize;
             top *= rectangleSize;
             int width = rectangleSize, height = rectangleSize;
@@ -254,10 +223,8 @@ namespace IsingModern.ViewModel
             colorData |= color.B << 0; // B
             int bpp = wbmap.Format.BitsPerPixel / 8;
 
-            unsafe
-            {
-                for (int y = 0; y < height; y++)
-                {
+            unsafe {
+                for(int y = 0; y < height; y++) {
                     // Get a pointer to the back buffer
                     int pBackBuffer = (int)wbmap.BackBuffer;
 
@@ -265,8 +232,7 @@ namespace IsingModern.ViewModel
                     pBackBuffer += (top + y) * wbmap.BackBufferStride;
                     pBackBuffer += left * bpp;
 
-                    for (int x = 0; x < width; x++)
-                    {
+                    for(int x = 0; x < width; x++) {
                         // Assign the color data to the pixel
                         *((int*)pBackBuffer) = colorData;
                         // Increment the address of the pixel to draw
@@ -277,8 +243,7 @@ namespace IsingModern.ViewModel
             wbmap.AddDirtyRect(new Int32Rect(left, top, width, height));
         }
 
-        private void DrawSpin(Spin p)
-        {
+        private void DrawSpin(Spin p) {
             int left = p.Index % N;
             int top = p.Index / N;
             wbmap.Lock();
@@ -286,8 +251,7 @@ namespace IsingModern.ViewModel
             wbmap.Unlock();
         }
 
-        internal void Refresh()
-        {
+        internal void Refresh() {
             DrawLattice();
         }
 

@@ -65,7 +65,7 @@
                 <DockPanel Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
                     <Label DockPanel.Dock="Left" FontWeight="Bold">Temperature:</Label>
                     <TextBox Text="{Binding ElementName=Temperature, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Right" Width="40" />
-                    <Slider Maximum="50" TickPlacement="BottomRight" TickFrequency="5" IsSnapToTickEnabled="True" Name="Temperature" ValueChanged="TemperatureSlider_ValueChanged" />
+                    <Slider Maximum="4" TickPlacement="BottomRight" TickFrequency="50" IsSnapToTickEnabled="False" Name="Temperature" ValueChanged="TemperatureSlider_ValueChanged" />
                 </DockPanel>
 
 

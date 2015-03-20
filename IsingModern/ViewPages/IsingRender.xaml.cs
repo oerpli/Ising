@@ -71,7 +71,7 @@ namespace IsingModern.Render {
 
         private void TemperatureSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            viewmodel.ChangeTemperature(Temperature.Value); 
+            viewmodel.ChangeTemperature(e.NewValue); 
         }
         #endregion
 

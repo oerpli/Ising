@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media;
+using System.Linq;
 
 namespace IsingModern.Ising {
     public abstract class Settings {
@@ -47,6 +48,11 @@ namespace IsingModern.Ising {
             this.Value = boundary ?? Value != 0 ? 0 : -1;
         }
         #endregion
+
+        public int InteractionEnergy() {
+            int spinsum = Neighbours.Aggregate(0, (sum, spin) => sum + spin.Value);
+            return -Value * spinsum;
+        }
 
         #region Rendering
 

@@ -85,6 +85,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Model\Dynamics.cs" />
     <Compile Include="Model\Lattice.cs" />
     <Compile Include="Model\Spin.cs" />
     <Compile Include="ViewModel\IsingRenderModel.cs" />
