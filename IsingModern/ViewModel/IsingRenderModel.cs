@@ -79,17 +79,17 @@ namespace IsingModern.ViewModel {
         internal void ToggleTopRight()
         {
             var p = model.Spins[2 * N - 2];
-            Dynamics.dynamic(p);
+            model.dynamic(p);
             DrawSpin(p);
         }
 
         internal void NextStep() {
-            Dynamics.Sweep();
+            model.Sweep();
             DrawLattice();
         }
 
         internal void ChangeTemperature(double T) {
-            Dynamics.Beta = Math.Max(1.0 / T, 0.00001); //prevent division by zero.
+            model.Beta = Math.Max(1.0 / T, 0.00001); //prevent division by zero.
         }
 
 

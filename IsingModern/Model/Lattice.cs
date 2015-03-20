@@ -9,14 +9,16 @@ namespace IsingModern.Ising {
         public int N;
         public int Count { get; private set; }
         public Spin[] Spins { get; private set; }
-        private Random r = new Random();
 
 
 
         public Lattice(int n) {
             {
-                Dynamics.J = 1;
-                Dynamics.Lattice = this;
+                J = 1;
+                h = 0;
+                Beta = 1;
+                dynamic = SingleFlip;
+                accept = Metropolis;
             }
             Spin[,] points;
             N = n;
@@ -54,7 +56,7 @@ namespace IsingModern.Ising {
             foreach(var p in Boundary) {
                 p.Value = periodic ? -1 : 0;
             }
-            Dynamics.UpdateTotalEnergy();
+            UpdateTotalEnergy();
         }
 
         private IEnumerable<Spin> Boundary {
@@ -80,7 +82,7 @@ namespace IsingModern.Ising {
                     p.Value = r.NextDouble() > 0.5 ? -1 : 1;
                 }
             }
-            Dynamics.UpdateTotalEnergy();
+            UpdateTotalEnergy();
         }
 
         #region Hamiltonian
