@@ -74,22 +74,27 @@ namespace IsingModern.Render {
 
         private void TemperatureSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             viewmodel.ChangeTemperature(e.NewValue);
+            e.Handled = true;
         }
 
         private void CouplingConstant_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             viewmodel.ChangeCoupling(e.NewValue);
+            e.Handled = true;
         }
 
         private void MagneticField_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             viewmodel.ChangeField(e.NewValue);
+            e.Handled = true;
         }
 
         private void Temperature_MouseWheel(object sender, MouseWheelEventArgs e) {
             Temperature.Value += Math.Sign(e.Delta) * 0.01;
+            e.Handled = true;
         }
 
         private void CouplingConstant_MouseWheel(object sender, MouseWheelEventArgs e) {
             CouplingConstant.Value += Math.Sign(e.Delta) * 0.01;
+            e.Handled = true;
         }
 
         private void MagneticField_MouseWheel(object sender, MouseWheelEventArgs e) {
