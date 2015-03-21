@@ -76,20 +76,28 @@ namespace IsingModern.ViewModel {
             DrawLattice();
         }
 
-        internal void ToggleTopRight()
-        {
+        internal void ToggleTopRight() {
             var p = model.Spins[2 * N - 2];
             model.dynamic(p);
             DrawSpin(p);
         }
 
         internal void NextStep() {
-            model.Sweep();
+            for(int i = 0; i < 5; i++)
+                model.Sweep();
             DrawLattice();
         }
 
         internal void ChangeTemperature(double T) {
-            model.Beta = Math.Max(1.0 / T, 0.00001); //prevent division by zero.
+            model.Beta = Math.Max(1.0 / T, 0.000000001); //prevent division by zero.
+        }
+
+        internal void ChangeCoupling(double J) {
+            if(Math.Abs(J) <= 0.009) J = 0;
+            model.J = J;
+        }
+        internal void ChangeField(double h) {
+            model.h = h;
         }
 
 

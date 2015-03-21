@@ -1,9 +1,12 @@
 ﻿using IsingModern.ViewModel;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-
+using System.Collections.Generic;
+using OxyPlot;
+using OxyPlot.Wpf;
 
 namespace IsingModern.Render {
     /// <summary>
@@ -16,15 +19,16 @@ namespace IsingModern.Render {
         private bool PeriodicBoundary = false;
         private int rndCounter = 0;
 
-        private const int maximalN = 600, minimalN = 3; //both should divide 600. 
+        private const int maximalN = 200, minimalN = 3; //both should divide 600. 
         private int currentN = 20;
 
         #region Initialization
 
         public IsingRender() {
-            InitializeComponent();
-            Current = this;
             viewmodel = new IsingRenderModel(currentN, PeriodicBoundary);
+            InitializeComponent();
+            plotinit(); //test
+            Current = this;
             BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
             modelParentElement.Children.Add(viewmodel);
             LatticeSizeInput.Text = currentN.ToString();
@@ -64,15 +68,34 @@ namespace IsingModern.Render {
             viewmodel.ToggleTopRight();
         }
 
-        private void Time_Click(object sender, RoutedEventArgs e)
-        {
-            viewmodel.NextStep(); 
+        private void Time_Click(object sender, RoutedEventArgs e) {
+            viewmodel.NextStep();
         }
 
-        private void TemperatureSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            viewmodel.ChangeTemperature(e.NewValue); 
+        private void TemperatureSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            viewmodel.ChangeTemperature(e.NewValue);
         }
+
+        private void CouplingConstant_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            viewmodel.ChangeCoupling(e.NewValue);
+        }
+
+        private void MagneticField_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            viewmodel.ChangeField(e.NewValue);
+        }
+
+        private void Temperature_MouseWheel(object sender, MouseWheelEventArgs e) {
+            Temperature.Value += Math.Sign(e.Delta) * 0.01;
+        }
+
+        private void CouplingConstant_MouseWheel(object sender, MouseWheelEventArgs e) {
+            CouplingConstant.Value += Math.Sign(e.Delta) * 0.01;
+        }
+
+        private void MagneticField_MouseWheel(object sender, MouseWheelEventArgs e) {
+            MagneticField.Value += Math.Sign(e.Delta) * 0.009;
+        }
+
         #endregion
 
         #region LatticeSize
@@ -117,19 +140,25 @@ namespace IsingModern.Render {
 
         #endregion
 
-        private void CouplingConstant_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
 
+        #region Plotting
+        public string Title { get; private set; }
+
+        public IList<DataPoint> Points { get; private set; }
+
+        private void plotinit() {
+            this.Points = new List<DataPoint>();
+            var x = new Random();
+            for(int i = 0; i < 100; i++) {
+                Points.Add(new DataPoint(i, x.Next(-200, 200)));
+            }
+            EnergyPlot.ItemsSource = Points;
+            MagnetizationPlot.ItemsSource = Points.Select(a => new DataPoint(a.X, a.Y * x.NextDouble()));
+            Plot.IsLegendVisible = true;
+            Plot.LegendBackground = System.Windows.Media.Colors.AliceBlue;
         }
 
-        private void MagneticField_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-
-        }
-
-
-
-
-
-        #region SomeTesting
         #endregion
+
     }
 }
