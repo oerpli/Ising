@@ -15,16 +15,23 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="600"/>
                     <ColumnDefinition Width="20"/>
-                    <ColumnDefinition Width="150"/>
-                    <ColumnDefinition Width="70"/>
-                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="130"/>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="10"/>
                 </Grid.ColumnDefinitions>
 
 
                 <Grid Grid.Column="0" Name="modelParentElement" Width="600" Height="600" Background="Transparent"/>
-               
-                
+
+
+
+
+
                 <StackPanel Grid.Column="2" HorizontalAlignment="Left">
+                    <Label Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Temperature"/>
+                    <Label Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Coupling Constant"/>
+                    <Label Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Magnetic Field"/>
+
                     <Button Name="ToggleBoundary" 
                             Click="ToggleBoundary_Click"
                             Content="Boundary!" 
@@ -45,9 +52,27 @@
                             Click="Time_Click" 
                             Content="Time"
                            Height="30" VerticalAlignment="Top"/>
-                   
+
                 </StackPanel>
-                <StackPanel Grid.Column="3">
+                <StackPanel Grid.Column="3" Grid.ColumnSpan="2">
+                    <DockPanel Grid.ColumnSpan="2">
+                        <Slider DockPanel.Dock="Left" Name="Temperature" Height="30"  Maximum="5" TickPlacement="BottomRight" TickFrequency="0.5" IsSnapToTickEnabled="False"
+                                ValueChanged="TemperatureSlider_ValueChanged"
+                                Width="230"/>
+                        <Label Height="30" Content="{Binding ElementName=Temperature, Path=Value, UpdateSourceTrigger=PropertyChanged}" Width="40"  />
+                    </DockPanel>
+                    <DockPanel Grid.ColumnSpan="2">
+                        <Slider DockPanel.Dock="Left" Name="CouplingConstant" Height="30"   Minimum="-1" Maximum="1"  TickPlacement="BottomRight" TickFrequency="0.5" IsSnapToTickEnabled="False"
+                                ValueChanged="CouplingConstant_ValueChanged"
+                                Width="230"/>
+                        <Label Height="30" Content="{Binding ElementName=CouplingConstant, Path=Value, UpdateSourceTrigger=PropertyChanged}" Width="40"  />
+                    </DockPanel>
+                    <DockPanel Grid.ColumnSpan="2">
+                        <Slider DockPanel.Dock="Left" Name="MagneticField" Height="30" Minimum="-1"  Maximum="1" TickPlacement="BottomRight" TickFrequency="0.5" IsSnapToTickEnabled="False"
+                                ValueChanged="MagneticField_ValueChanged"
+                                Width="230"/>
+                        <Label Height="30" Content="{Binding ElementName=MagneticField, Path=Value, UpdateSourceTrigger=PropertyChanged}" Width="40"  />
+                    </DockPanel>
                     <TextBlock Name="BoundaryText"
                                TextAlignment="Right" FontSize="15"
                                Width="70" Height="30"
@@ -62,15 +87,9 @@
                                Width="70" Height="30" 
                                VerticalAlignment="Top" HorizontalAlignment="Left"
                                Text="Init Failed"/>
-                    
+
                 </StackPanel>
 
-                <DockPanel Grid.Column="2" Grid.ColumnSpan="3" VerticalAlignment="Bottom">
-                    <Label DockPanel.Dock="Left" FontWeight="Bold">Temperature:</Label>
-
-                    <TextBox Text="{Binding ElementName=Temperature, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Right" Width="40" />
-                    <Slider Maximum="4" TickPlacement="BottomRight" TickFrequency="50" IsSnapToTickEnabled="False" Name="Temperature" ValueChanged="TemperatureSlider_ValueChanged" />
-                </DockPanel>
 
 
 

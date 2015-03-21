@@ -117,6 +117,14 @@ namespace IsingModern.Render {
 
         #endregion
 
+        private void CouplingConstant_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+
+        }
+
+        private void MagneticField_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+
+        }
+
 
 
 
