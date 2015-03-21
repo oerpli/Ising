@@ -5,7 +5,7 @@
         Title="Ising Model" IsTitleVisible="True"
         ContentSource="/ViewPages/IsingRender.xaml"
                   Height="800"
-                  Width="950"
+                  Width="1200"
                   MinHeight="800"
                   MinWidth="950"
                   >

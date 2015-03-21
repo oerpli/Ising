@@ -16,7 +16,8 @@
                     <ColumnDefinition Width="600"/>
                     <ColumnDefinition Width="20"/>
                     <ColumnDefinition Width="150"/>
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="50"/>
                 </Grid.ColumnDefinitions>
 
 
@@ -44,7 +45,7 @@
                             Click="Time_Click" 
                             Content="Time"
                            Height="30" VerticalAlignment="Top"/>
-                  
+                   
                 </StackPanel>
                 <StackPanel Grid.Column="3">
                     <TextBlock Name="BoundaryText"
@@ -61,13 +62,15 @@
                                Width="70" Height="30" 
                                VerticalAlignment="Top" HorizontalAlignment="Left"
                                Text="Init Failed"/>
+                    
                 </StackPanel>
-                <DockPanel Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+
+                <DockPanel Grid.Column="2" Grid.ColumnSpan="3" VerticalAlignment="Bottom">
                     <Label DockPanel.Dock="Left" FontWeight="Bold">Temperature:</Label>
+
                     <TextBox Text="{Binding ElementName=Temperature, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Right" Width="40" />
                     <Slider Maximum="4" TickPlacement="BottomRight" TickFrequency="50" IsSnapToTickEnabled="False" Name="Temperature" ValueChanged="TemperatureSlider_ValueChanged" />
                 </DockPanel>
-
 
 
 
