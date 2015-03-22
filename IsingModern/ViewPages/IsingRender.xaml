@@ -102,7 +102,7 @@ Content="{Binding ElementName=MagneticField, Path=Value, UpdateSourceTrigger=Pro
 
                 </StackPanel>
                 
-                <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="4">
+                <StackPanel Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="4">
                     <Grid Background="White" Height="300">
                         <oxy:PlotView Name="Plot" Title="Energy">
                             <oxy:PlotView.Series>
