@@ -9,97 +9,69 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="600">
 
-
     <Grid Style="{StaticResource ContentRoot}" Name="maingrid" KeyDown="maingrid_KeyDown" >
         <ScrollViewer>
-            <Grid MinWidth="300" MinHeight="300"  VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Grid MinWidth="300" MinHeight="300" VerticalAlignment="Top" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="600"/>
                     <ColumnDefinition Width="20"/>
                     <ColumnDefinition Width="130"/>
                     <ColumnDefinition Width="260"/>
-                    <ColumnDefinition Width="400"/>
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Name="modelParentElement" Width="600" Height="600" Background="Transparent"/>
 
-
-                <Grid Grid.Column="0" Name="modelParentElement" Width="600" Height="600" Background="Transparent"/>
-
-
-
-
-
-                <StackPanel Grid.Column="2" HorizontalAlignment="Left">
-                    <Label Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Temperature"/>
-                    <Label Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Coupling Constant"/>
-                    <Label Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Magnetic Field"/>
-
-                    <Button Name="ToggleBoundary" 
-                            Click="ToggleBoundary_Click"
-                            Content="Boundary!" 
-                           Height="30" VerticalAlignment="Top"/>
-                    <Button Name="Randomize" 
-                            Click="RandomizeClick" 
-                            Content="Randomize!"
+                <StackPanel Grid.Column="2" Grid.Row="0" HorizontalAlignment="Left">
+                    <Button Name="ToggleBoundary" Click="ToggleBoundary_Click" Content="Boundary!" 
                             Height="30" VerticalAlignment="Top"/>
-                    <Button Name="LatticeSize" 
-                            Click="LatticeSize_Click"  MouseWheel="LatticeSize_MouseWheel"  KeyDown="LatticeSize_KeyDown" 
-                            Content="Set Size"
-                           Height="30" VerticalAlignment="Top"/>
-                    <Button Name="TopRight" 
-                            Click="TopRight_Click" 
-                            Content="Top Right"
-                           Height="30" VerticalAlignment="Top"/>
-                    <Button Name="Time" 
-                            Click="Time_Click" 
-                            Content="Time"
-                           Height="30" VerticalAlignment="Top"/>
+                    <Button Name="Randomize" Click="RandomizeClick" Content="Randomize!"
+                            Height="30" VerticalAlignment="Top"/>
+                    <Button Name="LatticeSize" Click="LatticeSize_Click" MouseWheel="LatticeSize_MouseWheel" 
+                            KeyDown="LatticeSize_KeyDown" Content="Set Size" Height="30" VerticalAlignment="Top"/>
+                    <Button Name="Time" Click="Time_Click" Content="Time" 
+                            Height="30" VerticalAlignment="Top"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="3" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <TextBlock Name="BoundaryText" TextAlignment="Right" FontSize="15"
+                               Width="70" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock Name="StatusText" TextAlignment="Right" FontSize="15" Width="70" 
+                               Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Text="Init"/>
+                    <TextBlock Name="LatticeSizeInput" MouseWheel="LatticeSize_MouseWheel" TextAlignment="Right" 
+                               FontSize="15" Width="70" Height="30" VerticalAlignment="Top" 
+                               HorizontalAlignment="Left" Text="Init Failed"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" >
+                    <StackPanel Orientation="Horizontal" Margin="10">
+                        <Label Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Temperature"/>
+                        <Slider Name="Temperature" Height="30" TickPlacement="BottomRight" TickFrequency="0.5" 
+                                IsSnapToTickEnabled="False" ValueChanged="TemperatureSlider_ValueChanged"
+                                MouseWheel="Temperature_MouseWheel" Value="1" 
+                                Minimum="0" Maximum="5" MinWidth="225" Margin="5"/>
+                        <Label Height="30" MinWidth="35" ContentStringFormat="N2"
+Content="{Binding ElementName=Temperature, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="10">
+                        <Label Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Magnetic Field"/>
+                        <Slider DockPanel.Dock="Left" Name="MagneticField" Height="30" TickPlacement="BottomRight" 
+                                TickFrequency="0.25" IsSnapToTickEnabled="False" ValueChanged="MagneticField_ValueChanged"
+                                MouseWheel="MagneticField_MouseWheel" Value="0" Minimum="-0.5" Maximum="0.5" MinWidth="225"/>
+                        <Label Height="30" MinWidth="35" ContentStringFormat="N2"
+Content="{Binding ElementName=MagneticField, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+
+
 
                 </StackPanel>
-                <StackPanel Grid.Column="3">
-                    <DockPanel>
-                        <Slider DockPanel.Dock="Left" Name="Temperature" Height="30"  TickPlacement="BottomRight" TickFrequency="0.5" IsSnapToTickEnabled="False"
-                                ValueChanged="TemperatureSlider_ValueChanged"
-                                MouseWheel="Temperature_MouseWheel"
-                                Value="1" Minimum="0" Maximum="5" 
-                                Width="225"/>
-                        <Label Height="30" Width="35" ContentStringFormat="N2"
-                               Content="{Binding ElementName=Temperature, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
-                    </DockPanel>
-                    <DockPanel>
-                        <Slider DockPanel.Dock="Left" Name="CouplingConstant" Height="30" TickPlacement="BottomRight" TickFrequency="0.5" IsSnapToTickEnabled="False"
-                                ValueChanged="CouplingConstant_ValueChanged"
-                                MouseWheel="CouplingConstant_MouseWheel"
-                                Value ="1" Minimum="-1" Maximum="1"  
-                                Width="225"/>
-                        <Label Height="30" Width="35" ContentStringFormat="N2"
-                               Content="{Binding ElementName=CouplingConstant, Path=Value, UpdateSourceTrigger=PropertyChanged}" />
-                    </DockPanel>
-                    <DockPanel>
-                        <Slider DockPanel.Dock="Left" Name="MagneticField" Height="30" TickPlacement="BottomRight" TickFrequency="0.25" IsSnapToTickEnabled="False"
-                                ValueChanged="MagneticField_ValueChanged"
-                                MouseWheel="MagneticField_MouseWheel"
-                                Value="0" Minimum="-0.5"  Maximum="0.5" 
-                                Width="225"/>
-                        <Label Height="30" Width="35" ContentStringFormat="N2"
-                               Content="{Binding ElementName=MagneticField, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
-                    </DockPanel>
-                    <TextBlock Name="BoundaryText"
-                               TextAlignment="Right" FontSize="15"
-                               Width="70" Height="30"
-                               VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                    <TextBlock Name="StatusText" 
-                               TextAlignment="Right" FontSize="15" 
-                               Width="70" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"
-                               Text="Init"/>
-                    <TextBlock Name="LatticeSizeInput" 
-                               MouseWheel="LatticeSize_MouseWheel" 
-                               TextAlignment="Right" FontSize="15" 
-                               Width="70" Height="30" 
-                               VerticalAlignment="Top" HorizontalAlignment="Left"
-                               Text="Init Failed"/>
-
-                </StackPanel>
-                <StackPanel Grid.Column="4">
+                
+                <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="4">
                     <Grid Background="White" Height="300">
                         <oxy:PlotView Name="Plot" Title="Energy">
                             <oxy:PlotView.Series>
@@ -109,10 +81,6 @@
                         </oxy:PlotView>
                     </Grid>
                 </StackPanel>
-
-
-
-
             </Grid>
         </ScrollViewer>
     </Grid>

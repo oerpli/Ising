@@ -64,9 +64,9 @@ namespace IsingModern.Render {
             BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
         }
 
-        private void TopRight_Click(object sender, RoutedEventArgs e) {
+       /* private void TopRight_Click(object sender, RoutedEventArgs e) {
             viewmodel.ToggleTopRight();
-        }
+        }*/
 
         private void Time_Click(object sender, RoutedEventArgs e) {
             viewmodel.NextStep();
@@ -92,10 +92,10 @@ namespace IsingModern.Render {
             e.Handled = true;
         }
 
-        private void CouplingConstant_MouseWheel(object sender, MouseWheelEventArgs e) {
+        /*private void CouplingConstant_MouseWheel(object sender, MouseWheelEventArgs e) {
             CouplingConstant.Value += Math.Sign(e.Delta) * 0.01;
             e.Handled = true;
-        }
+        }*/
 
         private void MagneticField_MouseWheel(object sender, MouseWheelEventArgs e) {
             MagneticField.Value += Math.Sign(e.Delta) * 0.009;
