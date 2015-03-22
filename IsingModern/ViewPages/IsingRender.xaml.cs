@@ -23,6 +23,10 @@ namespace IsingModern.Render {
         private const int maximalN = 200, minimalN = 3; //both should divide 600. 
         private int currentN = 20;
 
+        bool captured = false;
+        double x_shape, x_canvas, y_shape, y_canvas;
+        System.Windows.UIElement source = null;
+
         #region Initialization
 
         public IsingRender() {
@@ -184,7 +188,44 @@ namespace IsingModern.Render {
             viewmodel.ChangeCoupling(Ferromagnetic ? 1.0 : -1.0);
             CouplingText.Text= Ferromagnetic ? "Ferromagnetic" : "Anti-Ferromagnetic"; 
         }
- 
+
+        private void shape_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            source = (System.Windows.UIElement)sender;
+            Mouse.Capture(source);
+            captured = true;
+            x_shape = Canvas.GetLeft(source);
+            x_canvas = e.GetPosition(TemperatureMagneticField).X;
+            y_shape = Canvas.GetTop(source);
+            y_canvas = e.GetPosition(TemperatureMagneticField).Y;
+        }
+        private void shape_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (captured)
+            {
+                double x = e.GetPosition(TemperatureMagneticField).X;
+                double y = e.GetPosition(TemperatureMagneticField).Y;
+                x_shape += x - x_canvas;
+                if (x_shape > TemperatureMagneticField.ActualWidth - 10.0 || x_shape < 0.0)
+                {
+                    x_shape -= x - x_canvas;
+                    /*Mouse.Capture(null);
+                    captured = false;*/
+                }
+                Canvas.SetLeft(source, x_shape);
+                x_canvas = x;
+                y_shape += y - y_canvas;
+                if (y_shape > (TemperatureMagneticField.ActualHeight - 10.0) || y_shape < 0.0) y_shape -= y - y_canvas;
+                Canvas.SetTop(source, y_shape);
+                y_canvas = y;
+            }
+        }
+        private void shape_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Mouse.Capture(null);
+            captured = false;
+        }
+
 
     }
 }

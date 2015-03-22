@@ -69,8 +69,16 @@ Content="{Binding ElementName=Temperature, Path=Value, UpdateSourceTrigger=Prope
 Content="{Binding ElementName=MagneticField, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                     
+                    <Canvas Name="TemperatureMagneticField" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" Height="100" Width="200" Opacity="0.1" >
+                        <Rectangle Fill="Azure"  Canvas.Left="0" Canvas.Top="0" Width="200" Height="100"/>
+                        <Ellipse Fill="Black" Canvas.Left="50" Canvas.Top="50" Width="10" Height="10"
+                                 MouseLeftButtonDown="shape_MouseLeftButtonDown"
+                                 MouseMove="shape_MouseMove"
+                                 MouseLeftButtonUp="shape_MouseLeftButtonUp"/>
+
+                    </Canvas>
                     <ToggleButton Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" 
-                            VerticalAlignment="Top" HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom" HorizontalAlignment="Center"
                             MinWidth="60" MinHeight="40" 
                             Name="Start" Checked="Start_Click" Unchecked="Stop_Click">
                         <ToggleButton.Style>
