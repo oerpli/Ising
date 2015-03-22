@@ -6,6 +6,7 @@
              xmlns:oxy="http://oxyplot.org/wpf"
              xmlns:i="clr-namespace:System.Windows.Interop;assembly=PresentationCore"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             xmlns:vsm="clr-namespace:System.Windows;assembly=System.Windows"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="600">
 
@@ -15,8 +16,9 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="600"/>
                     <ColumnDefinition Width="20"/>
-                    <ColumnDefinition Width="130"/>
-                    <ColumnDefinition Width="260"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="50"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -27,28 +29,28 @@
                 </Grid.RowDefinitions>
                 <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Name="modelParentElement" Width="600" Height="600" Background="Transparent"/>
 
-                <StackPanel Grid.Column="2" Grid.Row="0" HorizontalAlignment="Left">
+                <StackPanel Grid.Column="2" Grid.Row="0" HorizontalAlignment="Left" Margin="3">
                     <Button Name="ToggleBoundary" Click="ToggleBoundary_Click" Content="Boundary!" 
-                            Height="30" VerticalAlignment="Top"/>
+                            MinHeight="30" VerticalAlignment="Top" Margin="3"/>
                     <Button Name="Randomize" Click="RandomizeClick" Content="Randomize!"
-                            Height="30" VerticalAlignment="Top"/>
+                            MinHeight="30" VerticalAlignment="Top" Margin="3"/>
                     <Button Name="LatticeSize" Click="LatticeSize_Click" MouseWheel="LatticeSize_MouseWheel" 
-                            KeyDown="LatticeSize_KeyDown" Content="Set Size" Height="30" VerticalAlignment="Top"/>
-                    <Button Name="Time" Click="Time_Click" Content="Time" 
-                            Height="30" VerticalAlignment="Top"/>
+                            KeyDown="LatticeSize_KeyDown" Content="Set Size" MinHeight="30" VerticalAlignment="Top" Margin="3"/>
+                    <Button Name="Coupling" Click="Coupling_Click" Content="Coupling" VerticalAlignment="Top" Margin="3"/>
                 </StackPanel>
                 
-                <StackPanel Grid.Column="3" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <StackPanel Grid.Column="3" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="3">
                     <TextBlock Name="BoundaryText" TextAlignment="Right" FontSize="15"
-                               Width="70" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                    <TextBlock Name="StatusText" TextAlignment="Right" FontSize="15" Width="70" 
-                               Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Text="Init"/>
+                              Height="30" Margin="3"/>
+                    <TextBlock Name="StatusText" TextAlignment="Right" FontSize="15"  
+                               Height="30" Text="Init" Margin="3"/>
                     <TextBlock Name="LatticeSizeInput" MouseWheel="LatticeSize_MouseWheel" TextAlignment="Right" 
-                               FontSize="15" Width="70" Height="30" VerticalAlignment="Top" 
-                               HorizontalAlignment="Left" Text="Init Failed"/>
+                               FontSize="15"  Height="30" Text="Init Failed" Margin="3"/>
+                    <TextBlock Name="CouplingText"  FontSize="15"
+                               Height="30" TextAlignment="Right" Margin="3" />
                 </StackPanel>
                 
-                <StackPanel Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" >
+                <StackPanel Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Left" >
                     <StackPanel Orientation="Horizontal" Margin="10">
                         <Label Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Temperature"/>
                         <Slider Name="Temperature" Height="30" TickPlacement="BottomRight" TickFrequency="0.5" 
@@ -63,9 +65,25 @@ Content="{Binding ElementName=Temperature, Path=Value, UpdateSourceTrigger=Prope
                         <Slider DockPanel.Dock="Left" Name="MagneticField" Height="30" TickPlacement="BottomRight" 
                                 TickFrequency="0.25" IsSnapToTickEnabled="False" ValueChanged="MagneticField_ValueChanged"
                                 MouseWheel="MagneticField_MouseWheel" Value="0" Minimum="-0.5" Maximum="0.5" MinWidth="225"/>
-                        <Label Height="30" MinWidth="35" ContentStringFormat="N2"
+                        <Label MinHeight="30" MinWidth="35" ContentStringFormat="N2"
 Content="{Binding ElementName=MagneticField, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
+                    
+                    <ToggleButton Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" 
+                            VerticalAlignment="Top" HorizontalAlignment="Center"
+                            MinWidth="60" MinHeight="40" 
+                            Name="Start" Checked="Start_Click" Unchecked="Stop_Click">
+                        <ToggleButton.Style>
+                            <Style TargetType="{x:Type ToggleButton}">
+                                <Setter Property="Content" Value="Start!"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter Property="Content" Value="Stop!"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ToggleButton.Style>
+                    </ToggleButton>
 
 
 

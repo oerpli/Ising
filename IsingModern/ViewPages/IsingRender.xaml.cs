@@ -17,6 +17,7 @@ namespace IsingModern.Render {
         private IsingRenderModel viewmodel;
 
         private bool PeriodicBoundary = false;
+        private bool Ferromagnetic = true; 
         private int rndCounter = 0;
 
         private const int maximalN = 200, minimalN = 3; //both should divide 600. 
@@ -30,6 +31,7 @@ namespace IsingModern.Render {
             plotinit(); //test
             Current = this;
             BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
+            CouplingText.Text = Ferromagnetic ? "Ferromagnetic" : "Anti-Ferromagnetic"; 
             modelParentElement.Children.Add(viewmodel);
             LatticeSizeInput.Text = currentN.ToString();
         }
@@ -164,6 +166,25 @@ namespace IsingModern.Render {
         }
 
         #endregion
+
+        private void Start_Click(object sender, RoutedEventArgs e)
+        {
+            viewmodel.NextStep();
+        }
+
+
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void Coupling_Click(object sender=null, RoutedEventArgs e=null)
+        {
+            if(sender != null) Ferromagnetic = !Ferromagnetic;
+            viewmodel.ChangeCoupling(Ferromagnetic ? 1.0 : -1.0);
+            CouplingText.Text= Ferromagnetic ? "Ferromagnetic" : "Anti-Ferromagnetic"; 
+        }
+ 
 
     }
 }
