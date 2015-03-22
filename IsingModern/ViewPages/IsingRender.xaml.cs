@@ -17,7 +17,8 @@ namespace IsingModern.Render {
         private IsingRenderModel viewmodel;
 
         private bool PeriodicBoundary = false;
-        private bool Ferromagnetic = true; 
+        private bool Ferromagnetic = true;
+        private bool Metropolis = true;
         private int rndCounter = 0;
 
         private const int maximalN = 200, minimalN = 3; //both should divide 600. 
@@ -35,7 +36,8 @@ namespace IsingModern.Render {
             plotinit(); //test
             Current = this;
             BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
-            CouplingText.Text = Ferromagnetic ? "Ferromagnetic" : "Anti-Ferromagnetic"; 
+            CouplingText.Text = Ferromagnetic ? "Ferromagnetic" : "Anti-Ferromagnetic";
+            AlgorithmText.Text = Metropolis ? "Metropolis" : "Glauber"; 
             modelParentElement.Children.Add(viewmodel);
             LatticeSizeInput.Text = currentN.ToString();
         }
@@ -107,6 +109,73 @@ namespace IsingModern.Render {
             MagneticField.Value += Math.Sign(e.Delta) * 0.009;
         }
 
+        private void Start_Click(object sender, RoutedEventArgs e)
+        {
+            viewmodel.NextStep();
+        }
+
+
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void Coupling_Click(object sender = null, RoutedEventArgs e = null)
+        {
+            if (sender != null) Ferromagnetic = !Ferromagnetic;
+            viewmodel.ChangeCoupling(Ferromagnetic ? 1.0 : -1.0);
+            CouplingText.Text = Ferromagnetic ? "Ferromagnetic" : "Anti-Ferromagnetic";
+        }
+
+        private void Algorithm_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender != null) Metropolis = !Metropolis;
+            viewmodel.ChangeAccept(Metropolis ? true : false);
+            AlgorithmText.Text = Metropolis ? "Metropolis" : "Glauber";
+        }
+
+        #endregion
+
+        #region Drag&Drop
+        private void shape_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            source = (System.Windows.UIElement)sender;
+            Mouse.Capture(source);
+            captured = true;
+            x_shape = Canvas.GetLeft(source);
+            x_canvas = e.GetPosition(TemperatureMagneticField).X;
+            y_shape = Canvas.GetTop(source);
+            y_canvas = e.GetPosition(TemperatureMagneticField).Y;
+        }
+        private void shape_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (captured)
+            {
+                double x = e.GetPosition(TemperatureMagneticField).X;
+                double y = e.GetPosition(TemperatureMagneticField).Y;
+                x_shape += x - x_canvas;
+                if (x_shape > TemperatureMagneticField.ActualWidth - 10.0 || x_shape < 0.0)
+                {
+                    x_shape -= x - x_canvas;
+                    /*Mouse.Capture(null);
+                    captured = false;*/
+                }
+                Canvas.SetLeft(source, x_shape);
+                x_canvas = x;
+                y_shape += y - y_canvas;
+                if (y_shape > (TemperatureMagneticField.ActualHeight - 10.0) || y_shape < 0.0) y_shape -= y - y_canvas;
+                Canvas.SetTop(source, y_shape);
+                y_canvas = y;
+            }
+        }
+        private void shape_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Mouse.Capture(null);
+            captured = false;
+        }
+
+ 
+
         #endregion
 
         #region LatticeSize
@@ -171,60 +240,7 @@ namespace IsingModern.Render {
 
         #endregion
 
-        private void Start_Click(object sender, RoutedEventArgs e)
-        {
-            viewmodel.NextStep();
-        }
-
-
-        private void Stop_Click(object sender, RoutedEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void Coupling_Click(object sender=null, RoutedEventArgs e=null)
-        {
-            if(sender != null) Ferromagnetic = !Ferromagnetic;
-            viewmodel.ChangeCoupling(Ferromagnetic ? 1.0 : -1.0);
-            CouplingText.Text= Ferromagnetic ? "Ferromagnetic" : "Anti-Ferromagnetic"; 
-        }
-
-        private void shape_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            source = (System.Windows.UIElement)sender;
-            Mouse.Capture(source);
-            captured = true;
-            x_shape = Canvas.GetLeft(source);
-            x_canvas = e.GetPosition(TemperatureMagneticField).X;
-            y_shape = Canvas.GetTop(source);
-            y_canvas = e.GetPosition(TemperatureMagneticField).Y;
-        }
-        private void shape_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (captured)
-            {
-                double x = e.GetPosition(TemperatureMagneticField).X;
-                double y = e.GetPosition(TemperatureMagneticField).Y;
-                x_shape += x - x_canvas;
-                if (x_shape > TemperatureMagneticField.ActualWidth - 10.0 || x_shape < 0.0)
-                {
-                    x_shape -= x - x_canvas;
-                    /*Mouse.Capture(null);
-                    captured = false;*/
-                }
-                Canvas.SetLeft(source, x_shape);
-                x_canvas = x;
-                y_shape += y - y_canvas;
-                if (y_shape > (TemperatureMagneticField.ActualHeight - 10.0) || y_shape < 0.0) y_shape -= y - y_canvas;
-                Canvas.SetTop(source, y_shape);
-                y_canvas = y;
-            }
-        }
-        private void shape_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            Mouse.Capture(null);
-            captured = false;
-        }
+        
 
 
     }

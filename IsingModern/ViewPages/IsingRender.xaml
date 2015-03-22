@@ -24,10 +24,11 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="20"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Name="modelParentElement" Width="600" Height="600" Background="Transparent"/>
+                <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" Name="modelParentElement" Width="600" Height="600" Background="Transparent"/>
 
                 <StackPanel Grid.Column="2" Grid.Row="0" HorizontalAlignment="Left" Margin="3">
                     <Button Name="ToggleBoundary" Click="ToggleBoundary_Click" Content="Boundary!" 
@@ -37,6 +38,8 @@
                     <Button Name="LatticeSize" Click="LatticeSize_Click" MouseWheel="LatticeSize_MouseWheel" 
                             KeyDown="LatticeSize_KeyDown" Content="Set Size" MinHeight="30" VerticalAlignment="Top" Margin="3"/>
                     <Button Name="Coupling" Click="Coupling_Click" Content="Coupling" VerticalAlignment="Top" Margin="3"/>
+                    <Button Name="Algorithm" Click="Algorithm_Click" Content="Algorithm" VerticalAlignment="Top" Margin="3"/>
+
                 </StackPanel>
                 
                 <StackPanel Grid.Column="3" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="3">
@@ -47,6 +50,8 @@
                     <TextBlock Name="LatticeSizeInput" MouseWheel="LatticeSize_MouseWheel" TextAlignment="Right" 
                                FontSize="15"  Height="30" Text="Init Failed" Margin="3"/>
                     <TextBlock Name="CouplingText"  FontSize="15"
+                               Height="30" TextAlignment="Right" Margin="3" />
+                    <TextBlock Name="AlgorithmText"  FontSize="15"
                                Height="30" TextAlignment="Right" Margin="3" />
                 </StackPanel>
                 
@@ -77,9 +82,9 @@ Content="{Binding ElementName=MagneticField, Path=Value, UpdateSourceTrigger=Pro
                                  MouseLeftButtonUp="shape_MouseLeftButtonUp"/>
 
                     </Canvas>
-                    <ToggleButton Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" 
-                            VerticalAlignment="Bottom" HorizontalAlignment="Center"
-                            MinWidth="60" MinHeight="40" 
+                    <ToggleButton Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" 
+                            VerticalAlignment="Center" HorizontalAlignment="Center"
+                            MinWidth="60" MinHeight="40" Margin="10"
                             Name="Start" Checked="Start_Click" Unchecked="Stop_Click">
                         <ToggleButton.Style>
                             <Style TargetType="{x:Type ToggleButton}">

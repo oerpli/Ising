@@ -101,6 +101,12 @@ namespace IsingModern.ViewModel {
         }
 
 
+        internal void ChangeAccept(bool AcceptAlgorithm)
+        {
+            //TODO: Algorithmus auswählen 
+        }
+
+
         #endregion
 
         #region Selection
@@ -265,6 +271,7 @@ namespace IsingModern.ViewModel {
 
 
         #endregion
+
 
 
 
