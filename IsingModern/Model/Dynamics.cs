@@ -65,13 +65,15 @@ namespace IsingModern.Ising {
         //Signaturen
         public delegate void DynamicsAlgorithm(Spin Chosen);
         public delegate bool AcceptanceFunction(double DeltaE);
+
+        public Dictionary<string, AcceptanceFunction> accepts;
         //Alle Algorithmen
         //DynamicsAlgorithm[] dynamics;
         //AcceptanceFunction[] accepts;
         //TODO hashmap o.Ä. implementieren um algorithmus auszuwählen.
 
         //Aktuelle Algorithmen
-        private AcceptanceFunction accept;
+        public AcceptanceFunction accept;
         public DynamicsAlgorithm dynamic;
 
 
@@ -104,12 +106,6 @@ namespace IsingModern.Ising {
         }
         #endregion
         #endregion
-
-        Dictionary<string, AcceptanceFunction> accepts = new Dictionary<string, AcceptanceFunction>()
-        {
-            {"Metropolis", Metropolis}, 
-            {"Glauber", Glauber}
-        };
  
     }
 }

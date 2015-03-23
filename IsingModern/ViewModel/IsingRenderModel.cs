@@ -275,6 +275,11 @@ namespace IsingModern.ViewModel {
 
 
 
+
+        internal void ChangeAccept(string p)
+        {
+            model.accept = model.accepts[p]; 
+        }
     }
 }
 

@@ -134,8 +134,9 @@ namespace IsingModern.Render {
         private void Algorithm_Click(object sender, RoutedEventArgs e)
         {
             if (sender != null) Metropolis = !Metropolis;
-            viewmodel.ChangeAccept(Metropolis ? true : false);
+           
             AlgorithmText.Text = Metropolis ? "Metropolis" : "Glauber";
+            viewmodel.ChangeAccept(AlgorithmText.Text);
         }
 
         #endregion
@@ -158,7 +159,7 @@ namespace IsingModern.Render {
                 double x = e.GetPosition(TemperatureMagneticField).X;
                 double y = e.GetPosition(TemperatureMagneticField).Y;
                 if (!fixed_temperature) x_shape += x - x_canvas;
-                if (x_shape > TemperatureMagneticField.ActualWidth  || x_shape < 0.0)
+                if (x_shape > TemperatureMagneticField.ActualWidth - 30.0  || x_shape < 20.0)
                 {
                     x_shape -= x - x_canvas;
                     captured = false;
@@ -166,7 +167,7 @@ namespace IsingModern.Render {
                 Canvas.SetLeft(source, x_shape);
                 x_canvas = x;
                 if (!fixed_magnfield) y_shape += y - y_canvas;
-                if (y_shape > TemperatureMagneticField.ActualHeight || y_shape < 0.0)
+                if (y_shape > TemperatureMagneticField.ActualHeight - 30.0 || y_shape < 20.0)
                 {
                     y_shape -= y - y_canvas;
                     captured = false; 
@@ -180,8 +181,8 @@ namespace IsingModern.Render {
 
             x_shape = Canvas.GetLeft(source);
             y_shape = Canvas.GetTop(source);
-            double new_temperature = x_shape * 5.0 / TemperatureMagneticField.ActualWidth;
-            double new_magnfield = 0.5 - y_shape / TemperatureMagneticField.ActualHeight;
+            double new_temperature = -100.0/(TemperatureMagneticField.ActualWidth - 40.0)+(x_shape + 5.0) * 5.0 / (TemperatureMagneticField.ActualWidth-40.0);
+            double new_magnfield = 0.5 + 20.0/(TemperatureMagneticField.ActualHeight -40.0) - (y_shape + 5.0) / (TemperatureMagneticField.ActualHeight - 40.0);
             viewmodel.ChangeTemperature(new_temperature);
             viewmodel.ChangeField(new_magnfield);
             TemperatureTextBox.Text=new_temperature.ToString("0.00");

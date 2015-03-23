@@ -75,8 +75,8 @@ Content="{Binding ElementName=MagneticField, Path=Value, UpdateSourceTrigger=Pro
                     </StackPanel>
                 </StackPanel>
 
-                <Canvas Name="TemperatureMagneticField" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="2" Height="140" Width="260" Opacity="1.0" >
-                    <Rectangle  Canvas.Left="0" Canvas.Top="0" Width="270" Height="150">
+                <Canvas Name="TemperatureMagneticField" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="2" Height="180" Width="300" Opacity="1.0" >
+                    <Rectangle  Canvas.Left="20" Canvas.Top="20" Width="260" Height="140">
                         <Rectangle.Fill>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="DarkBlue" Offset="0"/>
@@ -84,7 +84,12 @@ Content="{Binding ElementName=MagneticField, Path=Value, UpdateSourceTrigger=Pro
                             </LinearGradientBrush>
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Ellipse Name="ControlEllipse" Fill="Black" Canvas.Left="52" Canvas.Top="70" Width="10" Height="10"
+                    <Line X1="20" Y1="90" X2="280" Y2="90" Stroke="Black" StrokeThickness="2" />
+                    <Label Content="T" Canvas.Top="95" Canvas.Left="260"/>
+                    <Line X1="20" Y1="20" X2="20" Y2="160" Stroke="Black" StrokeThickness="2"/>
+                    <Label Content="H" Canvas.Top="20" Canvas.Left="0"/>
+                   
+                    <Ellipse Name="ControlEllipse" Fill="Black" Canvas.Left="67" Canvas.Top="85" Width="10" Height="10"
                                  MouseLeftButtonDown="shape_MouseLeftButtonDown"
                                  MouseMove="shape_MouseMove"
                                  MouseLeftButtonUp="shape_MouseLeftButtonUp"/>

@@ -9,8 +9,7 @@ namespace IsingModern.Ising {
         public int N;
         public int Count { get; private set; }
         public Spin[] Spins { get; private set; }
-
-
+ 
 
         public Lattice(int n) {
             {
@@ -19,6 +18,11 @@ namespace IsingModern.Ising {
                 Beta = 1;
                 dynamic = SingleFlip;
                 accept = Metropolis;
+                accepts = new Dictionary<string, AcceptanceFunction>()
+                {
+                    {"Metropolis", Metropolis}, 
+                    {"Glauber", Glauber}
+                };
             }
             Spin[,] points;
             N = n;
