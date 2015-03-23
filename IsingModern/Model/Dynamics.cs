@@ -104,5 +104,12 @@ namespace IsingModern.Ising {
         }
         #endregion
         #endregion
+
+        Dictionary<string, AcceptanceFunction> accepts = new Dictionary<string, AcceptanceFunction>()
+        {
+            {"Metropolis", Metropolis}, 
+            {"Glauber", Glauber}
+        };
+ 
     }
 }
