@@ -39,7 +39,9 @@ namespace IsingModern.Render {
             Current = this;
             BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
             CouplingText.Text = Ferromagnetic ? "Ferromagnetic" : "Anti-Ferromagnetic";
-            AlgorithmText.Text = Metropolis ? "Metropolis" : "Glauber"; 
+            AlgorithmText.Text = Metropolis ? "Metropolis" : "Glauber";
+            TemperatureTextBox.Text = "1.0";
+            MagnFieldTextBox.Text = "0.0"; 
             modelParentElement.Children.Add(viewmodel);
             LatticeSizeInput.Text = currentN.ToString();
         }
@@ -156,7 +158,7 @@ namespace IsingModern.Render {
                 double x = e.GetPosition(TemperatureMagneticField).X;
                 double y = e.GetPosition(TemperatureMagneticField).Y;
                 if (!fixed_temperature) x_shape += x - x_canvas;
-                if (x_shape > TemperatureMagneticField.ActualWidth - 10.0 || x_shape < 0.0)
+                if (x_shape > TemperatureMagneticField.ActualWidth  || x_shape < 0.0)
                 {
                     x_shape -= x - x_canvas;
                     captured = false;
@@ -164,7 +166,7 @@ namespace IsingModern.Render {
                 Canvas.SetLeft(source, x_shape);
                 x_canvas = x;
                 if (!fixed_magnfield) y_shape += y - y_canvas;
-                if (y_shape > (TemperatureMagneticField.ActualHeight - 10.0) || y_shape < 0.0)
+                if (y_shape > TemperatureMagneticField.ActualHeight || y_shape < 0.0)
                 {
                     y_shape -= y - y_canvas;
                     captured = false; 
@@ -175,6 +177,15 @@ namespace IsingModern.Render {
         }
         private void shape_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+
+            x_shape = Canvas.GetLeft(source);
+            y_shape = Canvas.GetTop(source);
+            double new_temperature = x_shape * 5.0 / TemperatureMagneticField.ActualWidth;
+            double new_magnfield = 0.5 - y_shape / TemperatureMagneticField.ActualHeight;
+            viewmodel.ChangeTemperature(new_temperature);
+            viewmodel.ChangeField(new_magnfield);
+            TemperatureTextBox.Text=new_temperature.ToString("0.00");
+            MagnFieldTextBox.Text = new_magnfield.ToString("0.00"); 
             Mouse.Capture(null);
             captured = false;
         }

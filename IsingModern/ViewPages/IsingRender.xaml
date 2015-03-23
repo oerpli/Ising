@@ -75,19 +75,27 @@ Content="{Binding ElementName=MagneticField, Path=Value, UpdateSourceTrigger=Pro
                     </StackPanel>
                 </StackPanel>
 
-                <Canvas Name="TemperatureMagneticField" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="2" Height="150" Width="270" Opacity="0.1" >
+                <Canvas Name="TemperatureMagneticField" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="2" Height="140" Width="260" Opacity="0.1" >
                     <Rectangle Fill="Azure"  Canvas.Left="0" Canvas.Top="0" Width="270" Height="150"/>
-                    <Ellipse Fill="Black" Canvas.Left="50" Canvas.Top="50" Width="10" Height="10"
+                    <Ellipse Name="ControlEllipse" Fill="Black" Canvas.Left="52" Canvas.Top="70" Width="10" Height="10"
                                  MouseLeftButtonDown="shape_MouseLeftButtonDown"
                                  MouseMove="shape_MouseMove"
                                  MouseLeftButtonUp="shape_MouseLeftButtonUp"/>
                 </Canvas>
                 
                 <StackPanel Grid.Column="4" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <CheckBox Content="fix temperature" Click="FixTemperature_Checked"/>
-                    <CheckBox Content="fix magnetic field" Click="FixMagneticField_Checked"/>
-
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox Name="TemperatureTextBox" TextWrapping="Wrap" TextAlignment="Right" MinWidth="42" Margin="3"/>
+                        <Label Content="Temperature" Margin="3"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox Name="MagnFieldTextBox" TextWrapping="Wrap" TextAlignment="Right" MinWidth="42" Margin="3"/>
+                        <Label Content="Magnetic field" Margin="3"/>
+                    </StackPanel>   
+                    <CheckBox Content="fix temperature" Click="FixTemperature_Checked" Margin="3"/>
+                    <CheckBox Content="fix magnetic field" Click="FixMagneticField_Checked" Margin="3"/>                   
                 </StackPanel>
+                
                 <ToggleButton Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" 
                             VerticalAlignment="Center" HorizontalAlignment="Center"
                             MinWidth="60" MinHeight="40" Margin="10"
