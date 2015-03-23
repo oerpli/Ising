@@ -17,8 +17,8 @@
                     <ColumnDefinition Width="600"/>
                     <ColumnDefinition Width="20"/>
                     <ColumnDefinition Width="150"/>
-                    <ColumnDefinition Width="250"/>
-                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -54,7 +54,7 @@
                     <TextBlock Name="AlgorithmText"  FontSize="15"
                                Height="30" TextAlignment="Right" Margin="3" />
                 </StackPanel>
-                
+
                 <StackPanel Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Left" >
                     <StackPanel Orientation="Horizontal" Margin="10">
                         <Label Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Temperature"/>
@@ -73,35 +73,38 @@ Content="{Binding ElementName=Temperature, Path=Value, UpdateSourceTrigger=Prope
                         <Label MinHeight="30" MinWidth="35" ContentStringFormat="N2"
 Content="{Binding ElementName=MagneticField, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
-                    
-                    <Canvas Name="TemperatureMagneticField" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" Height="100" Width="200" Opacity="0.1" >
-                        <Rectangle Fill="Azure"  Canvas.Left="0" Canvas.Top="0" Width="200" Height="100"/>
-                        <Ellipse Fill="Black" Canvas.Left="50" Canvas.Top="50" Width="10" Height="10"
+                </StackPanel>
+
+                <Canvas Name="TemperatureMagneticField" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="2" Height="150" Width="270" Opacity="0.1" >
+                    <Rectangle Fill="Azure"  Canvas.Left="0" Canvas.Top="0" Width="270" Height="150"/>
+                    <Ellipse Fill="Black" Canvas.Left="50" Canvas.Top="50" Width="10" Height="10"
                                  MouseLeftButtonDown="shape_MouseLeftButtonDown"
                                  MouseMove="shape_MouseMove"
                                  MouseLeftButtonUp="shape_MouseLeftButtonUp"/>
+                </Canvas>
+                
+                <StackPanel Grid.Column="4" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <CheckBox Content="fix temperature" Click="FixTemperature_Checked"/>
+                    <CheckBox Content="fix magnetic field" Click="FixMagneticField_Checked"/>
 
-                    </Canvas>
-                    <ToggleButton Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" 
+                </StackPanel>
+                <ToggleButton Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" 
                             VerticalAlignment="Center" HorizontalAlignment="Center"
                             MinWidth="60" MinHeight="40" Margin="10"
                             Name="Start" Checked="Start_Click" Unchecked="Stop_Click">
-                        <ToggleButton.Style>
-                            <Style TargetType="{x:Type ToggleButton}">
-                                <Setter Property="Content" Value="Start!"/>
-                                <Style.Triggers>
-                                    <Trigger Property="IsChecked" Value="True">
-                                        <Setter Property="Content" Value="Stop!"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ToggleButton.Style>
-                    </ToggleButton>
+                    <ToggleButton.Style>
+                        <Style TargetType="{x:Type ToggleButton}">
+                            <Setter Property="Content" Value="Start!"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Content" Value="Stop!"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
 
 
-
-                </StackPanel>
-                
                 <StackPanel Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="4">
                     <Grid Background="White" Height="300">
                         <oxy:PlotView Name="Plot" Title="Energy">

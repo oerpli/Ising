@@ -25,6 +25,8 @@ namespace IsingModern.Render {
         private int currentN = 20;
 
         bool captured = false;
+        bool fixed_temperature = false;
+        bool fixed_magnfield = false; 
         double x_shape, x_canvas, y_shape, y_canvas;
         System.Windows.UIElement source = null;
 
@@ -153,17 +155,20 @@ namespace IsingModern.Render {
             {
                 double x = e.GetPosition(TemperatureMagneticField).X;
                 double y = e.GetPosition(TemperatureMagneticField).Y;
-                x_shape += x - x_canvas;
+                if (!fixed_temperature) x_shape += x - x_canvas;
                 if (x_shape > TemperatureMagneticField.ActualWidth - 10.0 || x_shape < 0.0)
                 {
                     x_shape -= x - x_canvas;
-                    /*Mouse.Capture(null);
-                    captured = false;*/
+                    captured = false;
                 }
                 Canvas.SetLeft(source, x_shape);
                 x_canvas = x;
-                y_shape += y - y_canvas;
-                if (y_shape > (TemperatureMagneticField.ActualHeight - 10.0) || y_shape < 0.0) y_shape -= y - y_canvas;
+                if (!fixed_magnfield) y_shape += y - y_canvas;
+                if (y_shape > (TemperatureMagneticField.ActualHeight - 10.0) || y_shape < 0.0)
+                {
+                    y_shape -= y - y_canvas;
+                    captured = false; 
+                }
                 Canvas.SetTop(source, y_shape);
                 y_canvas = y;
             }
@@ -239,6 +244,17 @@ namespace IsingModern.Render {
         }
 
         #endregion
+
+        private void FixTemperature_Checked(object sender, RoutedEventArgs e)
+        {
+            fixed_temperature = !fixed_temperature; 
+        }
+
+        private void FixMagneticField_Checked(object sender, RoutedEventArgs e)
+        {
+            fixed_magnfield = !fixed_magnfield; 
+        }
+
 
         
 
