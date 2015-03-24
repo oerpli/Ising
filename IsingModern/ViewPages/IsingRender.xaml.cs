@@ -8,6 +8,11 @@ using System.Collections.Generic;
 using OxyPlot;
 using OxyPlot.Wpf;
 
+
+using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Threading;
+
 namespace IsingModern.Render {
     /// <summary>
     /// Interaction logic for LatticeOutput.xaml
@@ -27,6 +32,7 @@ namespace IsingModern.Render {
 
 
         #region Initialization
+
 
         public IsingRender() {
             viewmodel = new IsingRenderModel(currentN, PeriodicBoundary);
@@ -56,7 +62,7 @@ namespace IsingModern.Render {
                 e.Handled = true;
             }
             if(e.Key == Key.N) {
-                viewmodel.NextStep();
+                Start_Click(null, null);
                 e.Handled = true;
             }
         }
@@ -110,11 +116,6 @@ namespace IsingModern.Render {
             MagneticField.Value += Math.Sign(e.Delta) * 0.009;
         }
 
-        private void Start_Click(object sender, RoutedEventArgs e) {
-            viewmodel.NextStep();
-        }
-
-
         private void Stop_Click(object sender, RoutedEventArgs e) {
             e.Handled = true;
         }
@@ -138,14 +139,14 @@ namespace IsingModern.Render {
         bool fixed_temperature = false;
         bool fixed_magnfield = false;
 
-
-
         private void FixTemperature_Checked(object sender, RoutedEventArgs e) {
-            fixed_temperature = !fixed_temperature;
+            fixed_temperature = ((CheckBox)sender).IsChecked ?? false;
+            e.Handled = true;
         }
 
         private void FixMagneticField_Checked(object sender, RoutedEventArgs e) {
-            fixed_magnfield = !fixed_magnfield;
+            fixed_magnfield = ((CheckBox)sender).IsChecked ?? false;
+            e.Handled = true;
         }
         private void Thumb_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e) {
             if(!fixed_temperature)
@@ -153,6 +154,7 @@ namespace IsingModern.Render {
             if(!fixed_magnfield)
                 Canvas.SetTop(myThumb, Math.Max(15, Math.Min(TemperatureMagneticField.ActualHeight - 25, Canvas.GetTop(myThumb) + e.VerticalChange)));
             UpdateParameters(Canvas.GetLeft(myThumb), Canvas.GetTop(myThumb));
+            e.Handled = true;
         }
 
         private void UpdateParameters(double x, double y) {
@@ -230,7 +232,63 @@ namespace IsingModern.Render {
         #endregion
 
 
+        #region Threading
+        private bool running = false;
+        private BackgroundWorker worker;
 
+        private void Start_Click(object sender, RoutedEventArgs e) {
+            running = !running;
+
+            if(running) {
+                worker = worker_Init();
+                StatusText.Text = "0";
+                worker.RunWorkerAsync();
+            } else {
+                worker.CancelAsync();
+            }
+        }
+
+        private BackgroundWorker worker_Init() {
+            var worker = new BackgroundWorker() { WorkerReportsProgress = true, WorkerSupportsCancellation = true };
+            worker.DoWork += worker_Work;
+            worker.ProgressChanged += worker_Progress;
+            worker.RunWorkerCompleted += worker_Completed;
+            return worker;
+        }
+
+        private void worker_Work(object sender, DoWorkEventArgs e) {
+            if(e.Argument != null) {
+                var max = (int)e.Argument;
+                for(int i = 0; i < max; i++) {
+                    (sender as BackgroundWorker).ReportProgress(i);
+                    viewmodel.NextStep();
+                }
+            } else {
+                int i = 0;
+                while(true) {
+                    (sender as BackgroundWorker).ReportProgress(i++);
+                    viewmodel.NextStep();
+                }
+            }
+        }
+
+        long timerefresh;
+        private void worker_Progress(object sender, ProgressChangedEventArgs e) {
+            long time = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            if(time - timerefresh > 100) {
+                timerefresh = time;
+                StatusText.Text = e.ProgressPercentage.ToString();
+                viewmodel.Refresh();
+            }
+        }
+
+        private void worker_Completed(object sender, RunWorkerCompletedEventArgs e) {
+            viewmodel.Refresh();
+        }
+
+
+
+        #endregion
 
 
 

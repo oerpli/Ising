@@ -83,9 +83,7 @@ namespace IsingModern.ViewModel {
         }
 
         internal void NextStep() {
-            for(int i = 0; i < 5; i++)
-                model.Sweep();
-            DrawLattice();
+            model.Sweep();
         }
 
         internal void ChangeTemperature(double T) {
@@ -101,8 +99,7 @@ namespace IsingModern.ViewModel {
         }
 
 
-        internal void ChangeAccept(bool AcceptAlgorithm)
-        {
+        internal void ChangeAccept(bool AcceptAlgorithm) {
             //TODO: Algorithmus auswählen 
         }
 
@@ -217,7 +214,6 @@ namespace IsingModern.ViewModel {
         #region Rendering
         private void DrawLattice() {
             wbmap.Lock();
-            Random rnd = new Random(DateTime.Now.Millisecond);
             int counter = 0;
             for(int y = 0; y < N; y++) {
                 for(int x = 0; x < N; x++) {
@@ -276,9 +272,8 @@ namespace IsingModern.ViewModel {
 
 
 
-        internal void ChangeAccept(string p)
-        {
-            model.accept = model.accepts[p]; 
+        internal void ChangeAccept(string p) {
+            model.accept = model.accepts[p];
         }
     }
 }

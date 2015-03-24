@@ -97,7 +97,7 @@
                     <Label Content="T" Canvas.Top="95" Canvas.Left="260"/>
                     <Line X1="20" Y1="20" X2="20" Y2="160" Stroke="Black" StrokeThickness="2"/>
                     <Label Content="H" Canvas.Top="20" Canvas.Left="0"/>
-                    <Thumb Canvas.Left="20" Canvas.Top="20" Name="myThumb"  Template="{StaticResource circle}" Background="White" DragDelta="Thumb_DragDelta"/>
+                    <Thumb Canvas.Left="20" Canvas.Top="80" Name="myThumb"  Template="{StaticResource circle}" DragDelta="Thumb_DragDelta"/>
                 </Canvas>
 
                 <StackPanel Grid.Column="4" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center">
