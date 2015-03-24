@@ -102,7 +102,7 @@ namespace IsingModern.Ising {
             return DeltaE <= 0.0 || r.NextDouble() < Math.Exp(-DeltaE * Beta);
         }
         public bool Glauber(double DeltaE) {
-            return r.NextDouble() > (1.0 / (1.0 + Math.Exp(DeltaE * Beta)));
+            return r.NextDouble() < (1.0 / (1.0 + Math.Exp(DeltaE * Beta)));
         }
         #endregion
         #endregion
