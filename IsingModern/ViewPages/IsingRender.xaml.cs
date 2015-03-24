@@ -42,6 +42,7 @@ namespace IsingModern.Render {
             BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
             CouplingText.Text = Ferromagnetic ? "Ferromagnetic" : "Anti-Ferromagnetic";
             AlgorithmText.Text = Metropolis ? "Metropolis" : "Glauber";
+            UpdateThumb(1.0, 0.0);
             TemperatureTextBox.Text = "1.0";
             MagnFieldTextBox.Text = "0.0";
             modelParentElement.Children.Add(viewmodel);
@@ -160,10 +161,21 @@ namespace IsingModern.Render {
         private void UpdateParameters(double x, double y) {
             var temp = (x - 15) / (TemperatureMagneticField.ActualWidth - 40) * 5;
             var field = 0.5 - (y - 15) / (TemperatureMagneticField.ActualHeight - 40) * 1;
+            if(Math.Abs(field) < 0.015) { //snapping to 0 field -- easer to handle.
+                field = 0;
+                UpdateThumb(temp, field);
+            }
             viewmodel.ChangeTemperature(temp);
             viewmodel.ChangeField(field);
             TemperatureTextBox.Text = temp.ToString("0.00");
             MagnFieldTextBox.Text = field.ToString("0.00");
+        }
+
+        private void UpdateThumb(double temp, double field) {
+            var x = temp * (TemperatureMagneticField.ActualWidth - 40) / 5 + 15;
+            var y = -(field - 0.5) * (TemperatureMagneticField.ActualHeight - 40) + 15;
+            Canvas.SetLeft(myThumb, x);
+            Canvas.SetTop(myThumb, y);
         }
 
         #endregion
