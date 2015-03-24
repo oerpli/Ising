@@ -231,7 +231,6 @@ namespace IsingModern.Render {
 
         #endregion
 
-
         #region Plotting
         public string Title { get; private set; }
 
@@ -250,7 +249,6 @@ namespace IsingModern.Render {
         }
 
         #endregion
-
 
         #region Threading
         private bool running = false;
@@ -275,10 +273,9 @@ namespace IsingModern.Render {
 
         private void worker_Work(object sender, DoWorkEventArgs e) {
             int i = 0;
-            while(true) {
+            while(running) {
                 (sender as BackgroundWorker).ReportProgress(i++);
                 viewmodel.NextStep();
-                if(!running) break;
             }
         }
 
@@ -297,12 +294,6 @@ namespace IsingModern.Render {
         }
 
         #endregion
-
-
-
-
-
-
 
     }
 }
