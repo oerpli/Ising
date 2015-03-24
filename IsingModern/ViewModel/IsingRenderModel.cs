@@ -236,7 +236,7 @@ namespace IsingModern.ViewModel {
             unsafe {
                 for(int y = 0; y < height; y++) {
                     // Get a pointer to the back buffer
-                    long pBackBuffer = (long)wbmap.BackBuffer;
+                    int pBackBuffer = (int)wbmap.BackBuffer;
 
                     // Find the address of the pixel to draw
                     pBackBuffer += (top + y) * wbmap.BackBufferStride;
@@ -244,7 +244,7 @@ namespace IsingModern.ViewModel {
 
                     for(int x = 0; x < width; x++) {
                         // Assign the color data to the pixel
-                        *((long*)pBackBuffer) = colorData;
+                        *((int*)pBackBuffer) = colorData;
                         // Increment the address of the pixel to draw
                         pBackBuffer += bpp;
                     }
