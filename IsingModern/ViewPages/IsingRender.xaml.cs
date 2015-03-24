@@ -243,8 +243,6 @@ namespace IsingModern.Render {
                 worker = worker_Init();
                 StatusText.Text = "0";
                 worker.RunWorkerAsync();
-            } else {
-                worker.CancelAsync();
             }
         }
 
@@ -262,12 +260,14 @@ namespace IsingModern.Render {
                 for(int i = 0; i < max; i++) {
                     (sender as BackgroundWorker).ReportProgress(i);
                     viewmodel.NextStep();
+                    if(!running) break;
                 }
             } else {
                 int i = 0;
                 while(true) {
                     (sender as BackgroundWorker).ReportProgress(i++);
                     viewmodel.NextStep();
+                    if(!running) break;
                 }
             }
         }
