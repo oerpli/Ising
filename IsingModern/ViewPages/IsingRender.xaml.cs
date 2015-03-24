@@ -172,8 +172,8 @@ namespace IsingModern.Render {
         }
 
         private void UpdateThumb(double temp, double field) {
-            var x = temp * (TemperatureMagneticField.ActualWidth - 40) / 5 + 15;
-            var y = -(field - 0.5) * (TemperatureMagneticField.ActualHeight - 40) + 15;
+            double x = (temp*(TemperatureMagneticField.Width - 40.0)/5.0 + 15.0);
+            double y = (-(field - 0.5) * (TemperatureMagneticField.Height - 40) + 15);
             Canvas.SetLeft(myThumb, x);
             Canvas.SetTop(myThumb, y);
         }
