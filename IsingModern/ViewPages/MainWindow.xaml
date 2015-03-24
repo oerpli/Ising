@@ -10,11 +10,11 @@
                   MinWidth="1280"
                   >
 
+ 
     <mui:ModernWindow.MenuLinkGroups>
-        <mui:LinkGroup DisplayName="Main">
+        <mui:LinkGroup DisplayName="Ising Model">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="Ising Model" Source="/ViewPages/IsingRender.xaml" />
-                <mui:Link DisplayName="Doing stuff" Source="/ViewPages/Home.xaml" />
+                <mui:Link DisplayName="Simulation" Source="/ViewPages/IsingRender.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
 
