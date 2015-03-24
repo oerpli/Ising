@@ -159,8 +159,8 @@ namespace IsingModern.Render {
         }
 
         private void UpdateParameters(double x, double y) {
-            var temp = (x - 15) / (TemperatureMagneticField.ActualWidth - 40) * 5;
-            var field = 0.5 - (y - 15) / (TemperatureMagneticField.ActualHeight - 40) * 1;
+            var temp = (x - 15.0) / (TemperatureMagneticField.ActualWidth - 40.0) * 5.0;
+            var field = 0.5 - (y - 15.0) / (TemperatureMagneticField.ActualHeight - 40.0) * 1;
             if(Math.Abs(field) < 0.015) { //snapping to 0 field -- easer to handle.
                 field = 0;
                 UpdateThumb(temp, field);
@@ -172,8 +172,16 @@ namespace IsingModern.Render {
         }
 
         private void UpdateThumb(double temp, double field) {
-            double x = (temp*(TemperatureMagneticField.Width - 40.0)/5.0 + 15.0);
-            double y = (-(field - 0.5) * (TemperatureMagneticField.Height - 40) + 15);
+            var w = TemperatureMagneticField.ActualWidth;
+            var h = TemperatureMagneticField.ActualHeight;
+
+            if(w <= 0 || h <= 0) {
+                w = TemperatureMagneticField.Width;
+                h = TemperatureMagneticField.Height;
+            }
+
+            var x = temp * (w - 40.0) / 5.0 + 15.0;
+            var y = -(field - 0.5) * (h - 40.0) + 15.0;
             Canvas.SetLeft(myThumb, x);
             Canvas.SetTop(myThumb, y);
         }
@@ -250,7 +258,6 @@ namespace IsingModern.Render {
 
         private void Start_Click(object sender, RoutedEventArgs e) {
             running = !running;
-
             if(running) {
                 worker = worker_Init();
                 StatusText.Text = "0";
@@ -259,7 +266,7 @@ namespace IsingModern.Render {
         }
 
         private BackgroundWorker worker_Init() {
-            var worker = new BackgroundWorker() { WorkerReportsProgress = true, WorkerSupportsCancellation = true };
+            var worker = new BackgroundWorker() { WorkerReportsProgress = true };
             worker.DoWork += worker_Work;
             worker.ProgressChanged += worker_Progress;
             worker.RunWorkerCompleted += worker_Completed;
@@ -267,20 +274,11 @@ namespace IsingModern.Render {
         }
 
         private void worker_Work(object sender, DoWorkEventArgs e) {
-            if(e.Argument != null) {
-                var max = (int)e.Argument;
-                for(int i = 0; i < max; i++) {
-                    (sender as BackgroundWorker).ReportProgress(i);
-                    viewmodel.NextStep();
-                    if(!running) break;
-                }
-            } else {
-                int i = 0;
-                while(true) {
-                    (sender as BackgroundWorker).ReportProgress(i++);
-                    viewmodel.NextStep();
-                    if(!running) break;
-                }
+            int i = 0;
+            while(true) {
+                (sender as BackgroundWorker).ReportProgress(i++);
+                viewmodel.NextStep();
+                if(!running) break;
             }
         }
 
@@ -297,8 +295,6 @@ namespace IsingModern.Render {
         private void worker_Completed(object sender, RunWorkerCompletedEventArgs e) {
             viewmodel.Refresh();
         }
-
-
 
         #endregion
 
