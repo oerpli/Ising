@@ -275,10 +275,10 @@ namespace IsingModern.Render {
         long timerefresh;
         private void worker_Progress(object sender, ProgressChangedEventArgs e) {
             long time = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-            if(time - timerefresh > 100) {
-                timerefresh = time;
+            if(time - timerefresh > 40) {
                 StatusText.Text = e.ProgressPercentage.ToString();
                 viewmodel.Refresh();
+                timerefresh = time;
             }
         }
 
