@@ -236,7 +236,7 @@ namespace IsingModern.ViewModel {
             unsafe {
                 for(int y = 0; y < height; y++) {
                     // Get a pointer to the back buffer
-                    int pBackBuffer = (int)wbmap.BackBuffer;
+                    long pBackBuffer = (long)wbmap.BackBuffer;
 
                     // Find the address of the pixel to draw
                     pBackBuffer += (top + y) * wbmap.BackBufferStride;
