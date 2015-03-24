@@ -91,7 +91,7 @@ namespace IsingModern.Ising {
         }
         public void SingleFlip(Spin Chosen) {
             double EnergyDifference = CalculateEnergyChange(Chosen);
-            if(accept(EnergyDifference)) {
+            if(accept(2*EnergyDifference)) {
                 Chosen.ToggleSpin();
                 TotalEnergy += EnergyDifference;
             }

@@ -64,6 +64,7 @@ namespace IsingModern.Render {
         private void RandomizeClick(object sender, RoutedEventArgs e) {
             viewmodel.Randomize();
             StatusText.Text = "Count: " + (++rndCounter).ToString();
+            e.Handled = true;
         }
 
         private void ToggleBoundary_Click(object sender = null, RoutedEventArgs e = null) {
@@ -134,7 +135,7 @@ namespace IsingModern.Render {
         #endregion
 
         #region Drag&Drop
-                bool fixed_temperature = false;
+        bool fixed_temperature = false;
         bool fixed_magnfield = false;
 
 
@@ -156,7 +157,7 @@ namespace IsingModern.Render {
 
         private void UpdateParameters(double x, double y) {
             var temp = (x - 15) / (TemperatureMagneticField.ActualWidth - 40) * 5;
-            var field = -0.5 + (y - 15) / (TemperatureMagneticField.ActualHeight - 40) * 1;
+            var field = 0.5 - (y - 15) / (TemperatureMagneticField.ActualHeight - 40) * 1;
             viewmodel.ChangeTemperature(temp);
             viewmodel.ChangeField(field);
             TemperatureTextBox.Text = temp.ToString("0.00");
@@ -183,6 +184,7 @@ namespace IsingModern.Render {
 
         private void LatticeSize_MouseWheel(object sender, MouseWheelEventArgs e) {
             _changeLatticeSize(e.Delta > 0 ? 1 : -1, true);
+            e.Handled = true;
         }
 
         //if using scrollwheel increase/decrase to next divisor of 600 (to avoid ugly rendering) - can be finetuned with left/right keys if necessary

@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ControlTemplate x:Key="circle">
-                <Ellipse Width="10" Height="10" Fill="Black"/>
+                <Ellipse Width="10" Height="10" Fill="White" />
             </ControlTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -98,7 +98,6 @@
                     <Line X1="20" Y1="20" X2="20" Y2="160" Stroke="Black" StrokeThickness="2"/>
                     <Label Content="H" Canvas.Top="20" Canvas.Left="0"/>
                     <Thumb Canvas.Left="20" Canvas.Top="20" Name="myThumb"  Template="{StaticResource circle}" Background="White" DragDelta="Thumb_DragDelta"/>
-                  
                 </Canvas>
 
                 <StackPanel Grid.Column="4" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center">
