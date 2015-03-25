@@ -45,18 +45,12 @@ namespace IsingModern.Ising {
             return EnergyChange;
         }
 
-
-        private double CalculateEnergyChangeKawasaki(Spin Chosen1, Spin Chosen2) {
-            double EnergyChange = 0.0;
-            int SameSpins = 0;
-            foreach(var Neighbour in Chosen1.Neighbours) {
-                SameSpins += (Neighbour.Value == Chosen1.Value) ? 1 : 0;
-            }
-            foreach(var Neighbour in Chosen2.Neighbours) {
-                SameSpins += (Neighbour.Value == Chosen2.Value) ? 1 : 0;
-            }
-            EnergyChange = -12.0 * J + 4.0 * J * (double)SameSpins;
-            return EnergyChange;
+        private int CalculateEnergyNN(Spin s){
+            return s.Neighbours.Aggregate(0, (sum, spin) => sum + spin.Value) * s.Value;
+        }
+        
+        private int CalculateEnergyChangeKawasaki(Spin s1, Spin s2) {
+            return -2*(CalculateEnergyNN(s2) + CalculateEnergyNN(s2) - 1);
         }
 
 
@@ -98,6 +92,15 @@ namespace IsingModern.Ising {
         }
         #endregion
         #region AcceptanceFunctions
+        public bool MetropolisCached(double NN, double M){
+            return false;
+        }
+        
+        public bool GlauberCached(double NN, double M){
+            return false;
+        }
+        
+        
         public bool Metropolis(double DeltaE) {
             return DeltaE <= 0.0 || r.NextDouble() < Math.Exp(-DeltaE * Beta);
         }
