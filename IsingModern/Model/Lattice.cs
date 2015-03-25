@@ -9,7 +9,7 @@ namespace IsingModern.Ising {
         public int N;
         public int Count { get; private set; }
         public Spin[] Spins { get; private set; }
- 
+
 
         public Lattice(int n) {
             {

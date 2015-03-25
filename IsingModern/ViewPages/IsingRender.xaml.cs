@@ -85,7 +85,7 @@ namespace IsingModern.Render {
          }*/
 
         private void Time_Click(object sender, RoutedEventArgs e) {
-            viewmodel.NextStep();
+            viewmodel.Sweep();
         }
 
         private void TemperatureSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
@@ -275,7 +275,7 @@ namespace IsingModern.Render {
             int i = 0;
             while(running) {
                 (sender as BackgroundWorker).ReportProgress(i++);
-                viewmodel.NextStep();
+                viewmodel.Sweep();
             }
         }
 

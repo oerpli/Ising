@@ -73,32 +73,6 @@ namespace IsingModern.Ising {
             }
         }
 
-        //static Point() {
-        //    var brushes = PointColorBrushes.Values.AsEnumerable();
-        //    foreach(var x in brushes) {
-        //        if(x.CanFreeze) {
-        //            x.Freeze();
-        //        }
-        //    }
-        //}
-        //public static Dictionary<int, SolidColorBrush> PointColorBrushes = new Dictionary<int, SolidColorBrush>() 
-        //    {   { -1 , new SolidColorBrush(Colors.DeepSkyBlue) }
-        //    ,   { 1, new SolidColorBrush(Colors.DarkBlue)  } 
-        //    ,   { 0 , new SolidColorBrush(Colors.White)}};
-        //private static SolidColorBrush failColorBrush = new SolidColorBrush(Colors.Gold);
-        //public SolidColorBrush ColorBrush {
-        //    get {
-        //        if(PointColorBrushes.ContainsKey(Value)) {
-        //            return PointColorBrushes[Value];
-        //        } else {
-        //            return failColorBrush;
-        //        }
-        //    }
-        //}
-        //public String Text {
-        //    get { return Value.ToString(); }
-        //}
-
         #endregion
 
     }

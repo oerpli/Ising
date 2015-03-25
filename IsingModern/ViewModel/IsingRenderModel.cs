@@ -82,7 +82,7 @@ namespace IsingModern.ViewModel {
             DrawSpin(p);
         }
 
-        internal void NextStep() {
+        internal void Sweep() {
             model.Sweep();
         }
 
