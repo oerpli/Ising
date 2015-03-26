@@ -19,6 +19,11 @@ namespace IsingModern.Model {
                     {"Metropolis", MetropolisCached}, 
                     {"Glauber", GlauberCached}
                 };
+                Dynamics = new Dictionary<string, DynamicsAlgorithm>()
+                {
+                    {"SingleFlip", SingleFlip}, 
+                    {"Kawasaki", Kawasaki}
+                };
             }
             N = n;
             var points = new Spin[N, N];

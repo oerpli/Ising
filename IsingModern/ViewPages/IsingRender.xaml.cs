@@ -18,7 +18,7 @@ namespace IsingModern.ViewPages {
 
         private bool PeriodicBoundary = false;
         private bool Ferromagnetic = true;
-        private bool Metropolis = true;
+        private bool SingleFlip = true;
 
         private const int maximalN = 200, minimalN = 3; //both should divide 600. 
         private int currentN = 20;
@@ -35,7 +35,7 @@ namespace IsingModern.ViewPages {
             Current = this;
             BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
             CouplingText.Text = Ferromagnetic ? "Ferromagnetic" : "Anti-Ferromagnetic";
-            AlgorithmText.Text = Metropolis ? "Metropolis" : "Glauber";
+            AlgorithmText.Text = SingleFlip ? "SingleFlip" : "Glauber";
             UpdateThumb(1.0, 0.0);
             TemperatureTextBox.Text = "1.0";
             MagnFieldTextBox.Text = "0.0";
@@ -113,10 +113,10 @@ namespace IsingModern.ViewPages {
         }
 
         private void Algorithm_Click(object sender, RoutedEventArgs e) {
-            if(sender != null) Metropolis = !Metropolis;
+            if(sender != null) SingleFlip = !SingleFlip;
 
-            AlgorithmText.Text = Metropolis ? "Metropolis" : "Glauber";
-            viewmodel.ChangeAccept(AlgorithmText.Text);
+            AlgorithmText.Text = SingleFlip ? "SingleFlip" : "Kawasaki";
+            viewmodel.ChangeDynamic(AlgorithmText.Text);
         }
 
         #endregion

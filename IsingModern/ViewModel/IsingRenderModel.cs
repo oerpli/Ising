@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -78,6 +77,7 @@ namespace IsingModern.ViewModel {
         }
 
         internal Tuple<double, double> Sweep() {
+
             return model.Sweep();
         }
 
@@ -249,7 +249,7 @@ namespace IsingModern.ViewModel {
             wbmap.Unlock();
         }
 
-        internal void Refresh() {
+        public void Refresh() {
             DrawLattice();
         }
 
@@ -260,9 +260,14 @@ namespace IsingModern.ViewModel {
 
 
 
+        internal void ChangeDynamic(string p) {
+            model.Dynamic = model.Dynamics[p];
+        }
         internal void ChangeAccept(string p) {
             model.Accept = model.Accepts[p];
         }
+
+
     }
 }
 

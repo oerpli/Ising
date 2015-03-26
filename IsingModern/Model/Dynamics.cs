@@ -29,10 +29,9 @@ namespace IsingModern.Model {
         #region DynamicsAlgorithms
         public void Kawasaki(Spin chosen) {
             Spin exchange = chosen.Neighbours[Rnd.Next(4)];
-            if(chosen.Value == exchange.Value) return;
-
+            if(chosen.Value == 0 || exchange.Value == 0 || chosen.Value == exchange.Value) return;
             var energyDifference = CalculateEnergyChangeKawasaki(chosen, exchange);
-            if(Accept(energyDifference, 0)) {
+            if(Accept(2 * energyDifference, 0)) {
                 chosen.ToggleSpin();
                 exchange.ToggleSpin();
                 TotalInteraction += energyDifference;
@@ -61,26 +60,26 @@ namespace IsingModern.Model {
         }
 
         private static int CalculateEnergyChangeKawasaki(Spin s1, Spin s2) {
-            return -2 * (CalculateEnergyNN(s2) + CalculateEnergyNN(s2) - 1);
+            return (CalculateEnergyNN(s2) + CalculateEnergyNN(s2) - 1);
         }
 
         #endregion
 
         #region AcceptanceFunctions
 
-        private bool MetropolisCached(int nearestNeighbourEnergy, int magnetizationEnergy) {
-            return Metropolis(nearestNeighbourEnergy * Coupling + magnetizationEnergy * Field);
+        private bool MetropolisCached(int nearestNeighbourInteraction, int magnetizationEnergy) {
+            return Metropolis(nearestNeighbourInteraction * Coupling + magnetizationEnergy * Field);
         }
 
-        private bool GlauberCached(int nearestNeighbourEnergy, int magnetizationEnergy) {
-            return Glauber(nearestNeighbourEnergy * Coupling + magnetizationEnergy * Field);
+        private bool GlauberCached(int nearestNeighbourInteraction, int magnetizationEnergy) {
+            return Glauber(nearestNeighbourInteraction * Coupling + magnetizationEnergy * Field);
         }
 
 
-        public bool Metropolis(double deltaE) {
+        private bool Metropolis(double deltaE) {
             return deltaE <= 0.0 || Rnd.NextDouble() < Math.Exp(-deltaE * Beta);
         }
-        public bool Glauber(double deltaE) {
+        private bool Glauber(double deltaE) {
             return Rnd.NextDouble() < (1.0 / (1.0 + Math.Exp(deltaE * Beta)));
         }
         #endregion
@@ -91,9 +90,10 @@ namespace IsingModern.Model {
         public delegate bool AcceptanceFunction(int nearestNeighbourEnergy, int magnetizationEnergy);
 
         public readonly Dictionary<string, AcceptanceFunction> Accepts;
+        public readonly Dictionary<string, DynamicsAlgorithm> Dynamics;
         //Aktuelle Algorithmen
         public AcceptanceFunction Accept;
-        public readonly DynamicsAlgorithm Dynamic;
+        public DynamicsAlgorithm Dynamic;
         #endregion
 
     }
