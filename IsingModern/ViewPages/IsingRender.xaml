@@ -23,7 +23,7 @@
                     <ColumnDefinition Width="600"/>
                     <ColumnDefinition Width="20"/>
                     <ColumnDefinition Width="150"/>
-                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="180"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -61,8 +61,8 @@
                                Height="30" TextAlignment="Right" Margin="3" />
                 </StackPanel>
 
-                <Canvas Name="TempMagField" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Height="180" Width="300" Opacity="1.0" VerticalAlignment="Top" Margin="3" HorizontalAlignment="Left" >
-                    <Rectangle Canvas.Left="0" Canvas.Top="0" Width="300" Height="180">
+                <Canvas Name="TempMagField" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Height="180" Width="320" Opacity="1.0" VerticalAlignment="Top" Margin="3" HorizontalAlignment="Left" >
+                    <Rectangle Canvas.Left="0" Canvas.Top="0" Width="320" Height="180">
                         <Rectangle.Fill>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="DarkBlue" Offset="0"/>
@@ -70,9 +70,9 @@
                             </LinearGradientBrush>
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Line Stroke="Black" StrokeThickness="2" X1="0" Y1="90" X2="300" Y2="90" />
+                    <Line Stroke="Black" StrokeThickness="2" X1="0" Y1="90" X2="320" Y2="90" />
                     <Line Stroke="Black" StrokeThickness="2" X1="0" Y1="0" X2="0" Y2="180" />
-                    <Label Content="T" FontWeight="SemiBold" Canvas.Top="70" Canvas.Left="285"/>
+                    <Label Content="T" FontWeight="SemiBold" Canvas.Top="70" Canvas.Right="5"/>
                     <Label Content="H" FontWeight="SemiBold" Canvas.Top="0" Canvas.Left="5" />
                     <!--maybe make a bigger touch target around the thumb (a second thumb transparent thumb with approx 30x30 dimensions)-->
                     <Thumb Name="fieldThumb"  Template="{StaticResource Circle}" DragDelta="Thumb_DragDelta"/>

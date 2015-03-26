@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Media;
 using System.Linq;
+using System.Windows.Media;
 
-namespace IsingModern.Ising {
+namespace IsingModern.Model {
     public abstract class Settings {
         static public bool DEBUG = false;
     }

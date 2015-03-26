@@ -1,12 +1,11 @@
-﻿using FirstFloor.ModernUI.Presentation;
-using IsingModern.Ising;
-using IsingModern.Render;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Media;
+using FirstFloor.ModernUI.Presentation;
+using IsingModern.Model;
 
-namespace IsingModern.Pages.Settings {
+namespace IsingModern.ViewPages.Settings {
     /// <summary>
     /// A simple view model for configuring theme, font and accent colors.
     /// </summary>

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace IsingModern.Model {
     public partial class Lattice {
-        public int InstanceNumber { get; private set; }
         public int N;
-        public int Count { get; private set; }
+        private int Count { get; set; }
         public Spin[] Spins { get; private set; }
 
 
@@ -22,11 +20,9 @@ namespace IsingModern.Model {
                     {"Glauber", Glauber}
                 };
             }
-            Spin[,] points;
             N = n;
-            points = new Spin[N, N];
+            var points = new Spin[N, N];
             Spins = new Spin[N * N];
-            var r = new Random();
             Count = 0;
             for(int i = 0; i < N; i++) {
                 for(int j = 0; j < N; j++) {
@@ -54,7 +50,6 @@ namespace IsingModern.Model {
         }
 
         public void SetBoundary(bool periodic) {
-            var r = new Random();
             foreach(var p in Boundary) {
                 p.Value = periodic ? -1 : 0;
             }

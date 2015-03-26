@@ -10,10 +10,11 @@ using IsingModern.Model;
 
 namespace IsingModern.ViewModel {
     class IsingRenderModel : Canvas {
-        private Image image = new Image();
+        private readonly Image image = new Image();
         private Lattice model;
-        private WriteableBitmap wbmap;
-        private double cellSize, viewsize = 600;// this should be dynamic, yo.
+        private readonly WriteableBitmap wbmap;
+        private double cellSize;// this should be dynamic, yo.
+        private readonly double viewsize = 600;// this should be dynamic, yo.
         private int rectangleSize; //to convert mouseclicks
         public int N { get { return model.N; } }
 
@@ -95,15 +96,15 @@ namespace IsingModern.ViewModel {
 
         #region Selection
         private Point mouseDownPoint;
-        private Shape selectionShape = new Rectangle() {
+        private readonly Shape selectionShape = new Rectangle() {
             Opacity = 0.5,
             Stroke = new SolidColorBrush(Colors.DarkCyan),
             StrokeThickness = 5,
             //StrokeDashArray = new Stroke { 2,1};
         };
         private int mouseState = 0;
-        private int[] coords = new int[4];
-        private SolidColorBrush[] selectionColors = new SolidColorBrush[]{
+        private readonly int[] coords = new int[4];
+        private readonly SolidColorBrush[] selectionColors = new SolidColorBrush[]{
             new SolidColorBrush(Colors.DeepSkyBlue),
             new SolidColorBrush(Colors.White),
             new SolidColorBrush(Colors.Gold),
