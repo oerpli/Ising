@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 
-
-namespace IsingModern.Ising {
+namespace IsingModern.Model {
     public partial class Lattice {
         public int InstanceNumber { get; private set; }
         public int N;

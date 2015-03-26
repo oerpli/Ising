@@ -1,19 +1,13 @@
-﻿using IsingModern.ViewModel;
-using System;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Collections.Generic;
+using IsingModern.ViewModel;
 using OxyPlot;
-using OxyPlot.Wpf;
 
-
-using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Threading;
-
-namespace IsingModern.Render {
+namespace IsingModern.ViewPages {
     /// <summary>
     /// Interaction logic for LatticeOutput.xaml
     /// </summary>
@@ -44,7 +38,7 @@ namespace IsingModern.Render {
             UpdateThumb(1.0, 0.0);
             TemperatureTextBox.Text = "1.0";
             MagnFieldTextBox.Text = "0.0";
-            modelParentElement.Children.Add(viewmodel);
+            ModelParentElement.Children.Add(viewmodel);
             LatticeSizeInput.Text = currentN.ToString();
         }
 

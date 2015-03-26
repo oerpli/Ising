@@ -82,11 +82,11 @@ namespace IsingModern.Ising {
         }
 
 
-        public bool Metropolis(double DeltaE) {
-            return DeltaE <= 0.0 || r.NextDouble() < Math.Exp(-DeltaE * Beta);
+        public bool Metropolis(double deltaE) {
+            return deltaE <= 0.0 || r.NextDouble() < Math.Exp(-deltaE * Beta);
         }
-        public bool Glauber(double DeltaE) {
-            return r.NextDouble() < (1.0 / (1.0 + Math.Exp(DeltaE * Beta)));
+        public bool Glauber(double deltaE) {
+            return r.NextDouble() < (1.0 / (1.0 + Math.Exp(deltaE * Beta)));
         }
         #endregion
 
