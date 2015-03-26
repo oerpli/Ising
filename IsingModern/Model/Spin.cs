@@ -7,24 +7,14 @@ namespace IsingModern.Ising {
         static public bool DEBUG = false;
     }
     public class Spin {
-        private int _value;
         public int Index { get; private set; }
-        public int Value {
-            get {
-                return _value;
-            }
-            internal set {
-                _value = value;
-            }
-        }
+        public int Value { get; internal set; }
 
         public Spin[] Neighbours { get; private set; } //North East South West
 
         #region Initialization
         public Spin(int val, int index) {
             Index = index;
-            //_value = val;
-            //InitDraw();
             Value = val;
         }
 

@@ -60,7 +60,7 @@ namespace IsingModern.Ising {
             foreach(var p in Boundary) {
                 p.Value = periodic ? -1 : 0;
             }
-            UpdateTotalEnergy();
+            UpdateStats();
         }
 
         private IEnumerable<Spin> Boundary {
@@ -86,7 +86,7 @@ namespace IsingModern.Ising {
                     p.Value = r.NextDouble() > 0.5 ? -1 : 1;
                 }
             }
-            UpdateTotalEnergy();
+            UpdateStats();
         }
 
         #region Hamiltonian

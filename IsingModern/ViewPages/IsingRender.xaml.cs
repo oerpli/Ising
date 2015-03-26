@@ -24,7 +24,6 @@ namespace IsingModern.Render {
         private bool PeriodicBoundary = false;
         private bool Ferromagnetic = true;
         private bool Metropolis = true;
-        private int rndCounter = 0;
 
         private const int maximalN = 200, minimalN = 3; //both should divide 600. 
         private int currentN = 20;
@@ -58,10 +57,6 @@ namespace IsingModern.Render {
 
         #region LatticeManipulation
         private void maingrid_KeyDown(object sender, KeyEventArgs e) {
-            if(e.Key == Key.R) {
-                RandomizeClick(null, null);
-                e.Handled = true;
-            }
             if(e.Key == Key.N) {
                 Start_Click(null, null);
                 e.Handled = true;
@@ -70,7 +65,6 @@ namespace IsingModern.Render {
 
         private void RandomizeClick(object sender, RoutedEventArgs e) {
             viewmodel.Randomize();
-            StatusText.Text = "Count: " + (++rndCounter).ToString();
             e.Handled = true;
         }
 
@@ -79,10 +73,6 @@ namespace IsingModern.Render {
             viewmodel.SetBoundary(PeriodicBoundary);
             BoundaryText.Text = PeriodicBoundary ? "Periodic" : "Walled";
         }
-
-        /* private void TopRight_Click(object sender, RoutedEventArgs e) {
-             viewmodel.ToggleTopRight();
-         }*/
 
         private void Time_Click(object sender, RoutedEventArgs e) {
             viewmodel.Sweep();
@@ -103,19 +93,19 @@ namespace IsingModern.Render {
             e.Handled = true;
         }
 
-        private void Temperature_MouseWheel(object sender, MouseWheelEventArgs e) {
-            Temperature.Value += Math.Sign(e.Delta) * 0.01;
-            e.Handled = true;
-        }
+        //private void Temperature_MouseWheel(object sender, MouseWheelEventArgs e) {
+        //    Temperature.Value += Math.Sign(e.Delta) * 0.01;
+        //    e.Handled = true;
+        //}
 
         /*private void CouplingConstant_MouseWheel(object sender, MouseWheelEventArgs e) {
             CouplingConstant.Value += Math.Sign(e.Delta) * 0.01;
             e.Handled = true;
         }*/
 
-        private void MagneticField_MouseWheel(object sender, MouseWheelEventArgs e) {
-            MagneticField.Value += Math.Sign(e.Delta) * 0.009;
-        }
+        //private void MagneticField_MouseWheel(object sender, MouseWheelEventArgs e) {
+        //    MagneticField.Value += Math.Sign(e.Delta) * 0.009;
+        //}
 
         private void Stop_Click(object sender, RoutedEventArgs e) {
             e.Handled = true;
@@ -137,31 +127,23 @@ namespace IsingModern.Render {
         #endregion
 
         #region Drag&Drop
-        bool fixed_temperature = false;
-        bool fixed_magnfield = false;
+        private const double snappingTolerance = 0.04;
+        private const double tempMax = 5, fieldMax = 0.5;
+        private const double thumbRadius = 5;
 
-        private void FixTemperature_Checked(object sender, RoutedEventArgs e) {
-            fixed_temperature = ((CheckBox)sender).IsChecked ?? false;
-            e.Handled = true;
-        }
-
-        private void FixMagneticField_Checked(object sender, RoutedEventArgs e) {
-            fixed_magnfield = ((CheckBox)sender).IsChecked ?? false;
-            e.Handled = true;
-        }
         private void Thumb_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e) {
             if(!fixed_temperature)
-                Canvas.SetLeft(myThumb, Math.Max(15, Math.Min(TemperatureMagneticField.ActualWidth - 25, Canvas.GetLeft(myThumb) + e.HorizontalChange)));
+                Canvas.SetLeft(fieldThumb, Math.Max(-thumbRadius, Math.Min(TempMagField.ActualWidth - thumbRadius, Canvas.GetLeft(fieldThumb) + e.HorizontalChange)));
             if(!fixed_magnfield)
-                Canvas.SetTop(myThumb, Math.Max(15, Math.Min(TemperatureMagneticField.ActualHeight - 25, Canvas.GetTop(myThumb) + e.VerticalChange)));
-            UpdateParameters(Canvas.GetLeft(myThumb), Canvas.GetTop(myThumb));
+                Canvas.SetTop(fieldThumb, Math.Max(-thumbRadius, Math.Min(TempMagField.ActualHeight - thumbRadius, Canvas.GetTop(fieldThumb) + e.VerticalChange)));
+            UpdateParameters(Canvas.GetLeft(fieldThumb), Canvas.GetTop(fieldThumb));
             e.Handled = true;
         }
 
         private void UpdateParameters(double x, double y) {
-            var temp = (x - 15.0) / (TemperatureMagneticField.ActualWidth - 40.0) * 5.0;
-            var field = 0.5 - (y - 15.0) / (TemperatureMagneticField.ActualHeight - 40.0) * 1;
-            if(Math.Abs(field) < 0.015) { //snapping to 0 field -- easer to handle.
+            var temp = (x + thumbRadius) / (TempMagField.ActualWidth) * tempMax;
+            var field = fieldMax - (y + thumbRadius) / (TempMagField.ActualHeight) * (2 * fieldMax);
+            if(snapping && Math.Abs(field) < snappingTolerance) { //snapping to 0 field
                 field = 0;
                 UpdateThumb(temp, field);
             }
@@ -172,18 +154,33 @@ namespace IsingModern.Render {
         }
 
         private void UpdateThumb(double temp, double field) {
-            var w = TemperatureMagneticField.ActualWidth;
-            var h = TemperatureMagneticField.ActualHeight;
+            var w = TempMagField.ActualWidth;
+            var h = TempMagField.ActualHeight;
 
             if(w <= 0 || h <= 0) {
-                w = TemperatureMagneticField.Width;
-                h = TemperatureMagneticField.Height;
+                w = TempMagField.Width;
+                h = TempMagField.Height;
             }
 
-            var x = temp * (w - 40.0) / 5.0 + 15.0;
-            var y = -(field - 0.5) * (h - 40.0) + 15.0;
-            Canvas.SetLeft(myThumb, x);
-            Canvas.SetTop(myThumb, y);
+            var x = temp * (w) / tempMax - thumbRadius;
+            var y = -(field - fieldMax) * (h) - thumbRadius;
+            Canvas.SetLeft(fieldThumb, x);
+            Canvas.SetTop(fieldThumb, y);
+        }
+
+        private bool fixed_temperature = false;
+        private bool fixed_magnfield = false;
+        private bool snapping = true;
+        private void FixTemperature_Checked(object sender, RoutedEventArgs e) {
+            fixed_temperature = ((CheckBox)sender).IsChecked ?? false;
+            e.Handled = true;
+        }
+        private void FixMagneticField_Checked(object sender, RoutedEventArgs e) {
+            fixed_magnfield = ((CheckBox)sender).IsChecked ?? false;
+            e.Handled = true;
+        }
+        private void Toggle_Snapping(object sender, RoutedEventArgs e) {
+            snapping = ((CheckBox)sender).IsChecked ?? false;
         }
 
         #endregion
@@ -234,16 +231,14 @@ namespace IsingModern.Render {
         #region Plotting
         public string Title { get; private set; }
 
-        public IList<DataPoint> Points { get; private set; }
+        public IList<DataPoint> EnergyPoints { get; private set; }
+        public IList<DataPoint> MagnetizationPoints { get; private set; }
 
         private void plotinit() {
-            this.Points = new List<DataPoint>();
-            var x = new Random();
-            for(int i = 0; i < 100; i++) {
-                Points.Add(new DataPoint(i, x.Next(-200, 200)));
-            }
-            EnergyPlot.ItemsSource = Points;
-            MagnetizationPlot.ItemsSource = Points.Select(a => new DataPoint(a.X, a.Y * x.NextDouble()));
+            EnergyPoints = new List<DataPoint>();
+            MagnetizationPoints = new List<DataPoint>();
+            EnergyPlot.ItemsSource = EnergyPoints;
+            MagnetizationPlot.ItemsSource = MagnetizationPoints;
             Plot.IsLegendVisible = true;
             Plot.LegendBackground = System.Windows.Media.Colors.AliceBlue;
         }
@@ -274,18 +269,43 @@ namespace IsingModern.Render {
         private void worker_Work(object sender, DoWorkEventArgs e) {
             int i = 0;
             while(running) {
-                (sender as BackgroundWorker).ReportProgress(i++);
-                viewmodel.Sweep();
+                var data = viewmodel.Sweep();
+                (sender as BackgroundWorker).ReportProgress(i++, data);
             }
         }
 
         long timerefresh;
+
+        private bool overwritePlot = false;
+        private int plotDataMax = 200;
+        private int plotIndex = 0;
+
         private void worker_Progress(object sender, ProgressChangedEventArgs e) {
             long time = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             if(time - timerefresh > 40) {
                 StatusText.Text = e.ProgressPercentage.ToString();
+                var data = (Tuple<double, double>)e.UserState; //not checking for null due to performance reasons.
+                if(overwritePlot) {
+                    EnergyPoints[plotIndex] = new DataPoint(plotIndex, data.Item1);
+                    MagnetizationPoints[plotIndex] = new DataPoint(plotIndex, data.Item2);
+                    plotIndex++;
+                    if(plotIndex == plotDataMax) {
+                        EnergyPlot.ItemsSource = EnergyPoints;
+                        MagnetizationPlot.ItemsSource = MagnetizationPoints;
+                        plotIndex = 0;
+                    }
+                } else {
+                    EnergyPoints.Add(new DataPoint(plotIndex, data.Item1));
+                    MagnetizationPoints.Add(new DataPoint(plotIndex, data.Item2));
+                    if(EnergyPoints.Count >= plotDataMax) {
+                        overwritePlot = true;
+                        plotIndex = 0;
+                    }
+                    plotIndex++;
+                }
                 viewmodel.Refresh();
                 timerefresh = time;
+                Plot.InvalidatePlot();
             }
         }
 
@@ -294,6 +314,8 @@ namespace IsingModern.Render {
         }
 
         #endregion
+
+
 
     }
 }

@@ -76,14 +76,8 @@ namespace IsingModern.ViewModel {
             DrawLattice();
         }
 
-        internal void ToggleTopRight() {
-            var p = model.Spins[2 * N - 2];
-            model.dynamic(p);
-            DrawSpin(p);
-        }
-
-        internal void Sweep() {
-            model.Sweep();
+        internal Tuple<double, double> Sweep() {
+            return model.Sweep();
         }
 
         internal void ChangeTemperature(double T) {
@@ -91,18 +85,11 @@ namespace IsingModern.ViewModel {
         }
 
         internal void ChangeCoupling(double J) {
-            if(Math.Abs(J) <= 0.009) J = 0;
             model.J = J;
         }
         internal void ChangeField(double h) {
             model.h = h;
         }
-
-
-        internal void ChangeAccept(bool AcceptAlgorithm) {
-            //TODO: Algorithmus auswählen 
-        }
-
 
         #endregion
 
