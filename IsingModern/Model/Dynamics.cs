@@ -27,16 +27,7 @@ namespace IsingModern.Model {
         }
 
         #region DynamicsAlgorithms
-        public void Kawasaki(Spin chosen) {
-            Spin exchange = chosen.Neighbours[Rnd.Next(4)];
-            if(chosen.Value == 0 || exchange.Value == 0 || chosen.Value == exchange.Value) return;
-            var energyDifference = CalculateEnergyChangeKawasaki(chosen, exchange);
-            if(Accept(2 * energyDifference, 0)) {
-                chosen.ToggleSpin();
-                exchange.ToggleSpin();
-                TotalInteraction += energyDifference;
-            }
-        }
+
         public void SingleFlip(Spin chosen) {
             var energyDifference = 2 * CalculateEnergyNN(chosen);
             if(Accept(energyDifference, chosen.Value)) {
@@ -45,6 +36,17 @@ namespace IsingModern.Model {
                 TotalMagnetization -= 2 * chosen.Value;
             }
         }
+        public void Kawasaki(Spin chosen) {
+            Spin exchange = chosen.Neighbours[Rnd.Next(4)];
+            if(chosen.Value == 0 || exchange.Value == 0 || chosen.Value == exchange.Value) return;
+            var energyDifference = 2 * CalculateEnergyChangeKawasaki(chosen, exchange);
+            if(Accept(energyDifference, 0)) {
+                chosen.ToggleSpin();
+                exchange.ToggleSpin();
+                TotalInteraction += energyDifference;
+            }
+        }
+
         #endregion
 
 
@@ -60,7 +62,7 @@ namespace IsingModern.Model {
         }
 
         private static int CalculateEnergyChangeKawasaki(Spin s1, Spin s2) {
-            return (CalculateEnergyNN(s2) + CalculateEnergyNN(s2) - 1);
+            return CalculateEnergyNN(s1) + CalculateEnergyNN(s2) + 1;
         }
 
         #endregion
