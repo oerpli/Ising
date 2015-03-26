@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using IsingModern.ViewModel;
 using OxyPlot;
+using OxyPlot.Wpf;
 
 namespace IsingModern.ViewPages {
     /// <summary>
@@ -223,6 +224,8 @@ namespace IsingModern.ViewPages {
         #endregion
 
         #region Plotting
+
+        private double axisMaxMin = 3.2;
         public string Title { get; private set; }
 
         public IList<DataPoint> EnergyPoints { get; private set; }
@@ -235,6 +238,10 @@ namespace IsingModern.ViewPages {
             MagnetizationPlot.ItemsSource = MagnetizationPoints;
             Plot.IsLegendVisible = true;
             Plot.LegendBackground = System.Windows.Media.Colors.AliceBlue;
+            var axis = new LinearAxis();
+            axis.Minimum = -axisMaxMin;
+            axis.Maximum = axisMaxMin;
+            Plot.Axes.Add((axis));
         }
 
         #endregion

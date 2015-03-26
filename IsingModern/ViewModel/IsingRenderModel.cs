@@ -86,10 +86,10 @@ namespace IsingModern.ViewModel {
         }
 
         internal void ChangeCoupling(double J) {
-            model.J = J;
+            model.Coupling = J;
         }
         internal void ChangeField(double h) {
-            model.h = h;
+            model.Field = h;
         }
 
         #endregion
@@ -261,7 +261,7 @@ namespace IsingModern.ViewModel {
 
 
         internal void ChangeAccept(string p) {
-            model.accept = model.accepts[p];
+            model.Accept = model.Accepts[p];
         }
     }
 }

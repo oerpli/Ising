@@ -73,7 +73,7 @@
                     <Line Stroke="Black" StrokeThickness="2" X1="0" Y1="90" X2="320" Y2="90" />
                     <Line Stroke="Black" StrokeThickness="2" X1="0" Y1="0" X2="0" Y2="180" />
                     <Label Content="T" FontWeight="SemiBold" Canvas.Top="70" Canvas.Right="5"/>
-                    <Label Content="H" FontWeight="SemiBold" Canvas.Top="0" Canvas.Left="5" />
+                    <Label Content="Field" FontWeight="SemiBold" Canvas.Top="0" Canvas.Left="5" />
                     <!--maybe make a bigger touch target around the thumb (a second thumb transparent thumb with approx 30x30 dimensions)-->
                     <Thumb Name="fieldThumb"  Template="{StaticResource Circle}" DragDelta="Thumb_DragDelta"/>
                 </Canvas>
@@ -94,10 +94,10 @@
 
                 <StackPanel Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="4">
                     <Grid Background="White" Height="300">
-                        <oxy:PlotView Name="Plot" Title="Energy">
+                        <oxy:PlotView Name="Plot" Title="Energy &amp; Magnetization (per Spin)">
                             <oxy:PlotView.Series>
-                                <oxy:LineSeries Name="EnergyPlot" Title="Energy"/>
-                                <oxy:LineSeries Name="MagnetizationPlot" Title="Mag"/>
+                                <oxy:LineSeries Name="EnergyPlot" Title="Energy per Spin"/>
+                                <oxy:LineSeries Name="MagnetizationPlot" Title="Magnetization per Spin"/>
                             </oxy:PlotView.Series>
                         </oxy:PlotView>
                     </Grid>

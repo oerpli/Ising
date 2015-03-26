@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace IsingModern.Model {
-    public partial class Lattice {
+    public sealed partial class Lattice {
         public int N;
         private int Count { get; set; }
         public Spin[] Spins { get; private set; }
@@ -9,15 +9,15 @@ namespace IsingModern.Model {
 
         public Lattice(int n) {
             {
-                J = 1;
-                h = 0;
+                Coupling = 1;
+                Field = 0;
                 Beta = 1;
-                dynamic = SingleFlip;
-                accept = Metropolis;
-                accepts = new Dictionary<string, AcceptanceFunction>()
+                Dynamic = SingleFlip;
+                Accept = MetropolisCached;
+                Accepts = new Dictionary<string, AcceptanceFunction>()
                 {
-                    {"Metropolis", Metropolis}, 
-                    {"Glauber", Glauber}
+                    {"Metropolis", MetropolisCached}, 
+                    {"Glauber", GlauberCached}
                 };
             }
             N = n;
@@ -32,18 +32,15 @@ namespace IsingModern.Model {
             }
             InitializeNeighbours(points);
             SetBoundary(true);
-            //Current = this;
         }
 
         private void InitializeNeighbours(Spin[,] points) {
             for(int i = 0; i < N; i++) {
                 for(int j = 0; j < N; j++) {
-                    Spin n, e, s, w;
-                    n = points[(i - 1 + N) % N, j];
-                    e = points[i, (j + 1) % N];
-                    s = points[(i + 1) % N, j];
-                    w = points[i, (j - 1 + N) % N];
-
+                    var n = points[(i - 1 + N) % N, j];
+                    var e = points[i, (j + 1) % N];
+                    var s = points[(i + 1) % N, j];
+                    var w = points[i, (j - 1 + N) % N];
                     points[i, j].SetNeighbours(n, e, w, s);
                 }
             }
@@ -70,13 +67,13 @@ namespace IsingModern.Model {
 
 
         internal Spin RandomSpin() {
-            return Spins[r.Next(N * N)];
+            return Spins[Rnd.Next(N * N)];
         }
 
-        public virtual void Randomize() {
+        public void Randomize() {
             foreach(var p in Spins) {
                 if(p.Value != 0) {
-                    p.Value = r.NextDouble() > 0.5 ? -1 : 1;
+                    p.Value = Rnd.NextDouble() > 0.5 ? -1 : 1;
                 }
             }
             UpdateStats();
