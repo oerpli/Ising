@@ -21,7 +21,7 @@ namespace IsingModern.ViewPages {
         private bool _singleFlip = true;
 
         private const int MaximalN = 200, MinimalN = 3; //both should divide 600. 
-        private int _currentN = 20;
+        private int _currentN = 200;
 
 
 
@@ -85,36 +85,34 @@ namespace IsingModern.ViewPages {
             BoundaryText.Text = _periodicBoundary ? "Periodic" : "Walled";
         }
 
-        private void Time_Click(object sender, RoutedEventArgs e) {
-            _viewmodel.Sweep();
-        }
+        //private void Time_Click(object sender, RoutedEventArgs e) {
+        //    _viewmodel.Sweep();
+        //}
+
+        //private void TemperatureSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        //    temperature = e.NewValue;
+        //    _viewmodel.ChangeTemperature(temperature);
+        //    e.Handled = true;
+        //}
+
+        //private void CouplingConstant_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        //    couplingconstant = e.NewValue;
+        //    _viewmodel.ChangeCoupling(couplingconstant);
+        //    e.Handled = true;
+        //}
+
+        //private void MagneticField_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        //    magneticfield = e.NewValue;
+        //    _viewmodel.ChangeField(magneticfield);
+        //    e.Handled = true;
+        //}
+
+        //private void Stop_Click(object sender, RoutedEventArgs e) {
+        //    e.Handled = true;
+        //}
 
 
-        private double temperature = 1.0;
-        private void TemperatureSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            temperature = e.NewValue;
-            _viewmodel.ChangeTemperature(temperature);
-            e.Handled = true;
-        }
-
-        private double couplingconstant = 1.0;
-        private void CouplingConstant_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            couplingconstant = e.NewValue;
-            _viewmodel.ChangeCoupling(couplingconstant);
-            e.Handled = true;
-        }
-
-        private double magneticfield = 0.0;
-        private void MagneticField_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            magneticfield = e.NewValue;
-            _viewmodel.ChangeField(magneticfield);
-            e.Handled = true;
-        }
-
-        private void Stop_Click(object sender, RoutedEventArgs e) {
-            e.Handled = true;
-        }
-
+        private double couplingconstant = 0.0;
         private void Coupling_Click(object sender = null, RoutedEventArgs e = null) {
             if(sender != null) _ferromagnetic = !_ferromagnetic;
             _viewmodel.ChangeCoupling(_ferromagnetic ? 1.0 : -1.0);
@@ -145,6 +143,10 @@ namespace IsingModern.ViewPages {
             e.Handled = true;
         }
 
+
+
+        private double magneticfield = 0.0;
+        private double temperature = 1.0;
         private void UpdateParameters(double x, double y) {
             var temp = (x + ThumbRadius) / (TempMagField.ActualWidth) * TempMax;
             var field = FieldMax - (y + ThumbRadius) / (TempMagField.ActualHeight) * (2 * FieldMax);
@@ -154,6 +156,8 @@ namespace IsingModern.ViewPages {
             }
             _viewmodel.ChangeTemperature(temp);
             _viewmodel.ChangeField(field);
+            temperature = temp;
+            magneticfield = field;
             TemperatureTextBox.Text = temp.ToString("0.00");
             MagnFieldTextBox.Text = field.ToString("0.00");
         }
