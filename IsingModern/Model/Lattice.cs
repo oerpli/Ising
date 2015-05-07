@@ -7,7 +7,7 @@ namespace IsingModern.Model {
         public Spin[] Spins { get; private set; }
 
 
-        public Lattice(int n) {
+        public Lattice(int n, double averageMagnetization) {
             {
                 Coupling = 1;
                 Field = 0;
@@ -29,9 +29,12 @@ namespace IsingModern.Model {
             var points = new Spin[N, N];
             Spins = new Spin[N * N];
             Count = 0;
+            double seed = 1 - 0.5 * (averageMagnetization + 1);
             for(int i = 0; i < N; i++) {
                 for(int j = 0; j < N; j++) {
-                    Spins[Count] = points[i, j] = new Spin(-1, Count);
+                    var r = Rnd.NextDouble();
+                    var val = r < seed ? -1 : 1;
+                    Spins[Count] = points[i, j] = new Spin(val, Count);
                     Count++;
                 }
             }

@@ -28,7 +28,7 @@ namespace IsingModern.ViewPages.Settings {
         };*/
 
         // 20 accent colors from Windows Phone 8
-        private Color[] accentColors = new Color[]{
+        private Color[] _accentColors = new Color[]{
          //   Color.FromRgb(0xa4, 0xc4, 0x00),   // lime
               Color.FromRgb(0x60, 0xa9, 0x17),   // green
          //   Color.FromRgb(0x00, 0x8a, 0x00),   // emerald
@@ -51,7 +51,7 @@ namespace IsingModern.ViewPages.Settings {
          //   Color.FromRgb(0x76, 0x60, 0x8a),   // mauve
          //   Color.FromRgb(0x87, 0x79, 0x4e),  // taupe
         };
-        private Color[] accentColorsDarker = new Color[]{
+        private Color[] _accentColorsDarker = new Color[]{
          //   Color.FromRgb(0xa4, 0xc4, 0x00),   // lime
          //   Color.FromRgb(0x60, 0xa9, 0x17),   // green
               Color.FromRgb(0x00, 0x8a, 0x00),   // emerald
@@ -75,15 +75,15 @@ namespace IsingModern.ViewPages.Settings {
          //   Color.FromRgb(0x87, 0x79, 0x4e),   // taupe
         };
 
-        private Color selectedAccentColor;
-        private LinkCollection themes = new LinkCollection();
-        private Link selectedTheme;
-        private string selectedFontSize;
+        private Color _selectedAccentColor;
+        private LinkCollection _themes = new LinkCollection();
+        private Link _selectedTheme;
+        private string _selectedFontSize;
 
         public AppearanceViewModel() {
             // add the default themes
-            this.themes.Add(new Link { DisplayName = "light", Source = AppearanceManager.LightThemeSource });
-            this.themes.Add(new Link { DisplayName = "dark", Source = AppearanceManager.DarkThemeSource });
+            this._themes.Add(new Link { DisplayName = "light", Source = AppearanceManager.LightThemeSource });
+            this._themes.Add(new Link { DisplayName = "dark", Source = AppearanceManager.DarkThemeSource });
 
             this.SelectedFontSize = AppearanceManager.Current.FontSize == FontSize.Large ? FontLarge : FontSmall;
             SyncThemeAndColor();
@@ -93,7 +93,7 @@ namespace IsingModern.ViewPages.Settings {
 
         private void SyncThemeAndColor() {
             // synchronizes the selected viewmodel theme with the actual theme used by the appearance manager.
-            this.SelectedTheme = this.themes.FirstOrDefault(l => l.Source.Equals(AppearanceManager.Current.ThemeSource));
+            this.SelectedTheme = this._themes.FirstOrDefault(l => l.Source.Equals(AppearanceManager.Current.ThemeSource));
 
             // and make sure accent color is up-to-date
             this.SelectedAccentColor = AppearanceManager.Current.AccentColor;
@@ -106,7 +106,7 @@ namespace IsingModern.ViewPages.Settings {
         }
 
         public LinkCollection Themes {
-            get { return this.themes; }
+            get { return this._themes; }
         }
 
         public string[] FontSizes {
@@ -114,14 +114,14 @@ namespace IsingModern.ViewPages.Settings {
         }
 
         public Color[] AccentColors {
-            get { return this.accentColors; }
+            get { return this._accentColors; }
         }
 
         public Link SelectedTheme {
-            get { return this.selectedTheme; }
+            get { return this._selectedTheme; }
             set {
-                if(this.selectedTheme != value) {
-                    this.selectedTheme = value;
+                if(this._selectedTheme != value) {
+                    this._selectedTheme = value;
                     OnPropertyChanged("SelectedTheme");
 
 
@@ -141,10 +141,10 @@ namespace IsingModern.ViewPages.Settings {
         }
 
         public string SelectedFontSize {
-            get { return this.selectedFontSize; }
+            get { return this._selectedFontSize; }
             set {
-                if(this.selectedFontSize != value) {
-                    this.selectedFontSize = value;
+                if(this._selectedFontSize != value) {
+                    this._selectedFontSize = value;
                     OnPropertyChanged("SelectedFontSize");
 
                     AppearanceManager.Current.FontSize = value == FontLarge ? FontSize.Large : FontSize.Small;
@@ -153,14 +153,14 @@ namespace IsingModern.ViewPages.Settings {
         }
 
         public Color SelectedAccentColor {
-            get { return this.selectedAccentColor; }
+            get { return this._selectedAccentColor; }
             set {
-                int index = Array.IndexOf(this.accentColors, this.selectedAccentColor);
+                int index = Array.IndexOf(this._accentColors, this._selectedAccentColor);
                 if(index != -1) {
                     Spin.PointColors.Remove(1);
                     Spin.PointColors.Remove(-1);
-                    Spin.PointColors.Add(1, accentColorsDarker[index]);
-                    Spin.PointColors.Add(-1, selectedAccentColor);
+                    Spin.PointColors.Add(1, _accentColorsDarker[index]);
+                    Spin.PointColors.Add(-1, _selectedAccentColor);
                     IsingRender.RefreshRender();
 
                     //Point.PointColorBrushes.Remove(1);
@@ -172,8 +172,8 @@ namespace IsingModern.ViewPages.Settings {
                     //Point.PointColorBrushes.Add(1, plus);
                     //Point.PointColorBrushes.Add(-1, minus);
                 }
-                if(this.selectedAccentColor != value) {
-                    this.selectedAccentColor = value;
+                if(this._selectedAccentColor != value) {
+                    this._selectedAccentColor = value;
                     OnPropertyChanged("SelectedAccentColor");
                     AppearanceManager.Current.AccentColor = value;
                 }

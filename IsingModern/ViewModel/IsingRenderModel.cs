@@ -11,10 +11,10 @@ namespace IsingModern.ViewModel {
     class IsingRenderModel : Canvas {
         private readonly Image image = new Image();
         private Lattice model;
-        private readonly WriteableBitmap wbmap;
+        private readonly WriteableBitmap _wbmap;
         private double cellSize;// this should be dynamic, yo.
-        private readonly double viewsize = 600;// this should be dynamic, yo.
-        private int rectangleSize; //to convert mouseclicks
+        private const double viewsize = 600; // this should be dynamic, yo.
+        private int _rectangleSize; //to convert mouseclicks
         public int N { get { return model.N; } }
 
         public IsingRenderModel(int n = 50, bool periodicBoundary = false) {
@@ -33,14 +33,14 @@ namespace IsingModern.ViewModel {
             //setting rendering up
             {
                 //fixing the scaling at 96dpi works so far. "It's not as dumb as it looks" - Magnus Carlsen
-                wbmap = new WriteableBitmap(600, 600, 96, 96, PixelFormats.Bgr24, null);
-                image.Source = wbmap;
-                rectangleSize = (int)viewsize / n;
+                _wbmap = new WriteableBitmap(600, 600, 96, 96, PixelFormats.Bgr24, null);
+                image.Source = _wbmap;
+                _rectangleSize = (int)viewsize / n;
                 cellSize = viewsize / n;
             }
             //initializing model
             {
-                model = new Lattice(n);
+                model = new Lattice(n,0);
                 this.SetBoundary(periodicBoundary);
             }
 
@@ -59,21 +59,23 @@ namespace IsingModern.ViewModel {
         }
 
         #region Manipulation
-        public void ChangeSize(int newSize) {
-            model = new Lattice(newSize);
+        public void ChangeSize(int newSize, double averageMagnetization = -1.0) {
+            model = new Lattice(newSize, averageMagnetization);
             cellSize = viewsize / newSize;
-            rectangleSize = (int)viewsize / newSize;
+            _rectangleSize = (int)viewsize / newSize;
             DrawLattice();
         }
 
-        internal void SetBoundary(bool PeriodicBoundary) {
-            model.SetBoundary(PeriodicBoundary);
+        internal void SetBoundary(bool periodicBoundary) {
+            model.SetBoundary(periodicBoundary);
             DrawLattice();
         }
 
-        internal void Randomize() {
+        internal void Randomize(bool redraw = false) {
             model.Randomize();
-            DrawLattice();
+            if(redraw) {
+                DrawLattice();
+            }
         }
 
         internal Tuple<double, double> Sweep() {
@@ -85,8 +87,8 @@ namespace IsingModern.ViewModel {
             model.Beta = Math.Max(1.0 / T, 0.000000001); //prevent division by zero.
         }
 
-        internal void ChangeCoupling(double J) {
-            model.Coupling = J;
+        internal void ChangeCoupling(double j) {
+            model.Coupling = j;
         }
         internal void ChangeField(double h) {
             model.Field = h;
@@ -96,15 +98,15 @@ namespace IsingModern.ViewModel {
 
         #region Selection
         private Point mouseDownPoint;
-        private readonly Shape selectionShape = new Rectangle() {
+        private readonly Shape _selectionShape = new Rectangle() {
             Opacity = 0.5,
             Stroke = new SolidColorBrush(Colors.DarkCyan),
             StrokeThickness = 5,
             //StrokeDashArray = new Stroke { 2,1};
         };
-        private int mouseState = 0;
+        private int _mouseState = 0;
         private readonly int[] coords = new int[4];
-        private readonly SolidColorBrush[] selectionColors = new SolidColorBrush[]{
+        private readonly SolidColorBrush[] _selectionColors = new SolidColorBrush[]{
             new SolidColorBrush(Colors.DeepSkyBlue),
             new SolidColorBrush(Colors.White),
             new SolidColorBrush(Colors.Gold),
@@ -113,33 +115,33 @@ namespace IsingModern.ViewModel {
         protected override void OnMouseDown(MouseButtonEventArgs e) {
             base.OnMouseDown(e);
             mouseDownPoint = e.GetPosition(this);
-            if(mouseState != 0) {
-                mouseState = 0;
-                this.Children.Remove(selectionShape);
+            if(_mouseState != 0) {
+                _mouseState = 0;
+                this.Children.Remove(_selectionShape);
                 for(int i = 0; i < 4; i++) coords[i] = 0;
                 return;
             }
             if(e.LeftButton == MouseButtonState.Pressed) {
-                mouseState = 1;
+                _mouseState = 1;
             } else if(e.RightButton == MouseButtonState.Pressed) {
-                mouseState = 2;
+                _mouseState = 2;
             } else if(e.MiddleButton == MouseButtonState.Pressed) {
-                mouseState = 3;
+                _mouseState = 3;
             } else {
                 return;
             }
             // clean up mess left behind from previous selections
             {
-                selectionShape.Width = selectionShape.Height = 0;
-                this.Children.Remove(selectionShape);
+                _selectionShape.Width = _selectionShape.Height = 0;
+                this.Children.Remove(_selectionShape);
             }
-            selectionShape.Fill = selectionColors[mouseState - 1];
-            this.Children.Add(selectionShape);
+            _selectionShape.Fill = _selectionColors[_mouseState - 1];
+            this.Children.Add(_selectionShape);
             Mouse.Capture(this);
         }
         protected override void OnMouseMove(MouseEventArgs e) {
             base.OnMouseMove(e);
-            if(mouseState != 0) {
+            if(_mouseState != 0) {
                 Point currentPoint = e.GetPosition(image);
                 coords[0] = (int)(Math.Min(currentPoint.X, mouseDownPoint.X) + 0.5 * cellSize) / (int)cellSize; //x1
                 coords[1] = (int)(Math.Max(currentPoint.X, mouseDownPoint.X) + 0.5 * cellSize) / (int)cellSize; //x2
@@ -155,18 +157,18 @@ namespace IsingModern.ViewModel {
                 double l = cellSize * coords[0];
                 double t = cellSize * coords[2];
 
-                selectionShape.Width = w;
-                selectionShape.Height = h;
-                Canvas.SetLeft(selectionShape, l);
-                Canvas.SetTop(selectionShape, t);
+                _selectionShape.Width = w;
+                _selectionShape.Height = h;
+                Canvas.SetLeft(_selectionShape, l);
+                Canvas.SetTop(_selectionShape, t);
 
             }
         }
         protected override void OnMouseUp(MouseButtonEventArgs e) {
             base.OnMouseUp(e);
-            if(mouseState != 0) {
+            if(_mouseState != 0) {
                 int maxx = coords[1], maxy = coords[3];
-                wbmap.Lock();
+                _wbmap.Lock();
                 for(int x = coords[0]; x < maxx; x++) {
                     for(int y = coords[2]; y < maxy; y++) {
                         MouseAction(model.Spins[y * N + x]);
@@ -179,20 +181,21 @@ namespace IsingModern.ViewModel {
                     int y = (int)pos.Y / (int)cellSize;
                     MouseAction(model.Spins[y * N + x]);
                 }
-                wbmap.Unlock();
+                _wbmap.Unlock();
             }
-            mouseState = 0;
+            _mouseState = 0;
             for(int i = 0; i < 4; i++) coords[i] = 0;
-            this.Children.Remove(selectionShape);
+            this.Children.Remove(_selectionShape);
             Mouse.Capture(null);
+            model.UpdateStats();
         }
 
         private void MouseAction(Spin spin) {
-            if(mouseState == 1)
+            if(_mouseState == 1)
                 spin.SetSpin();
-            if(mouseState == 2)
+            if(_mouseState == 2)
                 spin.ToggleBoundary(true);
-            if(mouseState == 3)
+            if(_mouseState == 3)
                 spin.ToggleSpin();
             DrawSpin(spin);
         }
@@ -201,33 +204,33 @@ namespace IsingModern.ViewModel {
 
         #region Rendering
         private void DrawLattice() {
-            wbmap.Lock();
+            _wbmap.Lock();
             int counter = 0;
             for(int y = 0; y < N; y++) {
                 for(int x = 0; x < N; x++) {
                     DrawSpin(x, y, model.Spins[counter++].Color);
                 }
             }
-            wbmap.Unlock();
+            _wbmap.Unlock();
         }
 
         private void DrawSpin(int left, int top, Color color) {
-            left *= rectangleSize;
-            top *= rectangleSize;
-            int width = rectangleSize, height = rectangleSize;
+            left *= _rectangleSize;
+            top *= _rectangleSize;
+            int width = _rectangleSize, height = _rectangleSize;
             // Compute the pixel's color
             int colorData = color.R << 16; // R
             colorData |= color.G << 8; // G
             colorData |= color.B << 0; // B
-            int bpp = wbmap.Format.BitsPerPixel / 8;
+            int bpp = _wbmap.Format.BitsPerPixel / 8;
 
             unsafe {
                 for(int y = 0; y < height; y++) {
                     // Get a pointer to the back buffer
-                    long pBackBuffer = (long)wbmap.BackBuffer;
+                    long pBackBuffer = (long)_wbmap.BackBuffer;
 
                     // Find the address of the pixel to draw
-                    pBackBuffer += (top + y) * wbmap.BackBufferStride;
+                    pBackBuffer += (top + y) * _wbmap.BackBufferStride;
                     pBackBuffer += left * bpp;
 
                     for(int x = 0; x < width; x++) {
@@ -238,15 +241,15 @@ namespace IsingModern.ViewModel {
                     }
                 }
             }
-            wbmap.AddDirtyRect(new Int32Rect(left, top, width, height));
+            _wbmap.AddDirtyRect(new Int32Rect(left, top, width, height));
         }
 
         private void DrawSpin(Spin p) {
             int left = p.Index % N;
             int top = p.Index / N;
-            wbmap.Lock();
+            _wbmap.Lock();
             DrawSpin(left, top, p.Color);
-            wbmap.Unlock();
+            _wbmap.Unlock();
         }
 
         public void Refresh() {

@@ -22,14 +22,14 @@ namespace IsingModern.Model {
             for(int i = 0; i < n; i++) {
                 Dynamic(RandomSpin());
             }
-            UpdateStats();
+            //UpdateStats();
             return Tuple.Create((TotalInteraction - TotalMagnetization * Field) / n, TotalMagnetization / n);
         }
 
         #region DynamicsAlgorithms
 
         public void SingleFlip(Spin chosen) {
-            var energyDifference = 2 * CalculateEnergyNN(chosen);
+            var energyDifference = 2 * CalculateEnergyNn(chosen);
             if(Accept(energyDifference, chosen.Value)) {
                 chosen.ToggleSpin();
                 TotalInteraction += energyDifference;
@@ -51,18 +51,18 @@ namespace IsingModern.Model {
 
 
         #region EnergyCalculations
-        private void UpdateStats() {
+        public void UpdateStats() {
             var interactionEnergy = Spins.Aggregate(0.0, (sum, spin) => sum + spin.InteractionEnergy());
             TotalMagnetization = Spins.Aggregate(0.0, (sum, spin) => sum + spin.Value);
             TotalInteraction = 0.5 * Coupling * interactionEnergy - Field * TotalMagnetization;
         }
 
-        private static int CalculateEnergyNN(Spin s) {
+        private static int CalculateEnergyNn(Spin s) {
             return s.Neighbours.Aggregate(0, (sum, spin) => sum + spin.Value) * s.Value;
         }
 
         private static int CalculateEnergyChangeKawasaki(Spin s1, Spin s2) {
-            return CalculateEnergyNN(s1) + CalculateEnergyNN(s2) + 1;
+            return CalculateEnergyNn(s1) + CalculateEnergyNn(s2) + 1;
         }
 
         #endregion
