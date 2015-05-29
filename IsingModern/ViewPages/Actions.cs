@@ -17,7 +17,7 @@ namespace IsingModern.ViewPages {
             randomize = false;
         }
 
-        public void Color(Color accentDark, Color accentColor) {
+        public void Color(Color accentColor, Color accentDark) {
             var grad = new LinearGradientBrush {
                 StartPoint = new Point(0.5, 0),
                 EndPoint = new Point(0.5, 1)
