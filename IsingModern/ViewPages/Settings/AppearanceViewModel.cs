@@ -14,19 +14,6 @@ namespace IsingModern.ViewPages.Settings {
         private const string FontSmall = "small";
         private const string FontLarge = "large";
 
-        // 9 accent colors from metro design principles
-        /*private Color[] accentColors = new Color[]{
-            Color.FromRgb(0x33, 0x99, 0xff),   // blue
-            Color.FromRgb(0x00, 0xab, 0xa9),   // teal
-            Color.FromRgb(0x33, 0x99, 0x33),   // green
-            Color.FromRgb(0x8c, 0xbf, 0x26),   // lime
-            Color.FromRgb(0xf0, 0x96, 0x09),   // orange
-            Color.FromRgb(0xff, 0x45, 0x00),   // orange red
-            Color.FromRgb(0xe5, 0x14, 0x00),   // red
-            Color.FromRgb(0xff, 0x00, 0x97),   // magenta
-            Color.FromRgb(0xa2, 0x00, 0xff),   // purple            
-        };*/
-
         // 20 accent colors from Windows Phone 8
         private Color[] _accentColors = new Color[]{
          //   Color.FromRgb(0xa4, 0xc4, 0x00),   // lime
@@ -152,6 +139,8 @@ namespace IsingModern.ViewPages.Settings {
             }
         }
 
+        public static Color AccentColor, AccentColorDark;
+
         public Color SelectedAccentColor {
             get { return this._selectedAccentColor; }
             set {
@@ -162,22 +151,18 @@ namespace IsingModern.ViewPages.Settings {
                     Spin.PointColors.Add(1, _accentColorsDarker[index]);
                     Spin.PointColors.Add(-1, _selectedAccentColor);
                     IsingRender.RefreshRender();
-
-                    //Point.PointColorBrushes.Remove(1);
-                    //Point.PointColorBrushes.Remove(-1);
-                    //var plus = new SolidColorBrush(this.selectedAccentColor);
-                    //var minus = new SolidColorBrush(this.accentColorsDarker[index]);
-                    //plus.Freeze();
-                    //minus.Freeze();
-                    //Point.PointColorBrushes.Add(1, plus);
-                    //Point.PointColorBrushes.Add(-1, minus);
+                    AccentColor = _selectedAccentColor;
+                    AccentColorDark = _accentColorsDarker[index];
                 }
                 if(this._selectedAccentColor != value) {
                     this._selectedAccentColor = value;
                     OnPropertyChanged("SelectedAccentColor");
                     AppearanceManager.Current.AccentColor = value;
                 }
+                AccentColor = value;
             }
         }
+
+
     }
 }
