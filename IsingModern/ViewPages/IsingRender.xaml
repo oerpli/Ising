@@ -23,8 +23,8 @@
                     <ColumnDefinition Width="840"/>
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="170"/>
-                    <ColumnDefinition Width="200"/>
-                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="180"/>
+                    <ColumnDefinition Width="40"/>
                     <ColumnDefinition Width="380"/>
                     <ColumnDefinition Width="170"/>
                     <ColumnDefinition Width="10"/>
