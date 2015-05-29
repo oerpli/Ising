@@ -1,23 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
-using FirstFloor.ModernUI.Presentation;
-using IsingModern.ViewPages.Settings;
 
 namespace IsingModern.ViewPages {
     public partial class IsingRender {
 
+        private bool randomize = false;
 
-        public void RandomizeGrid() {
-            _viewmodel.Randomize(true);
-            randomize = false;
-        }
 
-        public void Color(Color accentColor, Color accentDark) {
+        public void RectangleColor(Color accentColor, Color accentDark) {
             var grad = new LinearGradientBrush {
                 StartPoint = new Point(0.5, 0),
                 EndPoint = new Point(0.5, 1)
@@ -28,8 +18,26 @@ namespace IsingModern.ViewPages {
             FieldRectangle.Fill = grad;
         }
 
-        public void NewSize() {
+        private void RandomizeLattice() {
+            _viewmodel.Randomize(true);
+            randomize = false;
         }
 
+        private void NewLattice() {
+            _viewmodel.ChangeSize(_currentN, averageMagnetization);
+            //reapply settings from previous model:
+            _viewmodel.SetBoundary(_periodicBoundary);
+            _viewmodel.ChangeTemperature(temperature);
+            _viewmodel.ChangeField(magneticfield);
+            _viewmodel.ChangeDynamic(AlgorithmText.Text);
+            _viewmodel.ChangeCoupling(couplingconstant);
+            _updateLatticeSizeText();
+        }
+
+        private void Boundary() {
+            _viewmodel.SetBoundary(_periodicBoundary);
+            BoundaryText.Text = _periodicBoundary ? "Periodic" : "Walled";
+
+        }
     }
 }

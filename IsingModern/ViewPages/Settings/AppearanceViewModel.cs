@@ -150,7 +150,7 @@ namespace IsingModern.ViewPages.Settings {
                     Spin.PointColors.Add(-1, _selectedAccentColor);
                     IsingRender.RefreshRender();
 
-                    IsingRender.Current.Color(_selectedAccentColor, _accentColorsDarker[index]);
+                    IsingRender.Current.RectangleColor(_selectedAccentColor, _accentColorsDarker[index]);
                 }
                 if(this._selectedAccentColor != value) {
                     this._selectedAccentColor = value;

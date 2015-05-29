@@ -5,9 +5,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using IsingModern.ViewModel;
+using IsingModern.ViewPages.Settings;
 using OxyPlot;
+using OxyPlot.Annotations;
 using OxyPlot.Wpf;
+using LineAnnotation = OxyPlot.Wpf.LineAnnotation;
 
 namespace IsingModern.ViewPages {
     /// <summary>
@@ -34,11 +38,6 @@ namespace IsingModern.ViewPages {
         public IsingRender() {
             InitializeComponent();
             _viewmodel = new IsingRenderModel(_currentN, _periodicBoundary);
-
-
-
-
-
             Plotinit(); //test
             Current = this;
             BoundaryText.Text = _periodicBoundary ? "Periodic" : "Walled";
@@ -49,16 +48,6 @@ namespace IsingModern.ViewPages {
             MagnFieldTextBox.Text = "0.0";
             ModelParentElement.Children.Add(_viewmodel);
             LatticeSizeInput.Text = _currentN.ToString();
-        }
-
-        private void NewLattice(int n) {
-            _viewmodel.ChangeSize(n, averageMagnetization);
-            //reapply settings from previous model:
-            _viewmodel.SetBoundary(_periodicBoundary);
-            _viewmodel.ChangeTemperature(temperature);
-            _viewmodel.ChangeField(magneticfield);
-            _viewmodel.ChangeDynamic(AlgorithmText.Text);
-            _viewmodel.ChangeCoupling(couplingconstant);
         }
 
         #endregion
@@ -72,20 +61,18 @@ namespace IsingModern.ViewPages {
         }
 
 
-        private bool randomize = false;
         private void RandomizeClick(object sender, RoutedEventArgs e) {
             if(_running) {
                 randomize = true;
             } else {
-                _viewmodel.Randomize(true);
+                RandomizeLattice();
             }
             e.Handled = true;
         }
 
         private void ToggleBoundary_Click(object sender = null, RoutedEventArgs e = null) {
             if(sender != null) _periodicBoundary = !_periodicBoundary;
-            _viewmodel.SetBoundary(_periodicBoundary);
-            BoundaryText.Text = _periodicBoundary ? "Periodic" : "Walled";
+            Boundary();
         }
 
         private double couplingconstant = 0.0;
@@ -172,8 +159,7 @@ namespace IsingModern.ViewPages {
 
         #region LatticeSize
         private void LatticeSize_Click(object sender, RoutedEventArgs e) {
-            NewLattice(_currentN);
-            _updateLatticeSizeText();
+            NewLattice();
             e.Handled = true;
         }
         private void LatticeSize_KeyDown(object sender, KeyEventArgs e) {
@@ -191,7 +177,7 @@ namespace IsingModern.ViewPages {
             e.Handled = true;
         }
 
-        //if using scrollwheel increase/decrase to next divisor of 600 (to avoid ugly rendering) - can be finetuned with left/right keys if necessary
+        //if using scrollwheel increase/decrase to next divisor of Pixel (800) (to avoid ugly rendering) - can be finetuned with left/right keys if necessary
         private void _changeLatticeSize(int diff, bool mouse = false) {
             do {
                 Console.WriteLine(Pixels % _currentN);
@@ -216,22 +202,32 @@ namespace IsingModern.ViewPages {
         #region Plotting
 
         private double _axisMaxMin = 3.2;
+        private LineAnnotation line;
         public string Title { get; private set; }
 
         public IList<DataPoint> EnergyPoints { get; private set; }
         public IList<DataPoint> MagnetizationPoints { get; private set; }
 
+
         private void Plotinit() {
             EnergyPoints = new List<DataPoint>();
             MagnetizationPoints = new List<DataPoint>();
             EnergyPlot.ItemsSource = EnergyPoints;
+            EnergyPlot.Color = Colors.Red;
+            MagnetizationPlot.Color = Colors.DeepSkyBlue;
             MagnetizationPlot.ItemsSource = MagnetizationPoints;
             Plot.IsLegendVisible = true;
-            Plot.LegendBackground = System.Windows.Media.Colors.AliceBlue;
-            var axis = new LinearAxis();
-            axis.Minimum = -_axisMaxMin;
-            axis.Maximum = _axisMaxMin;
-            Plot.Axes.Add((axis));
+            Plot.Background = new SolidColorBrush(Color.FromRgb(50, 50, 50));
+            Plot.TextColor = Colors.White;
+            Plot.LegendBackground = Color.FromRgb(30, 30, 30);
+            var axis = new LinearAxis { Minimum = -_axisMaxMin, Maximum = _axisMaxMin, AxislineColor = Colors.White };
+            Plot.Axes.Add(axis);
+            for(int i = 0; i < _plotDataMax; i++) {
+                EnergyPoints.Add(new DataPoint(i, 0));
+                MagnetizationPoints.Add(new DataPoint(i, 0));
+            }
+            line = new LineAnnotation() { Type = LineAnnotationType.Vertical, Intercept = 0, StrokeThickness = 10, LineStyle = LineStyle.Solid, Color = Colors.Black };
+            Plot.Annotations.Add(line);
         }
 
         #endregion
@@ -279,12 +275,12 @@ namespace IsingModern.ViewPages {
 
         long _timerefresh;
 
-        private bool _overwritePlot = false;
+        private bool _overwritePlot = true;
         private int _plotDataMax = 300;
         private int _plotIndex = 0;
 
 
-        private double averageMagnetization = -1;
+        private double averageMagnetization = 1;
         private void worker_Progress(object sender, ProgressChangedEventArgs e) {
             long time = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             if(time - _timerefresh > 40) {
@@ -292,22 +288,9 @@ namespace IsingModern.ViewPages {
                 var data = (Tuple<double, double>)e.UserState; //not checking for null due to performance reasons.
                 if(_overwritePlot) {
                     EnergyPoints[_plotIndex] = new DataPoint(_plotIndex, data.Item1);
-                    MagnetizationPoints[_plotIndex] = new DataPoint(_plotIndex, data.Item2);
-                    _plotIndex++;
-                    if(_plotIndex == _plotDataMax) {
-                        EnergyPlot.ItemsSource = EnergyPoints;
-                        MagnetizationPlot.ItemsSource = MagnetizationPoints;
-                        _plotIndex = 0;
-                    }
-                } else {
-                    EnergyPoints.Add(new DataPoint(_plotIndex, data.Item1));
-                    MagnetizationPoints.Add(new DataPoint(_plotIndex, data.Item2));
-                    averageMagnetization = data.Item2;
-                    if(EnergyPoints.Count >= _plotDataMax) {
-                        _overwritePlot = true;
-                        _plotIndex = 0;
-                    }
-                    _plotIndex++;
+                    MagnetizationPoints[_plotIndex] = new DataPoint(_plotIndex, -data.Item2);
+                    _plotIndex = (_plotIndex + 1) % _plotDataMax;
+                    line.X = _plotIndex;
                 }
                 _viewmodel.Refresh();
                 _timerefresh = time;
