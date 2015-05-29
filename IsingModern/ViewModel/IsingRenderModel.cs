@@ -8,13 +8,15 @@ using System.Windows.Shapes;
 using IsingModern.Model;
 using System.Diagnostics;
 
+using IsingModern.ViewPages;
+
 namespace IsingModern.ViewModel {
     class IsingRenderModel : Canvas {
         private readonly Image image = new Image();
         private Lattice model;
         private readonly WriteableBitmap _wbmap;
         private double cellSize;// this should be dynamic, yo.
-        private const double viewsize = 800; // this should be dynamic, yo.
+        private const double viewsize = IsingRender.Pixels; // this should be dynamic, yo.
         private int _rectangleSize; //to convert mouseclicks
         public int N { get { return model.N; } }
 
@@ -34,7 +36,7 @@ namespace IsingModern.ViewModel {
             //setting rendering up
             {
                 //fixing the scaling at 96dpi works so far. "It's not as dumb as it looks" - Magnus Carlsen
-                _wbmap = new WriteableBitmap(800, 800, 96, 96, PixelFormats.Bgr24, null);
+                _wbmap = new WriteableBitmap(IsingRender.Pixels, IsingRender.Pixels, 96, 96, PixelFormats.Bgr24, null);
                 image.Source = _wbmap;
                 _rectangleSize = (int)viewsize / n;
                 cellSize = viewsize / n;

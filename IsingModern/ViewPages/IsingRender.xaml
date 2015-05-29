@@ -71,9 +71,9 @@
                 </StackPanel>
 
                 <Canvas Name="TempMagField" Grid.Column="5" Grid.ColumnSpan="1" Grid.Row="1" Width="370" Height="250" Opacity="1.0" VerticalAlignment="Top" Margin="3" HorizontalAlignment="Left" >
-                    <Rectangle Canvas.Left="0" Canvas.Top="0" Width="370" Height="250">
+                    <Rectangle Name="FieldRectangle" Canvas.Left="0" Canvas.Top="0" Width="370" Height="250">
                         <Rectangle.Fill>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <LinearGradientBrush  StartPoint="0.5,0" EndPoint="0.5,1">
                                 <GradientStop Color="DarkBlue"  Offset="0"/>
                                 <GradientStop Color="DeepSkyBlue" Offset="1"/>
                             </LinearGradientBrush>

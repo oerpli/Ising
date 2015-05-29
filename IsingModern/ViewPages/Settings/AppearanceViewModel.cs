@@ -139,8 +139,6 @@ namespace IsingModern.ViewPages.Settings {
             }
         }
 
-        public static Color AccentColor, AccentColorDark;
-
         public Color SelectedAccentColor {
             get { return this._selectedAccentColor; }
             set {
@@ -151,15 +149,14 @@ namespace IsingModern.ViewPages.Settings {
                     Spin.PointColors.Add(1, _accentColorsDarker[index]);
                     Spin.PointColors.Add(-1, _selectedAccentColor);
                     IsingRender.RefreshRender();
-                    AccentColor = _selectedAccentColor;
-                    AccentColorDark = _accentColorsDarker[index];
+
+                    IsingRender.Current.Color(_selectedAccentColor, _accentColorsDarker[index]);
                 }
                 if(this._selectedAccentColor != value) {
                     this._selectedAccentColor = value;
                     OnPropertyChanged("SelectedAccentColor");
                     AppearanceManager.Current.AccentColor = value;
                 }
-                AccentColor = value;
             }
         }
 

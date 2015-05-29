@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using IsingModern.ViewModel;
 using OxyPlot;
 using OxyPlot.Wpf;
@@ -13,15 +14,17 @@ namespace IsingModern.ViewPages {
     /// Interaction logic for LatticeOutput.xaml
     /// </summary>
     public partial class IsingRender : UserControl {
-        static IsingRender _current;
+        public static IsingRender Current;
         private IsingRenderModel _viewmodel;
 
         private bool _periodicBoundary = false;
         private bool _ferromagnetic = true;
         private bool _singleFlip = true;
 
-        private const int MaximalN = 200, MinimalN = 3; //both should divide 600. 
         private int _currentN = 200;
+        public const int MaximalN = 200, MinimalN = 4; //both should divide Pixels. 
+        public const int Pixels = 800;
+
 
 
 
@@ -37,7 +40,7 @@ namespace IsingModern.ViewPages {
 
 
             Plotinit(); //test
-            _current = this;
+            Current = this;
             BoundaryText.Text = _periodicBoundary ? "Periodic" : "Walled";
             CouplingText.Text = _ferromagnetic ? "Ferromagnetic" : "Anti-Ferromagnetic";
             AlgorithmText.Text = _singleFlip ? "SingleFlip" : "Glauber";
@@ -84,33 +87,6 @@ namespace IsingModern.ViewPages {
             _viewmodel.SetBoundary(_periodicBoundary);
             BoundaryText.Text = _periodicBoundary ? "Periodic" : "Walled";
         }
-
-        //private void Time_Click(object sender, RoutedEventArgs e) {
-        //    _viewmodel.Sweep();
-        //}
-
-        //private void TemperatureSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-        //    temperature = e.NewValue;
-        //    _viewmodel.ChangeTemperature(temperature);
-        //    e.Handled = true;
-        //}
-
-        //private void CouplingConstant_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-        //    couplingconstant = e.NewValue;
-        //    _viewmodel.ChangeCoupling(couplingconstant);
-        //    e.Handled = true;
-        //}
-
-        //private void MagneticField_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-        //    magneticfield = e.NewValue;
-        //    _viewmodel.ChangeField(magneticfield);
-        //    e.Handled = true;
-        //}
-
-        //private void Stop_Click(object sender, RoutedEventArgs e) {
-        //    e.Handled = true;
-        //}
-
 
         private double couplingconstant = 0.0;
         private void Coupling_Click(object sender = null, RoutedEventArgs e = null) {
@@ -218,9 +194,9 @@ namespace IsingModern.ViewPages {
         //if using scrollwheel increase/decrase to next divisor of 600 (to avoid ugly rendering) - can be finetuned with left/right keys if necessary
         private void _changeLatticeSize(int diff, bool mouse = false) {
             do {
-                Console.WriteLine(600 % _currentN);
+                Console.WriteLine(Pixels % _currentN);
                 _currentN = Math.Min(MaximalN, Math.Max(MinimalN, _currentN + diff));
-            } while(mouse && 600 % _currentN != 0);
+            } while(mouse && Pixels % _currentN != 0);
             _updateLatticeSizeText();
 
         }
@@ -232,7 +208,7 @@ namespace IsingModern.ViewPages {
 
         #region Rendering
         static internal void RefreshRender() {
-            _current._viewmodel.Refresh();
+            Current._viewmodel.Refresh();
         }
 
         #endregion
@@ -282,13 +258,17 @@ namespace IsingModern.ViewPages {
             return worker;
         }
 
+        private bool action = false;
 
         private void worker_Work(object sender, DoWorkEventArgs e) {
             int i = 0;
             while(_running) {
-                if(randomize) {
-                    _viewmodel.Randomize();
-                    randomize = false;
+                if(action) {
+                    if(randomize) {
+                        _viewmodel.Randomize();
+                        randomize = false;
+                    }
+
                 } else {
                     var data = _viewmodel.Sweep();
                     var backgroundWorker = sender as BackgroundWorker;
@@ -300,7 +280,7 @@ namespace IsingModern.ViewPages {
         long _timerefresh;
 
         private bool _overwritePlot = false;
-        private int _plotDataMax = 200;
+        private int _plotDataMax = 300;
         private int _plotIndex = 0;
 
 
