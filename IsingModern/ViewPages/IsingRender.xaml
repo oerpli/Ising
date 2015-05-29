@@ -20,7 +20,7 @@
         <ScrollViewer ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
             <Grid MinWidth="300" MinHeight="300" VerticalAlignment="Top" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="960"/>
+                    <ColumnDefinition Width="840"/>
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="170"/>
                     <ColumnDefinition Width="200"/>
@@ -30,7 +30,7 @@
                     <ColumnDefinition Width="10"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="20"/>
                     <RowDefinition Height="270"/>
                     <RowDefinition Height="100"/>
                     <RowDefinition Height="350"/>
