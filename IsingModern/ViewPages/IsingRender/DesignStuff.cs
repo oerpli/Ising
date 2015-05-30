@@ -10,9 +10,9 @@ namespace IsingModern.ViewPages {
             new SolidColorBrush(Colors.White)
         };
 
-        private Color[] textColors = { Colors.White, Colors.Black };
-        private Color[] legendColors = { Color.FromRgb(30, 30, 30), Color.FromRgb(240, 240, 240) };
-        private Color[] lineColors = { Color.FromRgb(40, 40, 40), Color.FromRgb(220, 220, 220) };
+        private readonly Color[] textColors = { Colors.White, Colors.Black };
+        private readonly Color[] legendColors = { Color.FromRgb(30, 30, 30), Color.FromRgb(240, 240, 240) };
+        private readonly Color[] lineColors = { Color.FromRgb(40, 40, 40), Color.FromRgb(220, 220, 220) };
 
 
         public void SwitchAccentColor(Color accentColor, Color accentDark) {
@@ -26,7 +26,6 @@ namespace IsingModern.ViewPages {
             MagnetizationPlot.Color = accentColor;
             FieldRectangle.Fill = grad;
         }
-
         public void SwitchTheme(bool dark) {
             Plot.Background = bgColors[dark ? 0 : 1];
             Plot.LegendBackground = legendColors[dark ? 0 : 1];
