@@ -240,7 +240,8 @@ namespace IsingModern.ViewPages {
             if(!lineAdded) {
                 Plot.Annotations.Add(line);
             }
-            Runningtext.Text = _running ? "Running" : "Paused";
+            ToggleSimulation.Content = _running ? "Stop" : "Start";
+            //Runningtext.Text = _running ? "Running" : "Paused";
             if(_running) {
                 _worker = worker_Init();
                 StatusText.Text = "0";
