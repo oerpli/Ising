@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using FirstFloor.ModernUI.Presentation;
 using IsingModern.ViewModel;
 using IsingModern.ViewPages.Settings;
 using OxyPlot;
@@ -200,7 +201,6 @@ namespace IsingModern.ViewPages {
 
         #region Plotting
 
-        private double _axisMaxMin = 3.2;
         private LineAnnotation line;
         public string Title { get; private set; }
 
@@ -209,24 +209,21 @@ namespace IsingModern.ViewPages {
 
 
         private void Plotinit() {
-            EnergyPoints = new List<DataPoint>();
-            MagnetizationPoints = new List<DataPoint>();
-            EnergyPlot.ItemsSource = EnergyPoints;
+            line = new LineAnnotation() { Type = LineAnnotationType.Vertical, Intercept = 0, StrokeThickness = 10, LineStyle = LineStyle.Solid, Color = lineColors[0] };
+
+            EnergyPlot.ItemsSource = EnergyPoints = new List<DataPoint>();
+            MagnetizationPlot.ItemsSource = MagnetizationPoints = new List<DataPoint>();
             EnergyPlot.Color = Colors.Red;
             MagnetizationPlot.Color = Colors.DeepSkyBlue;
-            MagnetizationPlot.ItemsSource = MagnetizationPoints;
             Plot.IsLegendVisible = true;
-            Plot.Background = bgColors[0];
-            Plot.TextColor = textColors[0];
-            Plot.LegendBackground = legendColors[0];
-            var axis = new LinearAxis { Minimum = -_axisMaxMin, Maximum = _axisMaxMin, AxislineColor = Colors.White };
-            Plot.Axes.Add(axis);
+
+            EnergyPlot.TrackerFormatString = MagnetizationPlot.TrackerFormatString = "{0}: {4:0.00}";
+            //setup tick/background etc color (matching the dark theme)
+            SwitchTheme(true);
             for(int i = 0; i < _plotDataMax; i++) {
                 EnergyPoints.Add(new DataPoint(i, 0));
                 MagnetizationPoints.Add(new DataPoint(i, 0));
             }
-            line = new LineAnnotation() { Type = LineAnnotationType.Vertical, Intercept = 0, StrokeThickness = 10, LineStyle = LineStyle.Solid, Color = lineColors[0] };
-            Plot.Annotations.Add(line);
         }
 
         #endregion
@@ -234,9 +231,13 @@ namespace IsingModern.ViewPages {
         #region Threading
         private bool _running = false;
         private BackgroundWorker _worker;
-
+        private bool lineAdded = false;
         private void Start_Click(object sender, RoutedEventArgs e) {
             _running = !_running;
+
+            if(!lineAdded) {
+                Plot.Annotations.Add(line);
+            }
             Runningtext.Text = _running ? "Running" : "Paused";
             if(_running) {
                 _worker = worker_Init();

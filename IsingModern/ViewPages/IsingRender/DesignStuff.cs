@@ -1,5 +1,14 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
+using OxyPlot;
+using OxyPlot.Wpf;
+using OxyPlot.Wpf.Properties;
+using OxyPlot.Axes;
+using OxyPlot.Series;
+using OxyPlot.Wpf.Properties;
 
 namespace IsingModern.ViewPages {
     public partial class IsingRender {
@@ -27,10 +36,18 @@ namespace IsingModern.ViewPages {
             FieldRectangle.Fill = grad;
         }
         public void SwitchTheme(bool dark) {
-            Plot.Background = bgColors[dark ? 0 : 1];
-            Plot.LegendBackground = legendColors[dark ? 0 : 1];
-            Plot.TextColor = textColors[dark ? 0 : 1];
-            line.Color = lineColors[dark ? 0 : 1];
+            var index = dark ? 0 : 1;
+            Plot.Background = bgColors[index];
+            Plot.LegendBackground = legendColors[index];
+            Plot.TextColor = textColors[index];
+            Plot.PlotAreaBorderColor = LeftAxis.TicklineColor = BottomAxis.TicklineColor = textColors[index];
+            line.Color = lineColors[index];
+
+            EnergyPlot.TrackerKey = MagnetizationPlot.TrackerKey = dark ? "TDark" : "TLight";
+            var c = new ControlTemplate();
+            var t = new TrackerControl();
+            t.Background = new SolidColorBrush(legendColors[index]);
+
         }
     }
 }

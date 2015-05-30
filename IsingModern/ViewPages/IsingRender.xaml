@@ -36,7 +36,7 @@
                     <RowDefinition Height="400"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                
+
                 <Grid Grid.Column="0" Grid.Row="1" Grid.RowSpan="4" VerticalAlignment="Top" HorizontalAlignment="Center" Name="ModelParentElement" Width="800" Height="800" Background="Transparent"/>
 
                 <StackPanel Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top">
@@ -79,7 +79,7 @@
                             </LinearGradientBrush>
                         </Rectangle.Fill>
                     </Rectangle>
-                    
+
                     <Line Stroke="Black" StrokeThickness="2" X1="0" Y1="125" X2="370" Y2="125" />
                     <Line Stroke="Black" StrokeThickness="2" X1="0" Y1="0" X2="0" Y2="250" />
                     <Line Stroke="Black" StrokeThickness="2" X1="168" Y1="120" X2="168" Y2="130"/>
@@ -106,7 +106,40 @@
 
                 <StackPanel Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="5">
                     <Grid Background="White" Height="350">
-                        <oxy:PlotView Name="Plot" Title="Energy &amp; Magnetization (per Spin)">
+
+                        <oxy:PlotView Name="Plot">
+
+
+                            <oxy:PlotView.TrackerDefinitions>
+
+                                <oxy:TrackerDefinition TrackerKey="TDark">
+                                    <oxy:TrackerDefinition.TrackerTemplate>
+                                        <ControlTemplate>
+                                            <oxy:TrackerControl Background="#FF505050" BorderBrush="White" Foreground="White" Position="{Binding Position}" LineExtents="{Binding PlotModel.PlotArea}">
+                                                <oxy:TrackerControl.Content>
+                                                    <TextBlock Text="{Binding}" Margin="7" />
+                                                </oxy:TrackerControl.Content>
+                                            </oxy:TrackerControl>
+                                        </ControlTemplate>
+                                    </oxy:TrackerDefinition.TrackerTemplate>
+                                </oxy:TrackerDefinition>
+                                <oxy:TrackerDefinition TrackerKey="TLight">
+                                    <oxy:TrackerDefinition.TrackerTemplate>
+                                        <ControlTemplate>
+                                            <oxy:TrackerControl  Background="#FFDDDDDD" Position="{Binding Position}" LineExtents="{Binding PlotModel.PlotArea}">
+                                                <oxy:TrackerControl.Content>
+                                                    <TextBlock Text="{Binding}" Margin="7" />
+                                                </oxy:TrackerControl.Content>
+                                            </oxy:TrackerControl>
+                                        </ControlTemplate>
+                                    </oxy:TrackerDefinition.TrackerTemplate>
+                                </oxy:TrackerDefinition>
+                            </oxy:PlotView.TrackerDefinitions>
+                            <!--Title="Energy &amp; Magnetization (per Spin)"-->
+                            <oxy:PlotView.Axes>
+                                <oxy:LinearAxis TickStyle="Inside" Name="BottomAxis" Position="Bottom" Minimum="0" Maximum="500"/>
+                                <oxy:LinearAxis TickStyle="Inside" Name="LeftAxis" Position="Left" Minimum="-3.2" Maximum="3.2"/>
+                            </oxy:PlotView.Axes>
                             <oxy:PlotView.Series>
                                 <oxy:LineSeries Name="EnergyPlot" Title="Energy per Spin"/>
                                 <oxy:LineSeries Name="MagnetizationPlot" Title="Magnetization per Spin"/>
