@@ -15,13 +15,13 @@ namespace IsingModern.ViewPages {
 
         private readonly SolidColorBrush[] bgColors =
         {
-            new SolidColorBrush(Color.FromRgb(50, 50, 50)),
-            new SolidColorBrush(Colors.White)
+            new SolidColorBrush(Color.FromRgb(37, 37, 38)),
+            new SolidColorBrush(Colors.White),
         };
 
         private readonly Color[] textColors = { Colors.White, Colors.Black };
-        private readonly Color[] legendColors = { Color.FromRgb(30, 30, 30), Color.FromRgb(240, 240, 240) };
-        private readonly Color[] lineColors = { Color.FromRgb(40, 40, 40), Color.FromRgb(220, 220, 220) };
+        private readonly Color[] legendColors = { Color.FromRgb(50, 50, 50), Color.FromRgb(240, 240, 240) };
+        private readonly Color[] lineColors = { Color.FromRgb(60, 60, 60), Color.FromRgb(220, 220, 220) };
 
 
         public void SwitchAccentColor(Color accentColor, Color accentDark) {
