@@ -26,7 +26,7 @@ namespace IsingModern.ViewPages {
         private bool _singleFlip = true;
 
         private int _currentN = 200;
-        private const int MaximalN = 200, MinimalN = 4; //both should divide Pixels. 
+        private const int MaximalN = 200, MinimalN = 25; //both should divide Pixels. 
         public const int Pixels = 800;
 
 
@@ -162,25 +162,26 @@ namespace IsingModern.ViewPages {
         }
         private void LatticeSize_KeyDown(object sender, KeyEventArgs e) {
             if(e.Key == Key.Left) {
-                _changeLatticeSize(-1);
+                _changeLatticeSize(false);
                 e.Handled = true;
             } else if(e.Key == Key.Right) {
-                _changeLatticeSize(1);
+                _changeLatticeSize(true);
                 e.Handled = true;
             }
         }
 
         private void LatticeSize_MouseWheel(object sender, MouseWheelEventArgs e) {
-            _changeLatticeSize(e.Delta > 0 ? 1 : -1, true);
+            _changeLatticeSize(e.Delta > 0);
             e.Handled = true;
         }
 
         //if using scrollwheel increase/decrase to next divisor of Pixel (800) (to avoid ugly rendering) - can be finetuned with left/right keys if necessary
-        private void _changeLatticeSize(int diff, bool mouse = false) {
-            do {
-                Console.WriteLine(Pixels % _currentN);
-                _currentN = Math.Min(MaximalN, Math.Max(MinimalN, _currentN + diff));
-            } while(mouse && Pixels % _currentN != 0);
+        private void _changeLatticeSize(bool bigger) {
+            if(bigger)
+                _currentN *= 2;
+            else
+                _currentN /= 2;
+            _currentN = Math.Min(MaximalN, Math.Max(MinimalN, _currentN));
             _updateLatticeSizeText();
 
         }
