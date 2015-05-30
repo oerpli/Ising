@@ -4,7 +4,7 @@ using System.Windows.Media;
 namespace IsingModern.ViewPages {
     public partial class IsingRender {
 
-        private SolidColorBrush[] bgColors =
+        private readonly SolidColorBrush[] bgColors =
         {
             new SolidColorBrush(Color.FromRgb(50, 50, 50)),
             new SolidColorBrush(Colors.White)
