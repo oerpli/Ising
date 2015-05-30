@@ -276,7 +276,7 @@ namespace IsingModern.ViewPages {
         long _timerefresh;
 
         private bool _overwritePlot = true;
-        private int _plotDataMax = 300;
+        private int _plotDataMax = 500;
         private int _plotIndex = 0;
 
 

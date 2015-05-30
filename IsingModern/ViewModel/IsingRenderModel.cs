@@ -43,7 +43,7 @@ namespace IsingModern.ViewModel {
             }
             //initializing model
             {
-                model = new Lattice(n,0);
+                model = new Lattice(n, 0);
                 this.SetBoundary(periodicBoundary);
             }
 

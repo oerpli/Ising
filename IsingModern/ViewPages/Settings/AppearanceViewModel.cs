@@ -119,6 +119,10 @@ namespace IsingModern.ViewPages.Settings {
                     } else {
                         Spin.PointColors.Add(0, Colors.Black);
                     }
+
+                    // Update Interface
+                    IsingRender.Current.SwitchTheme(value.DisplayName == "dark");
+                    // Update Lattice Render
                     IsingRender.RefreshRender();
 
                     // and update the actual theme
@@ -133,7 +137,6 @@ namespace IsingModern.ViewPages.Settings {
                 if(this._selectedFontSize != value) {
                     this._selectedFontSize = value;
                     OnPropertyChanged("SelectedFontSize");
-
                     AppearanceManager.Current.FontSize = value == FontLarge ? FontSize.Large : FontSize.Small;
                 }
             }
@@ -150,7 +153,7 @@ namespace IsingModern.ViewPages.Settings {
                     Spin.PointColors.Add(-1, _selectedAccentColor);
                     IsingRender.RefreshRender();
 
-                    IsingRender.Current.RectangleColor(_selectedAccentColor, _accentColorsDarker[index]);
+                    IsingRender.Current.SwitchAccentColor(_selectedAccentColor, _accentColorsDarker[index]);
                 }
                 if(this._selectedAccentColor != value) {
                     this._selectedAccentColor = value;

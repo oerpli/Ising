@@ -5,18 +5,9 @@ namespace IsingModern.ViewPages {
     public partial class IsingRender {
 
         private bool randomize = false;
+        private bool boundary = false;
+        private bool newlattice = false;
 
-
-        public void RectangleColor(Color accentColor, Color accentDark) {
-            var grad = new LinearGradientBrush {
-                StartPoint = new Point(0.5, 0),
-                EndPoint = new Point(0.5, 1)
-            };
-            grad.GradientStops.Add(new GradientStop(accentDark, 0.0));
-            grad.GradientStops.Add(new GradientStop(accentColor, 1.0));
-            grad.Freeze();
-            FieldRectangle.Fill = grad;
-        }
 
         private void RandomizeLattice() {
             _viewmodel.Randomize(true);
@@ -37,7 +28,6 @@ namespace IsingModern.ViewPages {
         private void Boundary() {
             _viewmodel.SetBoundary(_periodicBoundary);
             BoundaryText.Text = _periodicBoundary ? "Periodic" : "Walled";
-
         }
     }
 }

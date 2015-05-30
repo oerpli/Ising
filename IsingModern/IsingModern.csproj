@@ -116,7 +116,8 @@
     <Compile Include="Model\Lattice.cs" />
     <Compile Include="Model\Spin.cs" />
     <Compile Include="ViewModel\IsingRenderModel.cs" />
-    <Compile Include="ViewPages\Actions.cs" />
+    <Compile Include="ViewPages\IsingRender\DesignStuff.cs" />
+    <Compile Include="ViewPages\IsingRender\Actions.cs" />
     <Compile Include="ViewPages\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
