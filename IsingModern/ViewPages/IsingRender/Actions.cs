@@ -15,7 +15,8 @@ namespace IsingModern.ViewPages {
         }
 
         private void NewLattice() {
-            _viewmodel.ChangeSize(_currentN, averageMagnetization);
+            //_viewmodel.ChangeSize(_currentN, averageMagnetization);
+            _viewmodel.ScaleSize(_previousN, _currentN, averageMagnetization); 
             //reapply settings from previous model:
             _viewmodel.SetBoundary(_periodicBoundary);
             _viewmodel.ChangeTemperature(temperature);

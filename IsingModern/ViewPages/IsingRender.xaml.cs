@@ -27,6 +27,7 @@ namespace IsingModern.ViewPages {
         private bool _singleFlip = true;
 
         private int _currentN = 200;
+        private int _previousN = 200; 
         private const int MaximalN = 200, MinimalN = 25; //both should divide Pixels. 
         public const int Pixels = 800;
 
@@ -178,6 +179,7 @@ namespace IsingModern.ViewPages {
 
         //if using scrollwheel increase/decrase to next divisor of Pixel (800) (to avoid ugly rendering) - can be finetuned with left/right keys if necessary
         private void _changeLatticeSize(bool bigger) {
+            _previousN = _viewmodel.N; 
             if(bigger)
                 _currentN *= 2;
             else

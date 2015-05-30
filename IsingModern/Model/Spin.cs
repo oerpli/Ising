@@ -30,9 +30,10 @@ namespace IsingModern.Model {
             this.Value *= -1;
         }
 
-        internal void SetSpin() {
-            this.Value = -1;
+        internal void SetSpin(int value = -1) {
+            this.Value = value;
         }
+
 
         internal void ToggleBoundary(bool? boundary = null) {
             this.Value = boundary ?? Value != 0 ? 0 : -1;
