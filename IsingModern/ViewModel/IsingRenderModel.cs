@@ -20,7 +20,7 @@ namespace IsingModern.ViewModel {
         private int _rectangleSize; //to convert mouseclicks
         public int N { get { return model.N; } }
 
-        public IsingRenderModel(int n = 50, bool periodicBoundary = false) {
+        public IsingRenderModel(int n, bool periodicBoundary = false) {
             this.Children.Add(image);
             this.SnapsToDevicePixels = false;
             image.Height = image.Width = viewsize; //only square lattices currently

@@ -26,10 +26,8 @@ namespace IsingModern.ViewPages {
         private bool _singleFlip = true;
 
         private int _currentN = 200;
-        public const int MaximalN = 200, MinimalN = 4; //both should divide Pixels. 
+        private const int MaximalN = 200, MinimalN = 4; //both should divide Pixels. 
         public const int Pixels = 800;
-
-
 
 
         #region Initialization
@@ -217,16 +215,16 @@ namespace IsingModern.ViewPages {
             MagnetizationPlot.Color = Colors.DeepSkyBlue;
             MagnetizationPlot.ItemsSource = MagnetizationPoints;
             Plot.IsLegendVisible = true;
-            Plot.Background = new SolidColorBrush(Color.FromRgb(50, 50, 50));
-            Plot.TextColor = Colors.White;
-            Plot.LegendBackground = Color.FromRgb(30, 30, 30);
+            Plot.Background = bgColors[0];
+            Plot.TextColor = textColors[0];
+            Plot.LegendBackground = legendColors[0];
             var axis = new LinearAxis { Minimum = -_axisMaxMin, Maximum = _axisMaxMin, AxislineColor = Colors.White };
             Plot.Axes.Add(axis);
             for(int i = 0; i < _plotDataMax; i++) {
                 EnergyPoints.Add(new DataPoint(i, 0));
                 MagnetizationPoints.Add(new DataPoint(i, 0));
             }
-            line = new LineAnnotation() { Type = LineAnnotationType.Vertical, Intercept = 0, StrokeThickness = 10, LineStyle = LineStyle.Solid, Color = Colors.Black };
+            line = new LineAnnotation() { Type = LineAnnotationType.Vertical, Intercept = 0, StrokeThickness = 10, LineStyle = LineStyle.Solid, Color = lineColors[0] };
             Plot.Annotations.Add(line);
         }
 
@@ -275,7 +273,6 @@ namespace IsingModern.ViewPages {
 
         long _timerefresh;
 
-        private bool _overwritePlot = true;
         private int _plotDataMax = 500;
         private int _plotIndex = 0;
 
@@ -286,12 +283,10 @@ namespace IsingModern.ViewPages {
             if(time - _timerefresh > 40) {
                 StatusText.Text = e.ProgressPercentage.ToString();
                 var data = (Tuple<double, double>)e.UserState; //not checking for null due to performance reasons.
-                if(_overwritePlot) {
-                    EnergyPoints[_plotIndex] = new DataPoint(_plotIndex, data.Item1);
-                    MagnetizationPoints[_plotIndex] = new DataPoint(_plotIndex, -data.Item2);
-                    _plotIndex = (_plotIndex + 1) % _plotDataMax;
-                    line.X = _plotIndex;
-                }
+                EnergyPoints[_plotIndex] = new DataPoint(_plotIndex, data.Item1);
+                MagnetizationPoints[_plotIndex] = new DataPoint(_plotIndex, -data.Item2);
+                _plotIndex = (_plotIndex + 1) % _plotDataMax;
+                line.X = _plotIndex;
                 _viewmodel.Refresh();
                 _timerefresh = time;
                 Plot.InvalidatePlot();
