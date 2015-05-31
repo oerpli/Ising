@@ -68,65 +68,53 @@ namespace IsingModern.ViewModel {
             _rectangleSize = (int)viewsize / newSize;
             DrawLattice();
         }
-       
-        public void ScaleSize(int oldSize, int newSize, double averageMagnetization = -1.0)
-        {
+
+        public void ScaleSize(int oldSize, int newSize, double averageMagnetization = -1.0) {
             Spin[] oldSpins = new Spin[model.Spins.Length];
-            for (int i = 0; i < model.Spins.Length; i++)
-            {
-                oldSpins[i] = new Spin(model.Spins[i].Value, i); 
+            for(int i = 0; i < model.Spins.Length; i++) {
+                oldSpins[i] = new Spin(model.Spins[i].Value, i);
 
             }
             model = new Lattice(newSize, averageMagnetization);
             cellSize = viewsize / newSize;
             _rectangleSize = (int)viewsize / newSize;
-           
-            if (newSize > oldSize)
-            {
-                //int d = (int)(Math.Log(newSize / oldSize) / Math.Log(2));
-                int d = (int)(newSize / oldSize); 
-                for (int i = 0; i < oldSpins.Length; i++)
-                {
-                    int x = i%oldSize; 
-                    int y = (int)(i/oldSize);
-                    for (int j = x*d; j < x*d+d; j++)
-                    {
-                        for (int k = y * d; k < y * d + d; k++)
-                        {
-                            model.Spins[k * N + j].SetSpin(oldSpins[i].Value); 
+
+            if(newSize > oldSize) {
+                int d = newSize / oldSize;
+                for(int i = 0; i < oldSpins.Length; i++) {
+                    int x = i % oldSize;
+                    int y = (int)(i / oldSize);
+                    for(int j = x * d; j < x * d + d; j++) {
+                        for(int k = y * d; k < y * d + d; k++) {
+                            model.Spins[k * N + j].SetSpin(oldSpins[i].Value);
                         }
                     }
                 }
-            }
-            else if (newSize < oldSize)
-            {
-                int d = oldSize / newSize; 
+            } else if(newSize < oldSize) {
+                int d = oldSize / newSize;
                 //int exponent = (int)(Math.Log(newSize / oldSize) / Math.Log(2));
                 //int majority = (int)(Math.Pow(4, exponent) / 2.0); 
                 int majority = 0;
-                if (d == 2) majority = 2;
-                if (d == 4) majority = 8;
-                if (d == 8) majority = 32; 
-                for (int i = 0; i < model.Spins.Length; i++)
-                {
+                if(d == 2) majority = 2;
+                if(d == 4) majority = 8;
+                if(d == 8) majority = 32;
+                for(int i = 0; i < model.Spins.Length; i++) {
                     int x = i % newSize;
                     int y = (int)i / newSize;
                     int count_up = 0;
-                 
-                   
-                    for (int j = x * d; j < x * d + d; j++)
-                    {
-                        for (int k = y * d; k < y * d + d; k++)
-                        {
-                            if (oldSpins[k * N + j].Value > 0) count_up++; 
+
+
+                    for(int j = x * d; j < x * d + d; j++) {
+                        for(int k = y * d; k < y * d + d; k++) {
+                            if(oldSpins[k * N + j].Value > 0) count_up++;
                         }
                     }
-                    if (count_up > majority) model.Spins[i].SetSpin(1);
-                    else if (count_up < majority) model.Spins[i].SetSpin(-1);
-                    else model.Spins[i].SetSpin(Lattice.Rnd.NextDouble() < 0.5 ? -1 : 1); 
+                    if(count_up > majority) model.Spins[i].SetSpin(1);
+                    else if(count_up < majority) model.Spins[i].SetSpin(-1);
+                    else model.Spins[i].SetSpin(Lattice.Rnd.NextDouble() < 0.5 ? -1 : 1);
                 }
             }
-            DrawLattice(); 
+            DrawLattice();
         }
 
         internal void SetBoundary(bool periodicBoundary) {

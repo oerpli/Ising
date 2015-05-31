@@ -14,7 +14,6 @@ namespace IsingModern.Model {
 
         public double TotalInteraction;
         public double TotalMagnetization;
-        //static private readonly Random Rnd = new Random();
         static public readonly Random Rnd = new Random();
 
         public Tuple<double, double> Sweep() {
