@@ -6,8 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using IsingModern.Model;
-using System.Diagnostics;
-
+using System.Threading;
 using IsingModern.ViewPages;
 
 namespace IsingModern.ViewModel {

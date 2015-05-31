@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -30,6 +31,8 @@ namespace IsingModern.ViewPages {
         private const int MaximalN = 200, MinimalN = 25; //both should divide Pixels. 
         public const int Pixels = 800;
 
+
+        private Semaphore sem = new Semaphore(1, 5);
 
         #region Initialization
 
@@ -61,20 +64,13 @@ namespace IsingModern.ViewPages {
 
 
         private void RandomizeClick(object sender, RoutedEventArgs e) {
-            if(_running) {
-                action = true;
-                while(!access) {
-                }
-                RandomizeLattice();
-                action = false;
-            } else
-                RandomizeLattice();
+            ThreadedAction(RandomizeLattice);
             e.Handled = true;
         }
 
         private void ToggleBoundary_Click(object sender = null, RoutedEventArgs e = null) {
             if(sender != null) _periodicBoundary = !_periodicBoundary;
-            Boundary();
+            ThreadedAction(Boundary);
         }
 
         private void Coupling_Click(object sender = null, RoutedEventArgs e = null) {
@@ -160,14 +156,7 @@ namespace IsingModern.ViewPages {
 
         #region LatticeSize
         private void LatticeSize_Click(object sender, RoutedEventArgs e) {
-            if(_running) {
-                action = true;
-                while(!access) {
-                }
-                NewLattice();
-                action = false;
-            } else
-                NewLattice();
+            ThreadedAction(NewLattice);
             e.Handled = true;
         }
         private void LatticeSize_KeyDown(object sender, KeyEventArgs e) {
@@ -260,20 +249,14 @@ namespace IsingModern.ViewPages {
             return worker;
         }
 
-        private bool action = false;
-        private bool access = false;
         private void worker_Work(object sender, DoWorkEventArgs e) {
             int i = 0;
             while(_running) {
-                if(action) {
-                    access = true;
-                    while(action) { }
-                    access = false;
-                } else {
-                    var data = _viewmodel.Sweep();
-                    var backgroundWorker = sender as BackgroundWorker;
-                    if(backgroundWorker != null) backgroundWorker.ReportProgress(i++, data);
-                }
+                sem.WaitOne();
+                var data = _viewmodel.Sweep();
+                var backgroundWorker = sender as BackgroundWorker;
+                if(backgroundWorker != null) backgroundWorker.ReportProgress(i++, data);
+                sem.Release();
             }
         }
 

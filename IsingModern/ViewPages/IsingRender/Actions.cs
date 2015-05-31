@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
 
 namespace IsingModern.ViewPages {
@@ -16,6 +17,12 @@ namespace IsingModern.ViewPages {
         private void Boundary() {
             _viewmodel.SetBoundary(_periodicBoundary);
             BoundaryText.Text = _periodicBoundary ? "Periodic" : "Walled";
+        }
+
+        private void ThreadedAction(Action action) {
+            sem.WaitOne();
+            action();
+            sem.Release();
         }
     }
 }
