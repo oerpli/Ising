@@ -77,16 +77,16 @@ namespace IsingModern.Model {
 
                 var countVal = new int[3]; //count occurence of all three possible values
                 var count2s = 0;
-                for(int v = 0; v < 3; v++) {
+                for(var v = 0; v < 3; v++) {
                     countVal[v] = a.Aggregate(0, (c, val) => c + (val == v - 1 ? 1 : 0));
                     if(countVal[v] > 2) return v - 1;
                     if(countVal[v] == 2) count2s++;
                 }
-                count2s -= Rnd.NextDouble() < 0.5 ? 0 : 1; //tiebreaker
-                for(int i = 0; i < 3; i++) {
-                    if(countVal[i] == 2) {
+                count2s -= Rnd.NextDouble() < 0.5 ? 0 : 1; //random tiebreaker (may favor lower values - not sure)
+                for(var v = 0; v < 3; v++) {
+                    if(countVal[v] == 2) {
                         if(count2s > 1) count2s--;
-                        else return i - 1; //maps the array index to the values
+                        else return v - 1; //maps the array index to the values
                     }
                 }
                 throw new Exception("no value?!");
