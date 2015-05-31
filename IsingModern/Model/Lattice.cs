@@ -75,11 +75,9 @@ namespace IsingModern.Model {
                 a[3] = GetSpinValue(x * 2 + 1, y * 2 + 1);
 
                 var countVal = new int[3]; //count occurence of all three possible values
-                var maj = new bool[3];
                 for(var v = -1; v <= 1; v++) {
                     countVal[v] = a.Aggregate(0, (c, val) => c + (val == v ? 1 : 0));
                     if(countVal[v] > 2) return v;
-                    if(countVal[v] == 2) maj[v] = true;
                 }
                 int tiebreaker = Rnd.NextDouble() < 0.5 ? 0 : 1;
                 for(int i = 0; i < 3; i++) {
