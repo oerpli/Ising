@@ -73,11 +73,11 @@
                                Height="40" TextAlignment="Right" Margin="3" Padding="6"/>
                   
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-                        <Slider Name="SizeSlider" Width="140" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" 
-                                IsSnapToTickEnabled="True" Maximum="200" Minimum="25" TickPlacement="BottomRight" Value="100"
-                                Ticks="25, 50, 100, 200" ValueChanged="Slider_ValueChanged" Thumb.DragCompleted="MySlider_DragCompleted" />
+                        <Slider Name="SizeSlider" Width="120" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" 
+                                IsSnapToTickEnabled="True" Maximum="3" Minimum="0" TickPlacement="BottomRight" Value="2"
+                                Ticks="0, 1, 2, 3" ValueChanged="Slider_ValueChanged" Thumb.DragCompleted="MySlider_DragCompleted" />
                         <TextBlock Name="SizeText"  FontSize="15"
-                               Height="40" TextAlignment="Right" Margin="3" Padding="6"/>
+                               Height="40" TextAlignment="Right" Margin="3" Padding="6" Text="100" Width="40"/>
                     </StackPanel>
                     <TextBlock Name="LatticeSizeInput" MouseWheel="LatticeSize_MouseWheel" TextAlignment="Right" 
                                FontSize="15"  Height="40" Text="Init Failed" Margin="3" Padding="6"/>

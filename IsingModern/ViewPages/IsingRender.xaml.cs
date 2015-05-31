@@ -234,8 +234,8 @@ namespace IsingModern.ViewPages {
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             var slider = sender as Slider; 
-            _currentN = (int)slider.Value;
-            SizeText.Text = _currentN.ToString();
+            _currentN = 25*(int)Math.Pow(2.0, slider.Value);
+            if(SizeText != null) SizeText.Text = _currentN.ToString();
 
         }
         private void MySlider_DragCompleted(object sender, DragCompletedEventArgs e)
