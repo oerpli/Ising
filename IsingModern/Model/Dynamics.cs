@@ -21,7 +21,6 @@ namespace IsingModern.Model {
             for(int i = 0; i < n; i++) {
                 Dynamic(RandomSpin());
             }
-            //UpdateStats();
             return Tuple.Create((TotalInteraction - TotalMagnetization * Field) / n, TotalMagnetization / n);
         }
 

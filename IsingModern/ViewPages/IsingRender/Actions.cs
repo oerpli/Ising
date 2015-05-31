@@ -4,6 +4,7 @@ using System.Threading;
 namespace IsingModern.ViewPages {
     public partial class IsingRender {
         private readonly Semaphore sem = new Semaphore(1, 5);
+        private readonly Semaphore run = new Semaphore(1, 1);
 
         private void RandomizeLattice() {
             _viewmodel.Randomize(true);

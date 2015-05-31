@@ -48,6 +48,11 @@ namespace IsingModern.ViewPages {
             SizeText.Text = CurrentN.ToString();
             SizeSlider.Maximum = sliderMax;
             Reset();
+
+            _worker = worker_Init();
+            StatusText.Text = "0";
+            _worker.RunWorkerAsync();
+            run.WaitOne();
         }
 
         #endregion
@@ -244,7 +249,7 @@ namespace IsingModern.ViewPages {
 
 
         private void Plotinit() {
-            line = new LineAnnotation() { Type = LineAnnotationType.Vertical, Intercept = 0, StrokeThickness = 10, LineStyle = LineStyle.Solid, Color = lineColors[0] };
+            line = new LineAnnotation() { Type = LineAnnotationType.Vertical, X = -10, StrokeThickness = 10, LineStyle = LineStyle.Solid, Color = lineColors[0] };
 
             EnergyPlot.ItemsSource = EnergyPoints = new List<DataPoint>();
             MagnetizationPlot.ItemsSource = MagnetizationPoints = new List<DataPoint>();
@@ -259,6 +264,7 @@ namespace IsingModern.ViewPages {
                 EnergyPoints.Add(new DataPoint(i, 0));
                 MagnetizationPoints.Add(new DataPoint(i, 0));
             }
+            Plot.Annotations.Add(line);
         }
 
         #endregion
@@ -266,38 +272,32 @@ namespace IsingModern.ViewPages {
         #region Threading
         private bool _running = false;
         private BackgroundWorker _worker;
-        private bool lineAdded = false;
         private void Start_Click(object sender, RoutedEventArgs e) {
             _running = !_running;
-
-            if(!lineAdded) {
-                lineAdded = true;
-                Plot.Annotations.Add(line);
-            }
             ToggleSimulation.Content = _running ? "Stop" : "Start";
-            if(_running) {
-                _worker = worker_Init();
-                StatusText.Text = "0";
-                _worker.RunWorkerAsync();
-            }
+            if(_running)
+                run.Release();
+            else
+                run.WaitOne();
         }
 
         private BackgroundWorker worker_Init() {
             var worker = new BackgroundWorker() { WorkerReportsProgress = true };
             worker.DoWork += worker_Work;
             worker.ProgressChanged += worker_Progress;
-            worker.RunWorkerCompleted += worker_Completed;
             return worker;
         }
 
         private void worker_Work(object sender, DoWorkEventArgs e) {
             int i = 0;
-            while(_running) {
+            while(true) {
+                run.WaitOne();
                 sem.WaitOne();
                 var data = _viewmodel.Sweep();
                 var backgroundWorker = sender as BackgroundWorker;
                 if(backgroundWorker != null) backgroundWorker.ReportProgress(i++, data);
                 sem.Release();
+                run.Release();
             }
         }
 
@@ -305,7 +305,6 @@ namespace IsingModern.ViewPages {
 
         private int _plotDataMax = 500;
         private int _plotIndex = 0;
-
 
         private double averageMagnetization = 1;
         private void worker_Progress(object sender, ProgressChangedEventArgs e) {
@@ -321,10 +320,6 @@ namespace IsingModern.ViewPages {
                 _timerefresh = time;
                 Plot.InvalidatePlot();
             }
-        }
-
-        private void worker_Completed(object sender, RunWorkerCompletedEventArgs e) {
-            _viewmodel.Refresh();
         }
 
         #endregion
