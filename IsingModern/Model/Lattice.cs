@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace IsingModern.Model {
     public sealed partial class Lattice {
@@ -26,7 +27,7 @@ namespace IsingModern.Model {
                 };
             }
             N = n;
-            var points = new Spin[N, N];
+            var spin2DArray = new Spin[N, N]; //initalize with 2D array to make initalization easier 
             Spins = new Spin[N * N];
             Count = 0;
             double seed = 1 - 0.5 * (averageMagnetization + 1);
@@ -34,15 +35,67 @@ namespace IsingModern.Model {
                 for(int j = 0; j < N; j++) {
                     var r = Rnd.NextDouble();
                     var val = r < seed ? -1 : 1;
-                    Spins[Count] = points[i, j] = new Spin(val, Count);
+                    Spins[Count] = spin2DArray[i, j] = new Spin(val, Count);
                     Count++;
                 }
             }
-            InitializeNeighbours(points);
+            InitializeNeighbours(spin2DArray, N);
             SetBoundary(true);
         }
 
-        private void InitializeNeighbours(Spin[,] points) {
+
+        public void ScaleLattice(bool down) {
+            int count = 0;
+            int newN = down ? N / 2 : N * 2;
+            var spins2D = new Spin[newN, newN];
+            var spins = new Spin[newN * newN];
+            for(var x = 0; x < newN; x++) {
+                for(var y = 0; y < newN; y++) {
+                    spins[count] = spins2D[x, y] = new Spin(GetScaledValue(x, y, down), count);
+                    count++;
+                }
+            }
+            InitializeNeighbours(spins2D, newN);
+            this.N = newN;
+            this.Count = count;
+            this.Spins = spins;
+            this.UpdateStats();
+        }
+
+        private int GetSpinValue(int x, int y) {
+            return Spins[x * N + y].Value;
+        }
+
+        private int GetScaledValue(int x, int y, bool down) {
+            if(down) { //when downscaling use average of the previous 4 cells (if tie then assign -1)
+                var a = new int[4];
+                a[0] = GetSpinValue(x * 2, y * 2);
+                a[1] = GetSpinValue(x * 2, y * 2 + 1);
+                a[2] = GetSpinValue(x * 2 + 1, y * 2);
+                a[3] = GetSpinValue(x * 2 + 1, y * 2 + 1);
+
+                var countVal = new int[3]; //count occurence of all three possible values
+                var maj = new bool[3];
+                for(var v = -1; v <= 1; v++) {
+                    countVal[v] = a.Aggregate(0, (c, val) => c + (val == v ? 1 : 0));
+                    if(countVal[v] > 2) return v;
+                    if(countVal[v] == 2) maj[v] = true;
+                }
+                int tiebreaker = Rnd.NextDouble() < 0.5 ? 0 : 1;
+                for(int i = 0; i < 3; i++) {
+                    if(countVal[i] == 2) {
+                        if(tiebreaker == 0) return i - 1;
+                        else tiebreaker--;
+                    }
+                }
+
+            } else {
+                return GetSpinValue(x / 2, y / 2);
+            }
+
+        }
+
+        private void InitializeNeighbours(Spin[,] points, int N) {
             for(int i = 0; i < N; i++) {
                 for(int j = 0; j < N; j++) {
                     var n = points[(i - 1 + N) % N, j];
@@ -74,7 +127,7 @@ namespace IsingModern.Model {
         }
 
 
-        internal Spin RandomSpin() {
+        private Spin RandomSpin() {
             return Spins[Rnd.Next(N * N)];
         }
 
