@@ -19,6 +19,11 @@ namespace IsingModern.ViewPages {
             BoundaryText.Text = _periodicBoundary ? "Periodic" : "Walled";
         }
 
+        private void Reset()
+        {
+           
+        }
+
         private void ThreadedAction(Action action) {
             sem.WaitOne();
             action();

@@ -24,6 +24,8 @@ namespace IsingModern.ViewPages {
         private bool _periodicBoundary = false;
         private bool _ferromagnetic = true;
         private bool _singleFlip = true;
+        private double _tempMax = 5.0;
+        private double _magnMax = 0.5; 
 
         private int _currentN = 200;
         private const int MaximalN = 200, MinimalN = 25; //both should divide Pixels. 
@@ -75,18 +77,22 @@ namespace IsingModern.ViewPages {
             MagnFieldTextBox.Text = "0,00";
             if (_periodicBoundary)
             {
-                ThreadedAction(Boundary);
                 _periodicBoundary = !_periodicBoundary;
+                ThreadedAction(Boundary);
+
             }
             if (!_ferromagnetic)
             {
                 _ferromagnetic = !_ferromagnetic;
                 _viewmodel.ChangeCoupling(1.0);
-                CouplingText.Text = "Ferromagnetic"; 
+                CouplingText.Text = "Ferromagnetic";
             }
-           
-
-
+            if (!_singleFlip)
+            {
+                _singleFlip = !_singleFlip;
+                AlgorithmText.Text = "SingleFlip";
+                _viewmodel.ChangeDynamic(AlgorithmText.Text);
+            }
         }
 
         private void ToggleBoundary_Click(object sender = null, RoutedEventArgs e = null) {
@@ -180,6 +186,7 @@ namespace IsingModern.ViewPages {
                 double temp;
                 if (Double.TryParse(TemperatureTextBox.Text, out temp))
                 {
+                    temp = Math.Min(_tempMax, Math.Max(temp, 0));
                     _viewmodel.ChangeTemperature(temp);
                     temperature = temp;
                     TemperatureTextBox.Text = temperature.ToString("0.00");
@@ -200,6 +207,7 @@ namespace IsingModern.ViewPages {
                 double magn;
                 if (Double.TryParse(MagnFieldTextBox.Text, out magn))
                 {
+                    magn = Math.Min(_magnMax, Math.Max(-_magnMax, magn)); 
                     _viewmodel.ChangeField(magn);
                     magneticfield = magn;
                     MagnFieldTextBox.Text = magn.ToString("0.00");

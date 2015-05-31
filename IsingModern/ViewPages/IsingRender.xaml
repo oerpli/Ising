@@ -32,6 +32,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="20"/>
                     <RowDefinition Height="280"/>
+                    <RowDefinition Height="60"/>
                     <RowDefinition Height="100"/>
                     <RowDefinition Height="400"/>
                     <RowDefinition Height="*"/>
@@ -39,7 +40,7 @@
 
                 <Grid Grid.Column="0" Grid.Row="1" Grid.RowSpan="4" VerticalAlignment="Top" HorizontalAlignment="Center" Name="ModelParentElement" Width="800" Height="800" Background="Transparent"/>
 
-                <StackPanel Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top">
+                <StackPanel Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top">
                     <Button Name="ToggleSimulation" Click="Start_Click" Content="Start" 
                             Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
                     <Button Name="ResetSimulation" Content="Reset" Click="Reset_Click" 
@@ -57,9 +58,11 @@
 
                 </StackPanel>
 
-                <StackPanel Grid.Column="3" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0">
+                <StackPanel Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0">
                     <TextBlock Name="StatusText" TextAlignment="Right" FontSize="15"  
                                Height="40" Text="Init" Margin="3" Padding="6"/>
+                    <TextBlock Name="Reset_Text" TextAlignment="Right" FontSize="15"  
+                               Height="40" Margin="3" Padding="6"/>
                     <TextBlock Name="BoundaryText" TextAlignment="Right" FontSize="15"
                               Height="40" Margin="3" VerticalAlignment="Center" Padding="6"/>
                     <TextBlock Name="RandomizeText" TextAlignment="Right" FontSize="15"
@@ -106,7 +109,7 @@
                     <CheckBox Content="enable field snapping" Click="Toggle_Snapping" IsChecked="True" Margin="3" FontSize="15"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="5">
+                <StackPanel Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="5">
                     <Grid Background="White" Height="350">
 
                         <oxy:PlotView Name="Plot" IsMouseWheelEnabled="False">
