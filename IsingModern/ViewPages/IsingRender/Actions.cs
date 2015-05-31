@@ -11,7 +11,7 @@ namespace IsingModern.ViewPages {
 
         private void NewLattice() {
             _viewmodel.ScaleSize(_currentN, averageMagnetization);
-            _updateLatticeSizeText(); //update text
+            //_updateLatticeSizeText(); //update text
         }
 
         private void Boundary() {

@@ -48,7 +48,7 @@ namespace IsingModern.ViewPages {
             TemperatureTextBox.Text = "1,00";
             MagnFieldTextBox.Text = "0,00";
             ModelParentElement.Children.Add(_viewmodel);
-            LatticeSizeInput.Text = _currentN.ToString();
+            //LatticeSizeInput.Text = _currentN.ToString();
             SizeText.Text = _currentN.ToString(); 
         }
 
@@ -263,12 +263,12 @@ namespace IsingModern.ViewPages {
         private void _changeLatticeSize(bool bigger) {
             _currentN = bigger ? _currentN * 2 : _currentN / 2;
             _currentN = Math.Min(MaximalN, Math.Max(MinimalN, _currentN)); // restrict to min/max values
-            _updateLatticeSizeText();
+            //_updateLatticeSizeText();
         }
 
-        private void _updateLatticeSizeText() {
+        /*private void _updateLatticeSizeText() {
             LatticeSizeInput.Text = (_currentN != _viewmodel.N ? "(" + _viewmodel.N + ") " : "") + _currentN.ToString();
-        }
+        }*/
         #endregion
 
         #region Rendering
