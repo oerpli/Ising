@@ -62,10 +62,13 @@ namespace IsingModern.ViewPages {
 
         private void RandomizeClick(object sender, RoutedEventArgs e) {
             if(_running) {
-                randomize = true;
-            } else {
+                action = true;
+                while(!access) {
+                }
                 RandomizeLattice();
-            }
+                action = false;
+            } else
+                RandomizeLattice();
             e.Handled = true;
         }
 
@@ -158,7 +161,14 @@ namespace IsingModern.ViewPages {
 
         #region LatticeSize
         private void LatticeSize_Click(object sender, RoutedEventArgs e) {
-            NewLattice();
+            if(_running) {
+                action = true;
+                while(!access) {
+                }
+                NewLattice();
+                action = false;
+            } else
+                NewLattice();
             e.Handled = true;
         }
         private void LatticeSize_KeyDown(object sender, KeyEventArgs e) {
@@ -252,16 +262,14 @@ namespace IsingModern.ViewPages {
         }
 
         private bool action = false;
-
+        private bool access = false;
         private void worker_Work(object sender, DoWorkEventArgs e) {
             int i = 0;
             while(_running) {
                 if(action) {
-                    if(randomize) {
-                        _viewmodel.Randomize();
-                        randomize = false;
-                    }
-
+                    access = true;
+                    while(action) { }
+                    access = false;
                 } else {
                     var data = _viewmodel.Sweep();
                     var backgroundWorker = sender as BackgroundWorker;
