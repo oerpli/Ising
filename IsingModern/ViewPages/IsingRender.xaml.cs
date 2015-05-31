@@ -43,8 +43,8 @@ namespace IsingModern.ViewPages {
             CouplingText.Text = _ferromagnetic ? "Ferromagnetic" : "Anti-Ferromagnetic";
             AlgorithmText.Text = _singleFlip ? "SingleFlip" : "Glauber";
             UpdateThumb(1.0, 0.0);
-            TemperatureTextBox.Text = "1.0";
-            MagnFieldTextBox.Text = "0.0";
+            TemperatureTextBox.Text = "1,00";
+            MagnFieldTextBox.Text = "0,00";
             ModelParentElement.Children.Add(_viewmodel);
             LatticeSizeInput.Text = _currentN.ToString();
         }
@@ -63,6 +63,30 @@ namespace IsingModern.ViewPages {
         private void RandomizeClick(object sender, RoutedEventArgs e) {
             ThreadedAction(RandomizeLattice);
             e.Handled = true;
+        }
+
+        private void Reset_Click(object sender, RoutedEventArgs e)
+        {
+            ThreadedAction(RandomizeLattice);
+            temperature = 1.00;
+            magneticfield = 0.00;
+            UpdateThumb(1.0, 0.0);
+            TemperatureTextBox.Text = "1,0";
+            MagnFieldTextBox.Text = "0,00";
+            if (_periodicBoundary)
+            {
+                ThreadedAction(Boundary);
+                _periodicBoundary = !_periodicBoundary;
+            }
+            if (!_ferromagnetic)
+            {
+                _ferromagnetic = !_ferromagnetic;
+                _viewmodel.ChangeCoupling(1.0);
+                CouplingText.Text = "Ferromagnetic"; 
+            }
+           
+
+
         }
 
         private void ToggleBoundary_Click(object sender = null, RoutedEventArgs e = null) {
@@ -149,38 +173,44 @@ namespace IsingModern.ViewPages {
             _snapping = ((CheckBox)sender).IsChecked ?? false;
         }
 
-        private void Temperature_TextChanged(object sender, TextChangedEventArgs e)
-        {  
-            double temp;
-            if (Double.TryParse(TemperatureTextBox.Text, out temp))
+        private void Temperature_TextChanged(object sender, KeyEventArgs e) //TextChangedEventArgs e)
+        {
+            if (e.Key == Key.Enter)
             {
-                _viewmodel.ChangeTemperature(temp);
-                temperature = temp;
-                TemperatureTextBox.Text = temperature.ToString("0.00"); 
+                double temp;
+                if (Double.TryParse(TemperatureTextBox.Text, out temp))
+                {
+                    _viewmodel.ChangeTemperature(temp);
+                    temperature = temp;
+                    TemperatureTextBox.Text = temperature.ToString("0.00");
+                }
+                else
+                {
+                    TemperatureTextBox.Text = temperature.ToString("0.00");
+                }
+                UpdateThumb(temperature, magneticfield);
             }
-            else
-            {
-                TemperatureTextBox.Text = temperature.ToString("0.00");
-            }
-            UpdateThumb(temperature, magneticfield);
-            e.Handled = true; 
+           
         }
 
-        private void MagnField_TextChanged(object sender, TextChangedEventArgs e)
+        private void MagnField_TextChanged(object sender, KeyEventArgs e)
         {
-            double magn;
-            if (Double.TryParse(MagnFieldTextBox.Text, out magn))
+            if (e.Key == Key.Enter)
             {
-                _viewmodel.ChangeField(magn);
-                magneticfield = magn;
-                MagnFieldTextBox.Text = magn.ToString("0.00");
+                double magn;
+                if (Double.TryParse(MagnFieldTextBox.Text, out magn))
+                {
+                    _viewmodel.ChangeField(magn);
+                    magneticfield = magn;
+                    MagnFieldTextBox.Text = magn.ToString("0.00");
+                }
+                else
+                {
+                    MagnFieldTextBox.Text = magneticfield.ToString("0.00");
+                }
+                UpdateThumb(temperature, magneticfield);
             }
-            else
-            {
-                MagnFieldTextBox.Text = magneticfield.ToString("0.00");
-            }
-            UpdateThumb(temperature, magneticfield);
-            e.Handled = true; 
+       
         }
 
         #endregion
@@ -318,6 +348,8 @@ namespace IsingModern.ViewPages {
         }
 
         #endregion
+
+     
 
        
 

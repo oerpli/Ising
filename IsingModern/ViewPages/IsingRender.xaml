@@ -42,6 +42,8 @@
                 <StackPanel Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top">
                     <Button Name="ToggleSimulation" Click="Start_Click" Content="Start" 
                             Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
+                    <Button Name="ResetSimulation" Content="Reset" Click="Reset_Click" 
+                            Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
                     <Button Name="ToggleBoundary" Click="ToggleBoundary_Click" Content="Boundary" 
                             Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
                     <Button Name="Randomize" Click="RandomizeClick" Content="Randomize!" 
@@ -92,11 +94,11 @@
 
                 <StackPanel Grid.Column="6" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
-                        <TextBox Name="TemperatureTextBox" TextWrapping="Wrap" TextAlignment="Right" MinWidth="42" Margin="3"  FontSize="15" TextChanged="Temperature_TextChanged"/>
+                        <TextBox Name="TemperatureTextBox" TextWrapping="Wrap" TextAlignment="Right" MinWidth="42" Margin="3"  FontSize="15" KeyDown="Temperature_TextChanged"/>
                         <Label Content="Temperature" Margin="3" FontSize="15"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBox Name="MagnFieldTextBox" TextWrapping="Wrap" TextAlignment="Right" MinWidth="42" Margin="3"  FontSize="15" TextChanged="MagnField_TextChanged" />
+                        <TextBox Name="MagnFieldTextBox" TextWrapping="Wrap" TextAlignment="Right" MinWidth="42" Margin="3"  FontSize="15" KeyDown="MagnField_TextChanged" />
                         <Label Content="Magnetic field" Margin="3" FontSize="15"/>
                     </StackPanel>
                     <CheckBox Content="fix temperature" Click="FixTemperature_Checked" Margin="3" FontSize="15"/>
