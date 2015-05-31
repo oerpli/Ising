@@ -74,10 +74,10 @@
 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
                         <Slider Name="SizeSlider" Width="120" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" 
-                                IsSnapToTickEnabled="True" Minimum="0" Maximum="1" TickPlacement="BottomRight" Value="2"
+                                IsSnapToTickEnabled="True" Minimum="0" Maximum="3" TickPlacement="BottomRight" Value="2"
                                 TickFrequency="1" ValueChanged="SizeSliderValueChanged" Thumb.DragCompleted="SizeSliderDragCompleted" MouseWheel="LatticeSize_MouseWheel" />
                         <TextBlock Name="SizeText"  FontSize="15"
-                               Height="40" TextAlignment="Right" Margin="3" Padding="6" Text="100" Width="40"/>
+                               Height="40" TextAlignment="Right" Margin="3" Padding="6" Width="40"/>
                     </StackPanel>
 
                 </StackPanel>

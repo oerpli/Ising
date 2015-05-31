@@ -39,21 +39,15 @@ namespace IsingModern.ViewPages {
 
         #region Initialization
 
-
         public IsingRender() {
             InitializeComponent();
             _viewmodel = new IsingRenderModel(CurrentN, _periodicBoundary);
             Plotinit(); //test
             Current = this;
-            BoundaryText.Text = _periodicBoundary ? "Periodic" : "Walled";
-            CouplingText.Text = _ferromagnetic ? "Ferromagnetic" : "Anti-Ferromagnetic";
-            AlgorithmText.Text = _singleFlip ? "SingleFlip" : "Glauber";
-            UpdateThumb(1.0, 0.0);
-            TemperatureTextBox.Text = "1,00";
-            MagnFieldTextBox.Text = "0,00";
             ModelParentElement.Children.Add(_viewmodel);
             SizeText.Text = CurrentN.ToString();
             SizeSlider.Maximum = sliderMax;
+            Reset();
         }
 
         #endregion
@@ -334,17 +328,6 @@ namespace IsingModern.ViewPages {
         }
 
         #endregion
-
-
-
-
-
-
-
-
-
-
-
 
     }
 }

@@ -104,7 +104,7 @@ namespace IsingModern.Model {
 
         public void SetBoundary(bool periodic) {
             foreach(var p in Boundary) {
-                p.Value = periodic ? -1 : 0;
+                p.Value = periodic ? Rnd.Next(2) * 2 - 1 : 0;
             }
             UpdateStats();
         }
