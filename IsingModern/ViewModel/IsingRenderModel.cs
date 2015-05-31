@@ -67,6 +67,7 @@ namespace IsingModern.ViewModel {
             while(N != newSize) {
                 model.ScaleLattice(newSize < N);
             }
+            model.UpdateStats();
             cellSize = viewsize / newSize;
             _rectangleSize = (int)viewsize / newSize;
             DrawLattice();

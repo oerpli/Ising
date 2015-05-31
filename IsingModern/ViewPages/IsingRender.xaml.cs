@@ -313,7 +313,7 @@ namespace IsingModern.ViewPages {
                 StatusText.Text = e.ProgressPercentage.ToString();
                 var data = (Tuple<double, double>)e.UserState; //not checking for null due to performance reasons.
                 EnergyPoints[_plotIndex] = new DataPoint(_plotIndex, data.Item1);
-                MagnetizationPoints[_plotIndex] = new DataPoint(_plotIndex, -data.Item2);
+                MagnetizationPoints[_plotIndex] = new DataPoint(_plotIndex, data.Item2);
                 _plotIndex = (_plotIndex + 1) % _plotDataMax;
                 line.X = _plotIndex;
                 _viewmodel.Refresh();

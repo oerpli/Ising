@@ -14,7 +14,7 @@ namespace IsingModern.Model {
 
         public double TotalInteraction;
         public double TotalMagnetization;
-        static public readonly Random Rnd = new Random();
+        public static readonly Random Rnd = new Random();
 
         public Tuple<double, double> Sweep() {
             var n = N * N;
@@ -31,7 +31,7 @@ namespace IsingModern.Model {
             if(Accept(energyDifference, chosen.Value)) {
                 chosen.ToggleSpin();
                 TotalInteraction += energyDifference;
-                TotalMagnetization -= 2 * chosen.Value;
+                TotalMagnetization += 2 * chosen.Value;
             }
         }
         public void Kawasaki(Spin chosen) {
