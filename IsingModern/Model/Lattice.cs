@@ -76,22 +76,14 @@ namespace IsingModern.Model {
                 a[3] = GetSpinValue(x * 2 + 1, y * 2 + 1);
 
                 var countVal = new int[3]; //count occurence of all three possible values
-                var count2s = 0;
                 for(var v = 0; v < 3; v++) {
                     countVal[v] = a.Aggregate(0, (c, val) => c + (val == v - 1 ? 1 : 0));
                     if(countVal[v] > 2) return v - 1;
-                    if(countVal[v] == 2) count2s++;
+                    if(countVal[v] == 2 && v == 1) return 0; //favor boundaries over non boundaries
                 }
-                count2s -= Rnd.NextDouble() < 0.5 ? 0 : 1; //random tiebreaker (may favor lower values - not sure)
-                for(var v = 0; v < 3; v++) {
-                    if(countVal[v] == 2) {
-                        if(count2s > 1) count2s--;
-                        else return v - 1; //maps the array index to the values
-                    }
-                }
-                throw new Exception("no value?!");
-
-            } else {
+                if(countVal[0] < 2) return 1;
+                if(countVal[2] < 2) return -1;
+            } else { //when upscaling give the values on the corresponding position
                 return GetSpinValue(x / 2, y / 2);
             }
 
