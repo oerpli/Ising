@@ -55,7 +55,7 @@
                             Height="40" MinWidth="150" FontSize="15"/>
                     <Button Name="LatticeSize" Click="LatticeSize_Click" MouseWheel="LatticeSize_MouseWheel" 
                             KeyDown="LatticeSize_KeyDown" Content="Set Size" Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
-                   
+
                 </StackPanel>
 
                 <StackPanel Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0">
@@ -71,15 +71,15 @@
                                Height="40" TextAlignment="Right" Margin="3" Padding="6"/>
                     <TextBlock Name="AlgorithmText"  FontSize="15"
                                Height="40" TextAlignment="Right" Margin="3" Padding="6"/>
-                  
+
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
                         <Slider Name="SizeSlider" Width="120" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" 
-                                IsSnapToTickEnabled="True" Maximum="3" Minimum="0" TickPlacement="BottomRight" Value="2"
-                                Ticks="0, 1, 2, 3" ValueChanged="Slider_ValueChanged" Thumb.DragCompleted="MySlider_DragCompleted" />
+                                IsSnapToTickEnabled="True" Minimum="0" Maximum="1" TickPlacement="BottomRight" Value="2"
+                                TickFrequency="1" ValueChanged="SizeSliderValueChanged" Thumb.DragCompleted="SizeSliderDragCompleted" MouseWheel="LatticeSize_MouseWheel" />
                         <TextBlock Name="SizeText"  FontSize="15"
                                Height="40" TextAlignment="Right" Margin="3" Padding="6" Text="100" Width="40"/>
                     </StackPanel>
-               
+
                 </StackPanel>
 
                 <Canvas Name="TempMagField" Grid.Column="5" Grid.ColumnSpan="1" Grid.Row="1" Width="370" Height="250" Opacity="1.0" VerticalAlignment="Top" Margin="3" HorizontalAlignment="Left" >

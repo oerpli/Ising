@@ -27,7 +27,11 @@ namespace IsingModern.ViewPages {
         private double _tempMax = 5.0;
         private double _magnMax = 0.5;
 
-        private int _currentN = 200;
+        private int sliderMin = 0, sliderMax = 3;
+
+        private int CurrentN {
+            get { return 25 * (1 << (int)SizeSlider.Value); }
+        }
         private const int MaximalN = 200, MinimalN = 25; //both should divide Pixels. 
         public const int Pixels = 800;
 
@@ -38,7 +42,7 @@ namespace IsingModern.ViewPages {
 
         public IsingRender() {
             InitializeComponent();
-            _viewmodel = new IsingRenderModel(_currentN, _periodicBoundary);
+            _viewmodel = new IsingRenderModel(CurrentN, _periodicBoundary);
             Plotinit(); //test
             Current = this;
             BoundaryText.Text = _periodicBoundary ? "Periodic" : "Walled";
@@ -48,7 +52,8 @@ namespace IsingModern.ViewPages {
             TemperatureTextBox.Text = "1,00";
             MagnFieldTextBox.Text = "0,00";
             ModelParentElement.Children.Add(_viewmodel);
-            SizeText.Text = _currentN.ToString();
+            SizeText.Text = CurrentN.ToString();
+            SizeSlider.Maximum = sliderMax;
         }
 
         #endregion
@@ -195,13 +200,11 @@ namespace IsingModern.ViewPages {
         }
 
 
-        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            var slider = sender as Slider;
-            _currentN = 25 * (int)Math.Pow(2.0, slider.Value);
-            if(SizeText != null) SizeText.Text = _currentN.ToString();
+        private void SizeSliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            if(SizeText != null) SizeText.Text = CurrentN.ToString();
 
         }
-        private void MySlider_DragCompleted(object sender, DragCompletedEventArgs e) {
+        private void SizeSliderDragCompleted(object sender, DragCompletedEventArgs e) {
             ThreadedAction(NewLattice);
             e.Handled = true;
         }
@@ -223,8 +226,8 @@ namespace IsingModern.ViewPages {
 
         //if using scrollwheel increase/decrase to next divisor of Pixel (800) (to avoid ugly rendering) - can be finetuned with left/right keys if necessary
         private void _changeLatticeSize(bool bigger) {
-            _currentN = bigger ? _currentN * 2 : _currentN / 2;
-            _currentN = Math.Min(MaximalN, Math.Max(MinimalN, _currentN)); // restrict to min/max values
+            SizeSlider.Value += bigger ? 1 : -1;
+            ThreadedAction(NewLattice);
         }
 
 

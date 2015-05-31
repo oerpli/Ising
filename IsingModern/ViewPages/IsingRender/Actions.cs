@@ -10,7 +10,7 @@ namespace IsingModern.ViewPages {
         }
 
         private void NewLattice() {
-            _viewmodel.ScaleSize(_currentN, averageMagnetization);
+            _viewmodel.ScaleSize(CurrentN, averageMagnetization);
         }
 
         private void Boundary() {

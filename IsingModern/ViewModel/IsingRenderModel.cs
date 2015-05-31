@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using IsingModern.Model;
 using System.Threading;
-using System.Diagnostics; 
+using System.Diagnostics;
 using IsingModern.ViewPages;
 
 namespace IsingModern.ViewModel {
@@ -62,14 +62,8 @@ namespace IsingModern.ViewModel {
         }
 
         #region Manipulation
-        public void ChangeSize(int newSize, double averageMagnetization = -1.0) {
-            model = new Lattice(newSize, averageMagnetization);
-            cellSize = viewsize / newSize;
-            _rectangleSize = (int)viewsize / newSize;
-            DrawLattice();
-        }
 
-        public void ScaleSize(int newSize, double averageMagnetization = -1.0) {
+        public void ScaleSize(int newSize) {
             while(N != newSize) {
                 model.ScaleLattice(newSize < N);
             }
