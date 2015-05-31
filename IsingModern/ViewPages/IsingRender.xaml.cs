@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using FirstFloor.ModernUI.Presentation;
 using IsingModern.ViewModel;
-using IsingModern.ViewPages.Settings;
 using OxyPlot;
 using OxyPlot.Annotations;
-using OxyPlot.Wpf;
 using LineAnnotation = OxyPlot.Wpf.LineAnnotation;
 
 namespace IsingModern.ViewPages {
@@ -32,7 +28,6 @@ namespace IsingModern.ViewPages {
         public const int Pixels = 800;
 
 
-        private Semaphore sem = new Semaphore(1, 5);
 
         #region Initialization
 
@@ -94,7 +89,7 @@ namespace IsingModern.ViewPages {
         private const double TempMax = 5, FieldMax = 0.5;
         private const double ThumbRadius = 5;
 
-        private void Thumb_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e) {
+        private void Thumb_DragDelta(object sender, DragDeltaEventArgs e) {
             if(!_fixedTemperature)
                 Canvas.SetLeft(FieldThumb, Math.Max(-ThumbRadius, Math.Min(TempMagField.ActualWidth - ThumbRadius, Canvas.GetLeft(FieldThumb) + e.HorizontalChange)));
             if(!_fixedMagnfield)

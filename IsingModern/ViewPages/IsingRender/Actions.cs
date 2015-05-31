@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Windows;
-using System.Windows.Media;
+using System.Threading;
 
 namespace IsingModern.ViewPages {
     public partial class IsingRender {
+        private readonly Semaphore sem = new Semaphore(1, 5);
 
         private void RandomizeLattice() {
             _viewmodel.Randomize(true);
