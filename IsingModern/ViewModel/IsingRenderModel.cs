@@ -208,7 +208,7 @@ namespace IsingModern.ViewModel {
             if(_mouseState == 2)
                 spin.ToggleBoundary(true);
             if(_mouseState == 3)
-                spin.ToggleSpin();
+                spin.Value = 1;
             DrawSpin(spin);
         }
 
