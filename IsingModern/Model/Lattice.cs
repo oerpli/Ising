@@ -83,6 +83,7 @@ namespace IsingModern.Model {
                 }
                 if(countVal[0] < 2) return 1;
                 if(countVal[2] < 2) return -1;
+                return Rnd.NextDouble() < 0.5 ? -1 : 1; //spin 1 and -1 have 2 -- return random value
             } else { //when upscaling give the values on the corresponding position
                 return GetSpinValue(x / 2, y / 2);
             }

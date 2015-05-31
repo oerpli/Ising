@@ -70,8 +70,8 @@ namespace IsingModern.ViewModel {
         }
 
         public void ScaleSize(int newSize, double averageMagnetization = -1.0) {
-            while(model.N != newSize) {
-                model.ScaleLattice(newSize < model.N);
+            while(N != newSize) {
+                model.ScaleLattice(newSize < N);
             }
             cellSize = viewsize / newSize;
             _rectangleSize = (int)viewsize / newSize;

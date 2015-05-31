@@ -17,9 +17,6 @@ namespace IsingModern.ViewPages {
         private void NewLattice() {
             _viewmodel.ScaleSize(_currentN, averageMagnetization);
             //reapply settings from previous model:
-            _viewmodel.ChangeField(magneticfield);
-            _viewmodel.ChangeDynamic(AlgorithmText.Text);
-            _viewmodel.ChangeCoupling(couplingconstant);
             _updateLatticeSizeText();
         }
 
