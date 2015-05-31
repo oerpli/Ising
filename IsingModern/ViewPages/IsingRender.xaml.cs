@@ -21,11 +21,11 @@ namespace IsingModern.ViewPages {
         public static IsingRender Current;
         private IsingRenderModel _viewmodel;
 
-        private bool _periodicBoundary = false;
+        private bool _periodicBoundary = true;
         private bool _ferromagnetic = true;
         private bool _singleFlip = true;
         private double _tempMax = 5.0;
-        private double _magnMax = 0.5; 
+        private double _magnMax = 0.5;
 
         private int _currentN = 200;
         private const int MaximalN = 200, MinimalN = 25; //both should divide Pixels. 
@@ -48,8 +48,8 @@ namespace IsingModern.ViewPages {
             TemperatureTextBox.Text = "1,00";
             MagnFieldTextBox.Text = "0,00";
             ModelParentElement.Children.Add(_viewmodel);
-            //LatticeSizeInput.Text = _currentN.ToString();
-            SizeText.Text = _currentN.ToString(); 
+            LatticeSizeInput.Text = _currentN.ToString();
+            SizeText.Text = _currentN.ToString();
         }
 
         #endregion
@@ -68,32 +68,8 @@ namespace IsingModern.ViewPages {
             e.Handled = true;
         }
 
-        private void Reset_Click(object sender, RoutedEventArgs e)
-        {
-            ThreadedAction(RandomizeLattice);
-            temperature = 1.00;
-            magneticfield = 0.00;
-            UpdateThumb(1.0, 0.0);
-            TemperatureTextBox.Text = "1,0";
-            MagnFieldTextBox.Text = "0,00";
-            if (_periodicBoundary)
-            {
-                _periodicBoundary = !_periodicBoundary;
-                ThreadedAction(Boundary);
-
-            }
-            if (!_ferromagnetic)
-            {
-                _ferromagnetic = !_ferromagnetic;
-                _viewmodel.ChangeCoupling(1.0);
-                CouplingText.Text = "Ferromagnetic";
-            }
-            if (!_singleFlip)
-            {
-                _singleFlip = !_singleFlip;
-                AlgorithmText.Text = "SingleFlip";
-                _viewmodel.ChangeDynamic(AlgorithmText.Text);
-            }
+        private void Reset_Click(object sender, RoutedEventArgs e) {
+            Reset();
         }
 
         private void ToggleBoundary_Click(object sender = null, RoutedEventArgs e = null) {
@@ -103,15 +79,13 @@ namespace IsingModern.ViewPages {
 
         private void Coupling_Click(object sender = null, RoutedEventArgs e = null) {
             if(sender != null) _ferromagnetic = !_ferromagnetic;
-            _viewmodel.ChangeCoupling(_ferromagnetic ? 1.0 : -1.0);
-            CouplingText.Text = _ferromagnetic ? "Ferromagnetic" : "Anti-Ferromagnetic";
+            ChangeCoupling();
             if(e != null) e.Handled = true;
         }
 
         private void Algorithm_Click(object sender, RoutedEventArgs e) {
             if(sender != null) _singleFlip = !_singleFlip;
-            AlgorithmText.Text = _singleFlip ? "SingleFlip" : "Kawasaki";
-            _viewmodel.ChangeDynamic(AlgorithmText.Text);
+            ChangeAlgorithm();
             e.Handled = true;
         }
 
@@ -182,44 +156,35 @@ namespace IsingModern.ViewPages {
 
         private void Temperature_TextChanged(object sender, KeyEventArgs e) //TextChangedEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
+            if(e.Key == Key.Enter) {
                 double temp;
-                if (Double.TryParse(TemperatureTextBox.Text, out temp))
-                {
+                if(Double.TryParse(TemperatureTextBox.Text, out temp)) {
                     temp = Math.Min(_tempMax, Math.Max(temp, 0));
                     _viewmodel.ChangeTemperature(temp);
                     temperature = temp;
                     TemperatureTextBox.Text = temperature.ToString("0.00");
-                }
-                else
-                {
+                } else {
                     TemperatureTextBox.Text = temperature.ToString("0.00");
                 }
                 UpdateThumb(temperature, magneticfield);
             }
-           
+
         }
 
-        private void MagnField_TextChanged(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
+        private void MagnField_TextChanged(object sender, KeyEventArgs e) {
+            if(e.Key == Key.Enter) {
                 double magn;
-                if (Double.TryParse(MagnFieldTextBox.Text, out magn))
-                {
-                    magn = Math.Min(_magnMax, Math.Max(-_magnMax, magn)); 
+                if(Double.TryParse(MagnFieldTextBox.Text, out magn)) {
+                    magn = Math.Min(_magnMax, Math.Max(-_magnMax, magn));
                     _viewmodel.ChangeField(magn);
                     magneticfield = magn;
                     MagnFieldTextBox.Text = magn.ToString("0.00");
-                }
-                else
-                {
+                } else {
                     MagnFieldTextBox.Text = magneticfield.ToString("0.00");
                 }
                 UpdateThumb(temperature, magneticfield);
             }
-       
+
         }
 
         #endregion
@@ -231,17 +196,15 @@ namespace IsingModern.ViewPages {
         }
 
 
-        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            var slider = sender as Slider; 
-            _currentN = 25*(int)Math.Pow(2.0, slider.Value);
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            var slider = sender as Slider;
+            _currentN = 25 * (int)Math.Pow(2.0, slider.Value);
             if(SizeText != null) SizeText.Text = _currentN.ToString();
 
         }
-        private void MySlider_DragCompleted(object sender, DragCompletedEventArgs e)
-        {
+        private void MySlider_DragCompleted(object sender, DragCompletedEventArgs e) {
             ThreadedAction(NewLattice);
-            e.Handled = true; 
+            e.Handled = true;
         }
 
         private void LatticeSize_KeyDown(object sender, KeyEventArgs e) {
@@ -263,12 +226,9 @@ namespace IsingModern.ViewPages {
         private void _changeLatticeSize(bool bigger) {
             _currentN = bigger ? _currentN * 2 : _currentN / 2;
             _currentN = Math.Min(MaximalN, Math.Max(MinimalN, _currentN)); // restrict to min/max values
-            //_updateLatticeSizeText();
         }
 
-        /*private void _updateLatticeSizeText() {
-            LatticeSizeInput.Text = (_currentN != _viewmodel.N ? "(" + _viewmodel.N + ") " : "") + _currentN.ToString();
-        }*/
+
         #endregion
 
         #region Rendering
@@ -373,16 +333,16 @@ namespace IsingModern.ViewPages {
 
         #endregion
 
-     
 
-     
 
-   
 
-     
 
-       
 
-       
+
+
+
+
+
+
     }
 }
