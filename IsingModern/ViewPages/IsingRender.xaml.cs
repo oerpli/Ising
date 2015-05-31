@@ -11,10 +11,12 @@ using OxyPlot;
 using OxyPlot.Annotations;
 using LineAnnotation = OxyPlot.Wpf.LineAnnotation;
 
+
 namespace IsingModern.ViewPages {
     /// <summary>
     /// Interaction logic for LatticeOutput.xaml
     /// </summary>
+
     public partial class IsingRender : UserControl {
         public static IsingRender Current;
         private IsingRenderModel _viewmodel;
@@ -145,6 +147,40 @@ namespace IsingModern.ViewPages {
         }
         private void Toggle_Snapping(object sender, RoutedEventArgs e) {
             _snapping = ((CheckBox)sender).IsChecked ?? false;
+        }
+
+        private void Temperature_TextChanged(object sender, TextChangedEventArgs e)
+        {  
+            double temp;
+            if (Double.TryParse(TemperatureTextBox.Text, out temp))
+            {
+                _viewmodel.ChangeTemperature(temp);
+                temperature = temp;
+                TemperatureTextBox.Text = temperature.ToString("0.00"); 
+            }
+            else
+            {
+                TemperatureTextBox.Text = temperature.ToString("0.00");
+            }
+            UpdateThumb(temperature, magneticfield);
+            e.Handled = true; 
+        }
+
+        private void MagnField_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            double magn;
+            if (Double.TryParse(MagnFieldTextBox.Text, out magn))
+            {
+                _viewmodel.ChangeField(magn);
+                magneticfield = magn;
+                MagnFieldTextBox.Text = magn.ToString("0.00");
+            }
+            else
+            {
+                MagnFieldTextBox.Text = magneticfield.ToString("0.00");
+            }
+            UpdateThumb(temperature, magneticfield);
+            e.Handled = true; 
         }
 
         #endregion
@@ -282,5 +318,9 @@ namespace IsingModern.ViewPages {
         }
 
         #endregion
+
+       
+
+       
     }
 }

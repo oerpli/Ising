@@ -92,11 +92,11 @@
 
                 <StackPanel Grid.Column="6" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
-                        <TextBox Name="TemperatureTextBox" TextWrapping="Wrap" TextAlignment="Right" MinWidth="42" Margin="3"  FontSize="15"/>
+                        <TextBox Name="TemperatureTextBox" TextWrapping="Wrap" TextAlignment="Right" MinWidth="42" Margin="3"  FontSize="15" TextChanged="Temperature_TextChanged"/>
                         <Label Content="Temperature" Margin="3" FontSize="15"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBox Name="MagnFieldTextBox" TextWrapping="Wrap" TextAlignment="Right" MinWidth="42" Margin="3"  FontSize="15"/>
+                        <TextBox Name="MagnFieldTextBox" TextWrapping="Wrap" TextAlignment="Right" MinWidth="42" Margin="3"  FontSize="15" TextChanged="MagnField_TextChanged" />
                         <Label Content="Magnetic field" Margin="3" FontSize="15"/>
                     </StackPanel>
                     <CheckBox Content="fix temperature" Click="FixTemperature_Checked" Margin="3" FontSize="15"/>
