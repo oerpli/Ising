@@ -77,7 +77,6 @@ namespace IsingModern.ViewPages {
             Boundary();
         }
 
-        private double couplingconstant = 0.0;
         private void Coupling_Click(object sender = null, RoutedEventArgs e = null) {
             if(sender != null) _ferromagnetic = !_ferromagnetic;
             _viewmodel.ChangeCoupling(_ferromagnetic ? 1.0 : -1.0);

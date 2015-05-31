@@ -4,20 +4,13 @@ using System.Windows.Media;
 namespace IsingModern.ViewPages {
     public partial class IsingRender {
 
-        private bool randomize = false;
-        private bool boundary = false;
-        private bool newlattice = false;
-
-
         private void RandomizeLattice() {
             _viewmodel.Randomize(true);
-            randomize = false;
         }
 
         private void NewLattice() {
             _viewmodel.ScaleSize(_currentN, averageMagnetization);
-            //reapply settings from previous model:
-            _updateLatticeSizeText();
+            _updateLatticeSizeText(); //update text
         }
 
         private void Boundary() {
