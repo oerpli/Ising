@@ -32,8 +32,8 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="20"/>
                     <RowDefinition Height="280"/>
-                    <RowDefinition Height="60"/>
                     <RowDefinition Height="100"/>
+                    <RowDefinition Height="80"/>
                     <RowDefinition Height="400"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
@@ -45,17 +45,17 @@
                             Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
                     <Button Name="ResetSimulation" Content="Reset" Click="Reset_Click" 
                             Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
+                    <Button Name="Randomize" Click="RandomizeClick" Content="Randomize" 
+                            Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
                     <Button Name="ToggleBoundary" Click="ToggleBoundary_Click" Content="Boundary" 
                             Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
-                    <Button Name="Randomize" Click="RandomizeClick" Content="Randomize!" 
-                            Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
-                    <Button Name="LatticeSize" Click="LatticeSize_Click" MouseWheel="LatticeSize_MouseWheel" 
-                            KeyDown="LatticeSize_KeyDown" Content="Set Size" Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
                     <Button Name="Coupling" Click="Coupling_Click" Content="Coupling" VerticalAlignment="Top" Margin="3"
                             Height="40" MinWidth="150" FontSize="15"/>
                     <Button Name="Algorithm" Click="Algorithm_Click" Content="Algorithm" VerticalAlignment="Top" Margin="3"
                             Height="40" MinWidth="150" FontSize="15"/>
-
+                    <Button Name="LatticeSize" Click="LatticeSize_Click" MouseWheel="LatticeSize_MouseWheel" 
+                            KeyDown="LatticeSize_KeyDown" Content="Set Size" Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
+                   
                 </StackPanel>
 
                 <StackPanel Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0">
@@ -63,16 +63,24 @@
                                Height="40" Text="Init" Margin="3" Padding="6"/>
                     <TextBlock Name="Reset_Text" TextAlignment="Right" FontSize="15"  
                                Height="40" Margin="3" Padding="6"/>
-                    <TextBlock Name="BoundaryText" TextAlignment="Right" FontSize="15"
-                              Height="40" Margin="3" VerticalAlignment="Center" Padding="6"/>
                     <TextBlock Name="RandomizeText" TextAlignment="Right" FontSize="15"
                               Height="40" Margin="3" Padding="6"/>
-                    <TextBlock Name="LatticeSizeInput" MouseWheel="LatticeSize_MouseWheel" TextAlignment="Right" 
-                               FontSize="15"  Height="40" Text="Init Failed" Margin="3" Padding="6"/>
+                    <TextBlock Name="BoundaryText" TextAlignment="Right" FontSize="15"
+                              Height="40" Margin="3" VerticalAlignment="Center" Padding="6"/>
                     <TextBlock Name="CouplingText"  FontSize="15"
                                Height="40" TextAlignment="Right" Margin="3" Padding="6"/>
                     <TextBlock Name="AlgorithmText"  FontSize="15"
                                Height="40" TextAlignment="Right" Margin="3" Padding="6"/>
+                  
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                        <Slider Name="SizeSlider" Width="140" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" 
+                                IsSnapToTickEnabled="True" Maximum="200" Minimum="25" TickPlacement="BottomRight" Value="100"
+                                Ticks="25, 50, 100, 200" ValueChanged="Slider_ValueChanged" Thumb.DragCompleted="MySlider_DragCompleted" />
+                        <TextBlock Name="SizeText"  FontSize="15"
+                               Height="40" TextAlignment="Right" Margin="3" Padding="6"/>
+                    </StackPanel>
+                    <TextBlock Name="LatticeSizeInput" MouseWheel="LatticeSize_MouseWheel" TextAlignment="Right" 
+                               FontSize="15"  Height="40" Text="Init Failed" Margin="3" Padding="6"/>
                 </StackPanel>
 
                 <Canvas Name="TempMagField" Grid.Column="5" Grid.ColumnSpan="1" Grid.Row="1" Width="370" Height="250" Opacity="1.0" VerticalAlignment="Top" Margin="3" HorizontalAlignment="Left" >

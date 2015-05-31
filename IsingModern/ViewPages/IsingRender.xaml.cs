@@ -49,6 +49,7 @@ namespace IsingModern.ViewPages {
             MagnFieldTextBox.Text = "0,00";
             ModelParentElement.Children.Add(_viewmodel);
             LatticeSizeInput.Text = _currentN.ToString();
+            SizeText.Text = _currentN.ToString(); 
         }
 
         #endregion
@@ -228,6 +229,21 @@ namespace IsingModern.ViewPages {
             ThreadedAction(NewLattice);
             e.Handled = true;
         }
+
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            var slider = sender as Slider; 
+            _currentN = (int)slider.Value;
+            SizeText.Text = _currentN.ToString();
+
+        }
+        private void MySlider_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            ThreadedAction(NewLattice);
+            e.Handled = true; 
+        }
+
         private void LatticeSize_KeyDown(object sender, KeyEventArgs e) {
             if(e.Key == Key.Left) {
                 _changeLatticeSize(false);
@@ -356,6 +372,12 @@ namespace IsingModern.ViewPages {
         }
 
         #endregion
+
+     
+
+     
+
+   
 
      
 
