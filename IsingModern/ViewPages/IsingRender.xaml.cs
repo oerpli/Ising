@@ -48,7 +48,6 @@ namespace IsingModern.ViewPages {
             TemperatureTextBox.Text = "1,00";
             MagnFieldTextBox.Text = "0,00";
             ModelParentElement.Children.Add(_viewmodel);
-            LatticeSizeInput.Text = _currentN.ToString();
             SizeText.Text = _currentN.ToString();
         }
 
