@@ -96,9 +96,11 @@ namespace IsingModern.ViewModel {
 
         internal void ChangeCoupling(double j) {
             model.Coupling = j;
+            model.UpdateStats();
         }
         internal void ChangeField(double h) {
             model.Field = h;
+            IsingRender.Current.UpdateHelpLines();
         }
 
         #endregion
@@ -188,6 +190,7 @@ namespace IsingModern.ViewModel {
                     int y = (int)pos.Y / (int)cellSize;
                     MouseAction(model.Spins[y * N + x]);
                 }
+                IsingRender.Current.UpdateHelpLines();
                 _wbmap.Unlock();
             }
             _mouseState = 0;
@@ -199,11 +202,11 @@ namespace IsingModern.ViewModel {
 
         private void MouseAction(Spin spin) {
             if(_mouseState == 1)
-                spin.Value = -1;
+                spin.SetSpin(-1);
             if(_mouseState == 2)
-                spin.ToggleBoundary(true);
+                spin.SetBoundary();
             if(_mouseState == 3)
-                spin.Value = 1;
+                spin.SetSpin(1);
             DrawSpin(spin);
         }
 
@@ -272,6 +275,7 @@ namespace IsingModern.ViewModel {
 
         internal void ChangeDynamic(string p) {
             model.Dynamic = model.Dynamics[p];
+            model.UpdateStats();
         }
         internal void ChangeAccept(string p) {
             model.Accept = model.Accepts[p];

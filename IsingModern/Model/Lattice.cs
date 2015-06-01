@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using IsingModern.ViewPages;
+
 
 namespace IsingModern.Model {
     public sealed partial class Lattice {
         public int N;
         private int Count { get; set; }
         public Spin[] Spins { get; private set; }
+
+        public static int ZeroSpins { get; set; }
 
 
         public Lattice(int n, double averageMagnetization) {
@@ -42,6 +45,7 @@ namespace IsingModern.Model {
             }
             InitializeNeighbours(spin2DArray, N);
             SetBoundary(true);
+            ZeroSpins = Spins.Aggregate(0, (sum, spin) => sum + (spin.Value == 0 ? 1 : 0));
         }
 
 
@@ -60,6 +64,8 @@ namespace IsingModern.Model {
             this.N = newN;
             this.Count = count;
             this.Spins = spins;
+            ZeroSpins = Spins.Aggregate(0, (sum, spin) => sum + (spin.Value == 0 ? 1 : 0));
+            IsingRender.Current.UpdateHelpLines();
             this.UpdateStats();
         }
 
@@ -104,6 +110,8 @@ namespace IsingModern.Model {
 
         public void SetBoundary(bool periodic) {
             foreach(var p in Boundary) {
+                if(p.Value == 0 && periodic) ZeroSpins++;
+                if(p.Value != 0 && !periodic) ZeroSpins--;
                 p.Value = periodic ? Rnd.Next(2) * 2 - 1 : 0;
             }
             UpdateStats();

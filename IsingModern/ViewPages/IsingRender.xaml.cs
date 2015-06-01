@@ -24,10 +24,10 @@ namespace IsingModern.ViewPages {
         private bool _periodicBoundary = true;
         private bool _ferromagnetic = true;
         private bool _singleFlip = true;
-        private double _tempMax = 5.0;
-        private double _magnMax = 0.5;
+        private const double _tempMax = 5.0;
+        private const double _magnMax = 0.5;
 
-        private int sliderMin = 0, sliderMax = 3;
+        private const int sliderMin = 0, sliderMax = 3;
 
         private int CurrentN {
             get { return 25 * (1 << (int)SizeSlider.Value); }
@@ -241,7 +241,7 @@ namespace IsingModern.ViewPages {
 
         #region Plotting
 
-        private LineAnnotation line;
+        private LineAnnotation line, mlineM, mlineP;
         public string Title { get; private set; }
 
         public IList<DataPoint> EnergyPoints { get; private set; }
@@ -249,12 +249,21 @@ namespace IsingModern.ViewPages {
 
 
         private void Plotinit() {
-            line = new LineAnnotation() { Type = LineAnnotationType.Vertical, X = -10, StrokeThickness = 10, LineStyle = LineStyle.Solid, Color = lineColors[0] };
-
             EnergyPlot.ItemsSource = EnergyPoints = new List<DataPoint>();
             MagnetizationPlot.ItemsSource = MagnetizationPoints = new List<DataPoint>();
             EnergyPlot.Color = Colors.Red;
             MagnetizationPlot.Color = Colors.DeepSkyBlue;
+
+
+            line = new LineAnnotation() { Type = LineAnnotationType.Vertical, X = -10, StrokeThickness = 10, LineStyle = LineStyle.Solid, Color = lineColors[0] };
+
+            var mcol = MagnetizationPlot.Color.SetTransparency(120);
+            mlineM = new LineAnnotation() { Intercept = -1, StrokeThickness = 1, Color = mcol };
+            mlineP = new LineAnnotation() { Intercept = 1, StrokeThickness = 1, Color = mcol };
+            var ecol = EnergyPlot.Color.SetTransparency(120);
+            Plot.Annotations.Add(line);
+            Plot.Annotations.Add(mlineP);
+            Plot.Annotations.Add(mlineM);
             Plot.IsLegendVisible = true;
 
             EnergyPlot.TrackerFormatString = MagnetizationPlot.TrackerFormatString = "{0}: {4:0.00}";
@@ -264,7 +273,6 @@ namespace IsingModern.ViewPages {
                 EnergyPoints.Add(new DataPoint(i, 0));
                 MagnetizationPoints.Add(new DataPoint(i, 0));
             }
-            Plot.Annotations.Add(line);
         }
 
         #endregion

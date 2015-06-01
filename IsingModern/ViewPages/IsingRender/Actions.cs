@@ -17,6 +17,7 @@ namespace IsingModern.ViewPages {
         private void Boundary() {
             _viewmodel.SetBoundary(_periodicBoundary);
             BoundaryText.Text = _periodicBoundary ? "Periodic" : "Walled";
+            UpdateHelpLines();
         }
 
         private void Reset() {

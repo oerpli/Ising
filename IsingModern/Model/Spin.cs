@@ -30,8 +30,16 @@ namespace IsingModern.Model {
             this.Value *= -1;
         }
 
-        internal void ToggleBoundary(bool? boundary = null) {
-            this.Value = boundary ?? Value != 0 ? 0 : -1;
+        internal void SetBoundary() {
+            Lattice.ZeroSpins += Value != 0 ? 1 : 0;
+            Value = 0;
+        }
+
+        internal void SetSpin(int val) {
+            if(val == 0) return;
+            if(Value == 0) Lattice.ZeroSpins--;
+            Value = val;
+
         }
         #endregion
 

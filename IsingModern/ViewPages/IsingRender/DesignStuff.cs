@@ -1,5 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
+using IsingModern.Model;
+using OxyPlot.Annotations;
 
 namespace IsingModern.ViewPages {
     public partial class IsingRender {
@@ -25,7 +29,19 @@ namespace IsingModern.ViewPages {
             grad.Freeze();
             MagnetizationPlot.Color = accentColor;
             FieldRectangle.Fill = grad;
+            mlineM.Color = accentColor.SetTransparency(120);
+            mlineP.Color = accentColor.SetTransparency(120);
         }
+
+        public void UpdateHelpLines() {
+            double N = CurrentN * CurrentN;
+            double active = N - Lattice.ZeroSpins;
+            var maxM = active / N;
+
+            mlineP.Intercept = maxM;
+            mlineM.Intercept = -maxM;
+        }
+
         public void SwitchTheme(bool dark) {
             var index = dark ? 0 : 1;
             Plot.Background = bgColors[index];
@@ -34,6 +50,12 @@ namespace IsingModern.ViewPages {
             Plot.PlotAreaBorderColor = LeftAxis.TicklineColor = BottomAxis.TicklineColor = textColors[index];
             line.Color = lineColors[index];
             EnergyPlot.TrackerKey = MagnetizationPlot.TrackerKey = dark ? "TDark" : "TLight";
+        }
+    }
+
+    public static class Extensions {
+        public static Color SetTransparency(this Color color, byte a) {
+            return Color.FromArgb(a, color.R, color.G, color.B);
         }
     }
 }
