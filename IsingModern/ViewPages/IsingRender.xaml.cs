@@ -57,7 +57,7 @@ namespace IsingModern.ViewPages {
 
         #endregion
 
-        #region LatticeManipulation
+        #region Lattice Manipulation
         private void maingrid_KeyDown(object sender, KeyEventArgs e) {
             if(e.Key == Key.N) {
                 Start_Click(null, null);
@@ -94,7 +94,7 @@ namespace IsingModern.ViewPages {
 
         #endregion
 
-        #region Drag&Drop
+        #region Temperature & Magnetization
         private const double SnappingTolerance = 0.04;
         private const double TempMax = 5, FieldMax = 0.5;
         private const double ThumbRadius = 5;
@@ -192,7 +192,7 @@ namespace IsingModern.ViewPages {
 
         #endregion
 
-        #region LatticeSize
+        #region Lattice Size
         private void LatticeSize_Click(object sender, RoutedEventArgs e) {
             ThreadedAction(NewLattice);
             e.Handled = true;
@@ -314,7 +314,6 @@ namespace IsingModern.ViewPages {
         private int _plotDataMax = 500;
         private int _plotIndex = 0;
 
-        private double averageMagnetization = 1;
         private void worker_Progress(object sender, ProgressChangedEventArgs e) {
             long time = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             if(time - _timerefresh > 40) {

@@ -17,6 +17,7 @@ namespace IsingModern.ViewPages {
         private readonly Color[] textColors = { Colors.White, Colors.Black };
         private readonly Color[] legendColors = { Color.FromRgb(50, 50, 50), Color.FromRgb(240, 240, 240) };
         private readonly Color[] lineColors = { Color.FromRgb(60, 60, 60), Color.FromRgb(220, 220, 220) };
+        private readonly String[] trackerStrings = { "TDark", "TLight" };
 
 
         public void SwitchAccentColor(Color accentColor, Color accentDark) {
@@ -34,9 +35,9 @@ namespace IsingModern.ViewPages {
         }
 
         public void UpdateHelpLines() {
-            double N = CurrentN * CurrentN;
-            double active = N - Lattice.ZeroSpins;
-            var maxM = active / N;
+            var n = CurrentN * CurrentN;
+            var active = n - Lattice.ZeroSpins;
+            var maxM = active / n;
 
             mlineP.Intercept = maxM;
             mlineM.Intercept = -maxM;
@@ -49,7 +50,7 @@ namespace IsingModern.ViewPages {
             Plot.TextColor = textColors[index];
             Plot.PlotAreaBorderColor = LeftAxis.TicklineColor = BottomAxis.TicklineColor = textColors[index];
             line.Color = lineColors[index];
-            EnergyPlot.TrackerKey = MagnetizationPlot.TrackerKey = dark ? "TDark" : "TLight";
+            EnergyPlot.TrackerKey = MagnetizationPlot.TrackerKey = trackerStrings[index];
         }
     }
 

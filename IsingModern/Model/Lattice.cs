@@ -142,13 +142,6 @@ namespace IsingModern.Model {
             }
             UpdateStats();
         }
-
-        #region Hamiltonian
-
-
-
-
-        #endregion
     }
 }
 
