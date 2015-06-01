@@ -35,7 +35,7 @@ namespace IsingModern.ViewPages {
         }
 
         public void UpdateHelpLines() {
-            var n = CurrentN * CurrentN;
+            double n = CurrentN * CurrentN;
             var active = n - Lattice.ZeroSpins;
             var maxM = active / n;
 
