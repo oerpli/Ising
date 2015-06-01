@@ -10,6 +10,10 @@ namespace IsingModern.ViewPages {
             _viewmodel.Randomize(true);
         }
 
+        private void SetLatticeTo(int? val = null) {
+            _viewmodel.SetLatticeTo(val);
+        }
+
         private void ScaleLattice() {
             _viewmodel.ScaleSize(CurrentN);
             UpdateHelpLines();
@@ -22,7 +26,7 @@ namespace IsingModern.ViewPages {
         }
 
         private void Reset() {
-            ThreadedAction(RandomizeLattice);
+            ThreadedAction(SetLatticeTo); // no argument = random
             temperature = 1.00;
             magneticfield = 0.00;
             UpdateThumb(1.0, 0.0);
@@ -38,6 +42,8 @@ namespace IsingModern.ViewPages {
             _viewmodel.ChangeField(magneticfield);
         }
 
+
+
         private void ChangeCoupling() {
             _viewmodel.ChangeCoupling(_ferromagnetic ? 1.0 : -1.0);
             CouplingText.Text = _ferromagnetic ? "Ferromagnetic" : "Anti-Ferromagnetic";
@@ -51,6 +57,11 @@ namespace IsingModern.ViewPages {
         private void ThreadedAction(Action action) {
             sem.WaitOne();
             action();
+            sem.Release();
+        }
+        private void ThreadedAction(Action<int?> action, int? p = null) {
+            sem.WaitOne();
+            action(p);
             sem.Release();
         }
     }

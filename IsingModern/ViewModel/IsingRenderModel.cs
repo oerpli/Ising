@@ -281,6 +281,9 @@ namespace IsingModern.ViewModel {
         }
 
 
+        public void SetLatticeTo(int? val) {
+            model.SetLatticeTo(val);
+        }
     }
 }
 

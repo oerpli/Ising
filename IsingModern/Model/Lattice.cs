@@ -141,6 +141,12 @@ namespace IsingModern.Model {
             }
             UpdateStats();
         }
+
+        public void SetLatticeTo(int? val) {
+            foreach(var s in Spins) {
+                s.Value = val ?? (Rnd.NextDouble() > 0.5 ? -1 : 1);
+            }
+        }
     }
 }
 
