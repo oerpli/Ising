@@ -100,7 +100,6 @@ namespace IsingModern.ViewModel {
         }
         internal void ChangeField(double h) {
             model.Field = h;
-            IsingRender.Current.UpdateHelpLines();
         }
 
         #endregion

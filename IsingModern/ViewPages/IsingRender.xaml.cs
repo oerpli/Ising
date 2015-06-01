@@ -45,7 +45,7 @@ namespace IsingModern.ViewPages {
             Plotinit(); //test
             Current = this;
             ModelParentElement.Children.Add(_viewmodel);
-            SizeText.Text = CurrentN.ToString();
+            LatticeSize.Content = "Size: " + CurrentN.ToString();
             SizeSlider.Maximum = sliderMax;
             Reset();
 
@@ -194,17 +194,18 @@ namespace IsingModern.ViewPages {
 
         #region Lattice Size
         private void LatticeSize_Click(object sender, RoutedEventArgs e) {
-            ThreadedAction(NewLattice);
+            ThreadedAction(ScaleLattice);
             e.Handled = true;
         }
 
 
         private void SizeSliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            if(SizeText != null) SizeText.Text = CurrentN.ToString();
+            if(LatticeSize != null) LatticeSize.Content = "Size: " + CurrentN.ToString();
+
 
         }
         private void SizeSliderDragCompleted(object sender, DragCompletedEventArgs e) {
-            ThreadedAction(NewLattice);
+            ThreadedAction(ScaleLattice);
             e.Handled = true;
         }
 
@@ -226,7 +227,7 @@ namespace IsingModern.ViewPages {
         //if using scrollwheel increase/decrase to next divisor of Pixel (800) (to avoid ugly rendering) - can be finetuned with left/right keys if necessary
         private void _changeLatticeSize(bool bigger) {
             SizeSlider.Value += bigger ? 1 : -1;
-            ThreadedAction(NewLattice);
+            ThreadedAction(ScaleLattice);
         }
 
 

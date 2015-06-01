@@ -10,8 +10,9 @@ namespace IsingModern.ViewPages {
             _viewmodel.Randomize(true);
         }
 
-        private void NewLattice() {
+        private void ScaleLattice() {
             _viewmodel.ScaleSize(CurrentN);
+            UpdateHelpLines();
         }
 
         private void Boundary() {

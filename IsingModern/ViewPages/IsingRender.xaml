@@ -72,18 +72,18 @@
                     <TextBlock Name="AlgorithmText"  FontSize="15"
                                Height="40" TextAlignment="Right" Margin="3" Padding="6"/>
 
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-                        <Slider Name="SizeSlider" Width="120" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" 
-                                IsSnapToTickEnabled="True" Minimum="0" Maximum="3" TickPlacement="BottomRight" Value="2"
+                    <!--<StackPanel Orientation="Horizontal" VerticalAlignment="Top">-->
+                    <Slider Name="SizeSlider" Height="30" Width="175" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
+                                IsSnapToTickEnabled="True" Minimum="0" Maximum="3" TickPlacement="BottomRight" Value="2" Margin="0,15,0,0" Padding="0"
                                 TickFrequency="1" ValueChanged="SizeSliderValueChanged" Thumb.DragCompleted="SizeSliderDragCompleted" MouseWheel="LatticeSize_MouseWheel" />
-                        <TextBlock Name="SizeText"  FontSize="15"
-                               Height="40" TextAlignment="Right" Margin="3" Padding="6" Width="40"/>
-                    </StackPanel>
+                    <!--<TextBlock Name="SizeText"  FontSize="15"
+                               Height="40" TextAlignment="Right" Margin="3" Padding="6" Width="40"/>-->
+                    <!--</StackPanel>-->
 
                 </StackPanel>
 
-                <Canvas Name="TempMagField" Grid.Column="5" Grid.ColumnSpan="1" Grid.Row="1" Width="370" Height="250" Opacity="1.0" VerticalAlignment="Top" Margin="3" HorizontalAlignment="Left" >
-                    <Rectangle Name="FieldRectangle" Canvas.Left="0" Canvas.Top="0" Width="370" Height="250">
+                <Canvas Name="TempMagField" Grid.Column="5" Grid.ColumnSpan="1" Grid.Row="1" Width="370" Height="316" Opacity="1.0" VerticalAlignment="Top" Margin="3" HorizontalAlignment="Left" >
+                    <Rectangle Name="FieldRectangle" Canvas.Left="0" Canvas.Top="0" Width="370" Height="316">
                         <Rectangle.Fill>
                             <LinearGradientBrush  StartPoint="0.5,0" EndPoint="0.5,1">
                                 <GradientStop Color="DarkBlue"  Offset="0"/>
@@ -92,12 +92,12 @@
                         </Rectangle.Fill>
                     </Rectangle>
 
-                    <Line Stroke="Black" StrokeThickness="2" X1="0" Y1="125" X2="370" Y2="125" />
-                    <Line Stroke="Black" StrokeThickness="2" X1="0" Y1="0" X2="0" Y2="250" />
-                    <Line Stroke="Black" StrokeThickness="2" X1="168" Y1="120" X2="168" Y2="130"/>
-                    <Label Content="T" FontWeight="SemiBold" Canvas.Top="130" Canvas.Right="5" FontSize="15"/>
+                    <Line Stroke="Black" StrokeThickness="2" X1="0" Y1="158" X2="370" Y2="158" />
+                    <Line Stroke="Black" StrokeThickness="2" X1="0" Y1="0" X2="0" Y2="316" />
+                    <Line Stroke="Black" StrokeThickness="2" X1="168" Y1="153" X2="168" Y2="163"/>
+                    <Label Content="T" FontWeight="SemiBold" Canvas.Top="163" Canvas.Right="5" FontSize="15"/>
                     <Label Content="Field" FontWeight="SemiBold" Canvas.Top="0" Canvas.Left="5" FontSize="15"/>
-                    <TextBlock Canvas.Top="130" Canvas.Left="160" FontWeight="SemiBold"  FontSize="15">T<Run BaselineAlignment="Subscript" FontSize="12">crit</Run></TextBlock>
+                    <TextBlock Canvas.Top="163" Canvas.Left="160" FontWeight="SemiBold"  FontSize="15">T<Run BaselineAlignment="Subscript" FontSize="12">crit</Run></TextBlock>
                     <!--maybe make a bigger touch target around the thumb (a second thumb transparent thumb with approx 30x30 dimensions)-->
                     <Thumb Name="FieldThumb"  Template="{StaticResource Circle}" DragDelta="Thumb_DragDelta"/>
                 </Canvas>
@@ -119,7 +119,7 @@
                 <StackPanel Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="5">
                     <Grid Background="White" Height="350">
 
-                        <oxy:PlotView Name="Plot" IsMouseWheelEnabled="False">
+                        <oxy:PlotView Name="Plot" IsMouseWheelEnabled="False" LegendPosition="TopRight" Margin="-18,0,0,-47">
                             <oxy:PlotView.TrackerDefinitions>
                                 <oxy:TrackerDefinition TrackerKey="TDark">
                                     <oxy:TrackerDefinition.TrackerTemplate>

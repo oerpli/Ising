@@ -9,11 +9,15 @@ namespace IsingModern.Model {
         private int Count { get; set; }
         public Spin[] Spins { get; private set; }
 
-        public static int ZeroSpins { get; set; }
+        public static int ZeroSpins {
+            get { return Current.Spins.Aggregate(0, (sum, spin) => sum + (spin.Value == 0 ? 1 : 0)); }
+        }
+        private static Lattice Current { get; set; }
 
 
         public Lattice(int n, double averageMagnetization) {
             {
+                Current = this;
                 Coupling = 1;
                 Field = 0;
                 Beta = 1;
@@ -45,7 +49,6 @@ namespace IsingModern.Model {
             }
             InitializeNeighbours(spin2DArray, N);
             SetBoundary(true);
-            ZeroSpins = Spins.Aggregate(0, (sum, spin) => sum + (spin.Value == 0 ? 1 : 0));
         }
 
 
@@ -64,8 +67,6 @@ namespace IsingModern.Model {
             this.N = newN;
             this.Count = count;
             this.Spins = spins;
-            ZeroSpins = Spins.Aggregate(0, (sum, spin) => sum + (spin.Value == 0 ? 1 : 0));
-            IsingRender.Current.UpdateHelpLines();
             this.UpdateStats();
         }
 
@@ -110,8 +111,6 @@ namespace IsingModern.Model {
 
         public void SetBoundary(bool periodic) {
             foreach(var p in Boundary) {
-                if(p.Value == 0 && periodic) ZeroSpins++;
-                if(p.Value != 0 && !periodic) ZeroSpins--;
                 p.Value = periodic ? Rnd.Next(2) * 2 - 1 : 0;
             }
             UpdateStats();
