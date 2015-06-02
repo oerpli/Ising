@@ -5,10 +5,10 @@ using System.Linq;
 namespace IsingModern.Model {
     public sealed partial class Lattice {
         #region PhysicalParameters
-
-        public double Coupling { get; set; } // nearest neighbour interaction strength. positive values => ferromagnetic
-        public double Field { get; set; } // field strength (bias for spins in either direction)
-        public double Beta { get; set; } /*inverse temperature*/
+        private double _field, _coupling, _beta;
+        public double Coupling { get { return _coupling; } set { _coupling = value; ResetCache(); } } // nearest neighbour interaction strength. positive values => ferromagnetic
+        public double Field { get { return _field; } set { _field = value; ResetCache(); } } // field strength (bias for spins in either direction)
+        public double Beta { get { return _beta; } set { _beta = value; ResetCache(); } } /*inverse temperature*/
 
         #endregion
 
@@ -60,15 +60,30 @@ namespace IsingModern.Model {
         }
 
         private static int CalculateEnergyChangeKawasaki(Spin s1, Spin s2) {
-            return CalculateEnergyNn(s1) + CalculateEnergyNn(s2) + 1;
+            return CalculateEnergyNn(s1) + CalculateEnergyNn(s2) + 2;
         }
 
         #endregion
 
         #region AcceptanceFunctions
 
+        private readonly Dictionary<double, double> metropolisDictionary = new Dictionary<double, double>();
+
+        private void ResetCache() {
+            lock(metropolisDictionary) {
+                metropolisDictionary.Clear();
+            }
+        }
+
         private bool MetropolisCached(int nearestNeighbourInteraction, int magnetizationEnergy) {
-            return Metropolis(nearestNeighbourInteraction * Coupling + magnetizationEnergy * Field);
+            lock(metropolisDictionary) {
+                var e = nearestNeighbourInteraction * Coupling + magnetizationEnergy * Field;
+                if(e <= 0) return true;
+                if(!metropolisDictionary.ContainsKey(e)) {
+                    metropolisDictionary.Add(e, Metropolis(e));
+                }
+                return Rnd.NextDouble() < metropolisDictionary[e];
+            }
         }
 
         private bool GlauberCached(int nearestNeighbourInteraction, int magnetizationEnergy) {
@@ -76,8 +91,8 @@ namespace IsingModern.Model {
         }
 
 
-        private bool Metropolis(double deltaE) {
-            return deltaE <= 0.0 || Rnd.NextDouble() < Math.Exp(-deltaE * Beta);
+        private double Metropolis(double deltaE) {
+            return Math.Exp(-deltaE * Beta);
         }
         private bool Glauber(double deltaE) {
             return Rnd.NextDouble() < (1.0 / (1.0 + Math.Exp(deltaE * Beta)));
