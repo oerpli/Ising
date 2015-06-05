@@ -262,9 +262,9 @@ namespace IsingModern.ViewPages {
             mlineM = new LineAnnotation() { Intercept = -1, StrokeThickness = 1, Color = mcol };
             mlineP = new LineAnnotation() { Intercept = 1, StrokeThickness = 1, Color = mcol };
             var ecol = EnergyPlot.Color.SetTransparency(120);
-            Plot.Annotations.Add(line);
             Plot.Annotations.Add(mlineP);
             Plot.Annotations.Add(mlineM);
+            Plot.Annotations.Add(line);
             Plot.IsLegendVisible = true;
 
             EnergyPlot.TrackerFormatString = MagnetizationPlot.TrackerFormatString = "{0}: {4:0.00}";
