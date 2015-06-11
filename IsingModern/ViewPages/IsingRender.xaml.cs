@@ -168,7 +168,7 @@ namespace IsingModern.ViewPages {
             if(e.Key == Key.Enter) {
                 double temp;
                 if(Double.TryParse(TemperatureTextBox.Text, out temp)) {
-                    temp = Math.Min(_tempMax, Math.Max(temp, 0));
+                    temp = temp.Bound(0, _tempMax);
                     _viewmodel.ChangeTemperature(temp);
                     temperature = temp;
                     TemperatureTextBox.Text = temperature.ToString("0.00");
@@ -184,7 +184,7 @@ namespace IsingModern.ViewPages {
             if(e.Key == Key.Enter) {
                 double magn;
                 if(Double.TryParse(MagnFieldTextBox.Text, out magn)) {
-                    magn = Math.Min(_magnMax, Math.Max(-_magnMax, magn));
+                    magn = magn.Bound(-_magnMax, _magnMax);
                     _viewmodel.ChangeField(magn);
                     magneticfield = magn;
                     MagnFieldTextBox.Text = magn.ToString("0.00");

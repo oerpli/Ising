@@ -157,7 +157,7 @@ namespace IsingModern.ViewModel {
                 coords[3] = (int)(Math.Max(currentPoint.Y, mouseDownPoint.Y) + 0.5 * cellSize) / (int)cellSize; //y2
 
                 for(int i = 0; i < 4; i++) {
-                    coords[i] = Math.Min(N, Math.Max(0, coords[i]));
+                    coords[i] = coords[i].Bound(0, N);
                 }
 
                 double w = cellSize * (coords[1] - coords[0]);

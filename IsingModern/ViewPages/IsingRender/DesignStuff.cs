@@ -62,5 +62,9 @@ namespace IsingModern.ViewPages {
         public static double Bound(this double val, double min, double max) {
             return Math.Max(min, Math.Min(max, val));
         }
+
+        public static int Bound(this int val, int min, int max) {
+            return Math.Max(min, Math.Min(max, val));
+        }
     }
 }
