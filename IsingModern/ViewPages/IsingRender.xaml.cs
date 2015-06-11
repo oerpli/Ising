@@ -99,17 +99,6 @@ namespace IsingModern.ViewPages {
         private const double TempMax = 5, FieldMax = 0.5;
         private const double ThumbRadius = 5;
 
-        private void Thumb_DragDelta(object sender, DragDeltaEventArgs e) {
-            if(!_fixedTemperature)
-                Canvas.SetLeft(FieldThumb, Math.Max(-ThumbRadius, Math.Min(TempMagField.ActualWidth - ThumbRadius, Canvas.GetLeft(FieldThumb) + e.HorizontalChange)));
-            if(!_fixedMagnfield)
-                Canvas.SetTop(FieldThumb, Math.Max(-ThumbRadius, Math.Min(TempMagField.ActualHeight - ThumbRadius, Canvas.GetTop(FieldThumb) + e.VerticalChange)));
-            UpdateParameters(Canvas.GetLeft(FieldThumb), Canvas.GetTop(FieldThumb));
-            e.Handled = true;
-        }
-
-
-
         private double magneticfield = 0.0;
         private double temperature = 1.0;
         private void UpdateParameters(double x, double y) {
@@ -119,12 +108,16 @@ namespace IsingModern.ViewPages {
                 field = 0;
                 UpdateThumb(temp, field);
             }
-            _viewmodel.ChangeTemperature(temp);
-            _viewmodel.ChangeField(field);
-            temperature = temp;
-            magneticfield = field;
-            TemperatureTextBox.Text = temp.ToString("0.00");
-            MagnFieldTextBox.Text = field.ToString("0.00");
+            if(!_fixedTemperature) {
+                temperature = temp;
+                _viewmodel.ChangeTemperature(temp);
+                TemperatureTextBox.Text = temp.ToString("0.00");
+            }
+            if(!_fixedMagnfield) {
+                magneticfield = field;
+                _viewmodel.ChangeField(field);
+                MagnFieldTextBox.Text = field.ToString("0.00");
+            }
         }
 
         private void UpdateThumb(double temp, double field) {
@@ -138,8 +131,10 @@ namespace IsingModern.ViewPages {
 
             var x = temp * (w) / TempMax - ThumbRadius;
             var y = -(field - FieldMax) * (h) - ThumbRadius;
-            Canvas.SetLeft(FieldThumb, x);
-            Canvas.SetTop(FieldThumb, y);
+            if(!_fixedTemperature)
+                Canvas.SetLeft(FieldThumb, x);
+            if(!_fixedMagnfield)
+                Canvas.SetTop(FieldThumb, y);
         }
 
         private bool _fixedTemperature = false;
@@ -189,6 +184,25 @@ namespace IsingModern.ViewPages {
             }
 
         }
+
+        private void TempMagField_OnMouseMove(object sender, MouseEventArgs e) {
+            if(e.LeftButton == MouseButtonState.Pressed) {
+                var pos = e.GetPosition(TempMagField);
+                var x = pos.X.Bound(-ThumbRadius, TempMagField.ActualWidth - ThumbRadius);
+                var y = pos.Y.Bound(-ThumbRadius, TempMagField.ActualHeight - ThumbRadius);
+                UpdateParameters(x, y);
+                UpdateThumb(temperature, magneticfield);
+            }
+        }
+
+        private void TempMagField_OnMouseDown(object sender, MouseButtonEventArgs e) {
+            TempMagField.CaptureMouse();
+        }
+
+        private void TempMagField_OnMouseUp(object sender, MouseButtonEventArgs e) {
+            TempMagField.ReleaseMouseCapture();
+        }
+
 
         #endregion
 
@@ -331,6 +345,7 @@ namespace IsingModern.ViewPages {
         }
 
         #endregion
+
 
     }
 }

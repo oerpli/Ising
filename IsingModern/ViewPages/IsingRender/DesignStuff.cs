@@ -58,5 +58,9 @@ namespace IsingModern.ViewPages {
         public static Color SetTransparency(this Color color, byte a) {
             return Color.FromArgb(a, color.R, color.G, color.B);
         }
+
+        public static double Bound(this double val, double min, double max) {
+            return Math.Max(min, Math.Min(max, val));
+        }
     }
 }

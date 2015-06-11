@@ -47,7 +47,6 @@ namespace IsingModern.Model {
 
         #endregion
 
-
         #region EnergyCalculations
         public void UpdateStats() {
             var interactionEnergy = Spins.Aggregate(0.0, (sum, spin) => sum + spin.InteractionEnergy());

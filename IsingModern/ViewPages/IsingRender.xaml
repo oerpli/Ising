@@ -9,157 +9,155 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <ControlTemplate x:Key="Circle">
-                <Ellipse Width="10" Height="10" Fill="White" />
-            </ControlTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
 
+    <Viewbox >
+        <Grid Style="{StaticResource ContentRoot}" Name="Maingrid" KeyDown="maingrid_KeyDown" >
+            <ScrollViewer ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <Grid MinWidth="300" MinHeight="300" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="840"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="170"/>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="380"/>
+                        <ColumnDefinition Width="170"/>
+                        <ColumnDefinition Width="10"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="280"/>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="400"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-    <Grid Style="{StaticResource ContentRoot}" Name="Maingrid" KeyDown="maingrid_KeyDown" >
-        <ScrollViewer ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
-            <Grid MinWidth="300" MinHeight="300" VerticalAlignment="Top" HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="840"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="170"/>
-                    <ColumnDefinition Width="180"/>
-                    <ColumnDefinition Width="40"/>
-                    <ColumnDefinition Width="380"/>
-                    <ColumnDefinition Width="170"/>
-                    <ColumnDefinition Width="10"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="280"/>
-                    <RowDefinition Height="100"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="400"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+                    <Grid Grid.Column="0" Grid.Row="1" Grid.RowSpan="4" VerticalAlignment="Top" HorizontalAlignment="Center" Name="ModelParentElement" Width="800" Height="800" Background="Transparent"/>
 
-                <Grid Grid.Column="0" Grid.Row="1" Grid.RowSpan="4" VerticalAlignment="Top" HorizontalAlignment="Center" Name="ModelParentElement" Width="800" Height="800" Background="Transparent"/>
-
-                <StackPanel Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top">
-                    <Button Name="ToggleSimulation" Click="Start_Click" Content="Start" 
+                    <StackPanel Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top">
+                        <Button Name="ToggleSimulation" Click="Start_Click" Content="Start" 
                             Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
-                    <Button Name="ResetSimulation" Content="Reset" Click="Reset_Click" 
+                        <Button Name="ResetSimulation" Content="Reset" Click="Reset_Click" 
                             Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
-                    <Button Name="Randomize" Click="RandomizeClick" Content="Randomize" 
+                        <Button Name="Randomize" Click="RandomizeClick" Content="Randomize" 
                             Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
-                    <Button Name="ToggleBoundary" Click="ToggleBoundary_Click" Content="Boundary" 
+                        <Button Name="ToggleBoundary" Click="ToggleBoundary_Click" Content="Boundary" 
                             Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
-                    <Button Name="Coupling" Click="Coupling_Click" Content="Coupling" VerticalAlignment="Top" Margin="3"
+                        <Button Name="Coupling" Click="Coupling_Click" Content="Coupling" VerticalAlignment="Top" Margin="3"
                             Height="40" MinWidth="150" FontSize="15"/>
-                    <Button Name="Algorithm" Click="Algorithm_Click" Content="Algorithm" VerticalAlignment="Top" Margin="3"
+                        <Button Name="Algorithm" Click="Algorithm_Click" Content="Algorithm" VerticalAlignment="Top" Margin="3"
                             Height="40" MinWidth="150" FontSize="15"/>
-                    <Button Name="LatticeSize" Click="LatticeSize_Click" MouseWheel="LatticeSize_MouseWheel" 
+                        <Button Name="LatticeSize" Click="LatticeSize_Click" MouseWheel="LatticeSize_MouseWheel" 
                             KeyDown="LatticeSize_KeyDown" Content="Set Size" Height="40" MinWidth="150" FontSize="15" VerticalAlignment="Top" Margin="3"/>
 
-                </StackPanel>
+                    </StackPanel>
 
-                <StackPanel Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0">
-                    <TextBlock Name="StatusText" TextAlignment="Right" FontSize="15"  
+                    <StackPanel Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0">
+                        <TextBlock Name="StatusText" TextAlignment="Right" FontSize="15"  
                                Height="40" Text="Init" Margin="3" Padding="6"/>
-                    <TextBlock Name="Reset_Text" TextAlignment="Right" FontSize="15"  
+                        <TextBlock Name="Reset_Text" TextAlignment="Right" FontSize="15"  
                                Height="40" Margin="3" Padding="6"/>
-                    <TextBlock Name="RandomizeText" TextAlignment="Right" FontSize="15"
+                        <TextBlock Name="RandomizeText" TextAlignment="Right" FontSize="15"
                               Height="40" Margin="3" Padding="6"/>
-                    <TextBlock Name="BoundaryText" TextAlignment="Right" FontSize="15"
+                        <TextBlock Name="BoundaryText" TextAlignment="Right" FontSize="15"
                               Height="40" Margin="3" VerticalAlignment="Center" Padding="6"/>
-                    <TextBlock Name="CouplingText"  FontSize="15"
+                        <TextBlock Name="CouplingText"  FontSize="15"
                                Height="40" TextAlignment="Right" Margin="3" Padding="6"/>
-                    <TextBlock Name="AlgorithmText"  FontSize="15"
+                        <TextBlock Name="AlgorithmText"  FontSize="15"
                                Height="40" TextAlignment="Right" Margin="3" Padding="6"/>
 
-                    <!--<StackPanel Orientation="Horizontal" VerticalAlignment="Top">-->
-                    <Slider Name="SizeSlider" Height="30" Width="175" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
+                        <!--<StackPanel Orientation="Horizontal" VerticalAlignment="Top">-->
+                        <Slider Name="SizeSlider" Height="30" Width="175" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
                                 IsSnapToTickEnabled="True" Minimum="0" Maximum="3" TickPlacement="BottomRight" Value="2" Margin="0,15,0,0" Padding="0"
                                 TickFrequency="1" ValueChanged="SizeSliderValueChanged" Thumb.DragCompleted="SizeSliderDragCompleted" MouseWheel="LatticeSize_MouseWheel" />
-                    <!--<TextBlock Name="SizeText"  FontSize="15"
+                        <!--<TextBlock Name="SizeText"  FontSize="15"
                                Height="40" TextAlignment="Right" Margin="3" Padding="6" Width="40"/>-->
-                    <!--</StackPanel>-->
+                        <!--</StackPanel>-->
 
-                </StackPanel>
-
-                <Canvas Name="TempMagField" Grid.Column="5" Grid.ColumnSpan="1" Grid.Row="1" Width="370" Height="316" Opacity="1.0" VerticalAlignment="Top" Margin="3" HorizontalAlignment="Left" >
-                    <Rectangle Name="FieldRectangle" Canvas.Left="0" Canvas.Top="0" Width="370" Height="316">
-                        <Rectangle.Fill>
-                            <LinearGradientBrush  StartPoint="0.5,0" EndPoint="0.5,1">
-                                <GradientStop Color="DarkBlue"  Offset="0"/>
-                                <GradientStop Color="DeepSkyBlue" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Rectangle.Fill>
-                    </Rectangle>
-
-                    <Line Stroke="Black" StrokeThickness="2" X1="0" Y1="158" X2="370" Y2="158" />
-                    <Line Stroke="Black" StrokeThickness="2" X1="0" Y1="0" X2="0" Y2="316" />
-                    <Line Stroke="Black" StrokeThickness="2" X1="168" Y1="153" X2="168" Y2="163"/>
-                    <Label Content="T" FontWeight="SemiBold" Canvas.Top="163" Canvas.Right="5" FontSize="15"/>
-                    <Label Content="Field" FontWeight="SemiBold" Canvas.Top="0" Canvas.Left="5" FontSize="15"/>
-                    <TextBlock Canvas.Top="163" Canvas.Left="160" FontWeight="SemiBold"  FontSize="15">T<Run BaselineAlignment="Subscript" FontSize="12">crit</Run></TextBlock>
-                    <!--maybe make a bigger touch target around the thumb (a second thumb transparent thumb with approx 30x30 dimensions)-->
-                    <Thumb Name="FieldThumb"  Template="{StaticResource Circle}" DragDelta="Thumb_DragDelta"/>
-                </Canvas>
-
-                <StackPanel Grid.Column="6" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBox Name="TemperatureTextBox" TextWrapping="Wrap" TextAlignment="Right" MinWidth="42" Margin="3"  FontSize="15" KeyDown="Temperature_TextChanged"/>
-                        <Label Content="Temperature" Margin="3" FontSize="15"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBox Name="MagnFieldTextBox" TextWrapping="Wrap" TextAlignment="Right" MinWidth="42" Margin="3"  FontSize="15" KeyDown="MagnField_TextChanged" />
-                        <Label Content="Magnetic field" Margin="3" FontSize="15"/>
+
+                    <Canvas MouseDown="TempMagField_OnMouseDown" MouseUp="TempMagField_OnMouseUp"  MouseMove="TempMagField_OnMouseMove" Name="TempMagField" Grid.Column="5" Grid.ColumnSpan="1" Grid.Row="1" Width="370" Height="316" Opacity="1.0" VerticalAlignment="Top" Margin="3" HorizontalAlignment="Left" >
+                        <Rectangle Name="FieldRectangle" Canvas.Left="0" Canvas.Top="0" Width="370" Height="316">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush  StartPoint="0.5,0" EndPoint="0.5,1">
+                                    <GradientStop Color="DarkBlue"  Offset="0"/>
+                                    <GradientStop Color="DeepSkyBlue" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+
+                        <Line Stroke="Black" StrokeThickness="2" X1="0" Y1="158" X2="370" Y2="158" />
+                        <Line Stroke="Black" StrokeThickness="2" X1="0" Y1="0" X2="0" Y2="316" />
+                        <Line Stroke="Black" StrokeThickness="2" X1="168" Y1="153" X2="168" Y2="163"/>
+                        <Label Content="T" FontWeight="SemiBold" Canvas.Top="163" Canvas.Right="5" FontSize="15"/>
+                        <Label Content="Field" FontWeight="SemiBold" Canvas.Top="0" Canvas.Left="5" FontSize="15"/>
+                        <TextBlock Canvas.Top="163" Canvas.Left="160" FontWeight="SemiBold"  FontSize="15">T<Run BaselineAlignment="Subscript" FontSize="12">crit</Run></TextBlock>
+                        <!--maybe make a bigger touch target around the thumb (a second thumb transparent thumb with approx 30x30 dimensions)-->
+                        <Ellipse Name="FieldThumb" Width="10" Height="10" Fill="White" />
+                    </Canvas>
+
+                    <StackPanel Grid.Column="6" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Name="TemperatureTextBox" TextWrapping="Wrap" TextAlignment="Right" MinWidth="42" Margin="3"  FontSize="15" KeyDown="Temperature_TextChanged"/>
+                            <Label Content="Temperature" Margin="3" FontSize="15"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Name="MagnFieldTextBox" TextWrapping="Wrap" TextAlignment="Right" MinWidth="42" Margin="3"  FontSize="15" KeyDown="MagnField_TextChanged" />
+                            <Label Content="Magnetic field" Margin="3" FontSize="15"/>
+                        </StackPanel>
+                        <CheckBox Content="fix temperature" Click="FixTemperature_Checked" Margin="3" FontSize="15"/>
+                        <CheckBox Content="fix magnetic field" Click="FixMagneticField_Checked" Margin="3" FontSize="15"/>
+                        <CheckBox Content="enable field snapping" Click="Toggle_Snapping" IsChecked="True" Margin="3" FontSize="15"/>
                     </StackPanel>
-                    <CheckBox Content="fix temperature" Click="FixTemperature_Checked" Margin="3" FontSize="15"/>
-                    <CheckBox Content="fix magnetic field" Click="FixMagneticField_Checked" Margin="3" FontSize="15"/>
-                    <CheckBox Content="enable field snapping" Click="Toggle_Snapping" IsChecked="True" Margin="3" FontSize="15"/>
-                </StackPanel>
 
-                <StackPanel Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="5">
-                    <Grid Background="White" Height="350">
+                    <StackPanel Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="5">
+                        <Grid Background="White" Height="350">
 
-                        <oxy:PlotView Name="Plot" IsMouseWheelEnabled="False" LegendPosition="TopRight" Margin="-18,0,0,-47">
-                            <oxy:PlotView.TrackerDefinitions>
-                                <oxy:TrackerDefinition TrackerKey="TDark">
-                                    <oxy:TrackerDefinition.TrackerTemplate>
-                                        <ControlTemplate>
-                                            <oxy:TrackerControl Background="#FF505050" BorderBrush="White" Foreground="White" Position="{Binding Position}" LineExtents="{Binding PlotModel.PlotArea}">
-                                                <oxy:TrackerControl.Content>
-                                                    <TextBlock Text="{Binding}" Margin="7" />
-                                                </oxy:TrackerControl.Content>
-                                            </oxy:TrackerControl>
-                                        </ControlTemplate>
-                                    </oxy:TrackerDefinition.TrackerTemplate>
-                                </oxy:TrackerDefinition>
-                                <oxy:TrackerDefinition TrackerKey="TLight">
-                                    <oxy:TrackerDefinition.TrackerTemplate>
-                                        <ControlTemplate>
-                                            <oxy:TrackerControl  Background="#FFDDDDDD" Position="{Binding Position}" LineExtents="{Binding PlotModel.PlotArea}">
-                                                <oxy:TrackerControl.Content>
-                                                    <TextBlock Text="{Binding}" Margin="7" />
-                                                </oxy:TrackerControl.Content>
-                                            </oxy:TrackerControl>
-                                        </ControlTemplate>
-                                    </oxy:TrackerDefinition.TrackerTemplate>
-                                </oxy:TrackerDefinition>
-                            </oxy:PlotView.TrackerDefinitions>
-                            <oxy:PlotView.Axes>
-                                <oxy:LinearAxis Name="BottomAxis" Position="Bottom" Minimum="0" Maximum="500"
+                            <oxy:PlotView Name="Plot" IsMouseWheelEnabled="False" LegendPosition="TopRight" Margin="-18,0,0,-47">
+                                <oxy:PlotView.TrackerDefinitions>
+                                    <oxy:TrackerDefinition TrackerKey="TDark">
+                                        <oxy:TrackerDefinition.TrackerTemplate>
+                                            <ControlTemplate>
+                                                <oxy:TrackerControl Background="#FF505050" BorderBrush="White" Foreground="White" Position="{Binding Position}" LineExtents="{Binding PlotModel.PlotArea}">
+                                                    <oxy:TrackerControl.Content>
+                                                        <TextBlock Text="{Binding}" Margin="7" />
+                                                    </oxy:TrackerControl.Content>
+                                                </oxy:TrackerControl>
+                                            </ControlTemplate>
+                                        </oxy:TrackerDefinition.TrackerTemplate>
+                                    </oxy:TrackerDefinition>
+                                    <oxy:TrackerDefinition TrackerKey="TLight">
+                                        <oxy:TrackerDefinition.TrackerTemplate>
+                                            <ControlTemplate>
+                                                <oxy:TrackerControl  Background="#FFDDDDDD" Position="{Binding Position}" LineExtents="{Binding PlotModel.PlotArea}">
+                                                    <oxy:TrackerControl.Content>
+                                                        <TextBlock Text="{Binding}" Margin="7" />
+                                                    </oxy:TrackerControl.Content>
+                                                </oxy:TrackerControl>
+                                            </ControlTemplate>
+                                        </oxy:TrackerDefinition.TrackerTemplate>
+                                    </oxy:TrackerDefinition>
+                                </oxy:PlotView.TrackerDefinitions>
+                                <oxy:PlotView.Axes>
+                                    <oxy:LinearAxis Name="BottomAxis" Position="Bottom" Minimum="0" Maximum="500"
                                     IsZoomEnabled="False" IsPanEnabled="False" IsManipulationEnabled="False"
                                     TickStyle="Inside" />
-                                <oxy:LinearAxis Name="LeftAxis" Position="Left" Minimum="-3.2" Maximum="3.2"
+                                    <oxy:LinearAxis Name="LeftAxis" Position="Left" Minimum="-3.2" Maximum="3.2"
                                     IsZoomEnabled="False" IsPanEnabled="False" IsManipulationEnabled="False"
                                     TickStyle="Inside" />
-                            </oxy:PlotView.Axes>
-                            <oxy:PlotView.Series>
-                                <oxy:LineSeries Name="EnergyPlot" Title="Energy per Spin"/>
-                                <oxy:LineSeries Name="MagnetizationPlot" Title="Magnetization per Spin"/>
-                            </oxy:PlotView.Series>
-                        </oxy:PlotView>
-                    </Grid>
-                </StackPanel>
-            </Grid>
-        </ScrollViewer>
-    </Grid>
+                                </oxy:PlotView.Axes>
+                                <oxy:PlotView.Series>
+                                    <oxy:LineSeries Name="EnergyPlot" Title="Energy per Spin"/>
+                                    <oxy:LineSeries Name="MagnetizationPlot" Title="Magnetization per Spin"/>
+                                </oxy:PlotView.Series>
+                            </oxy:PlotView>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Viewbox>
 </UserControl>

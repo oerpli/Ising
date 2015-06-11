@@ -6,8 +6,8 @@
         ContentSource="/ViewPages/IsingRender.xaml"
                   Height="800"
                   Width="1280"
-                  MinHeight="800"
-                  MinWidth="1280"
+                  MinHeight="600"
+                  MinWidth="960"
                   >
 
  
