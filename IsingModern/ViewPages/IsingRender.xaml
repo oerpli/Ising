@@ -12,7 +12,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Viewbox >
+    <!--<Viewbox >-->
         <Grid Style="{StaticResource ContentRoot}" Name="Maingrid" KeyDown="maingrid_KeyDown" >
             <ScrollViewer ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <Grid MinWidth="300" MinHeight="300" VerticalAlignment="Top" HorizontalAlignment="Left">
@@ -159,5 +159,5 @@
                 </Grid>
             </ScrollViewer>
         </Grid>
-    </Viewbox>
+    <!--</Viewbox>-->
 </UserControl>

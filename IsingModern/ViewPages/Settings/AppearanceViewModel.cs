@@ -66,6 +66,12 @@ namespace IsingModern.ViewPages.Settings {
             get { return new string[] { FontSmall, FontLarge }; }
         }
 
+
+        private readonly int[] sizes = new int[] { 50, 100, 200, 400 };
+        public int[] MaxSizes {
+            get { return sizes; }
+        }
+
         public Color[] AccentColors {
             get { return this._accentColors; }
         }
@@ -105,6 +111,16 @@ namespace IsingModern.ViewPages.Settings {
                     OnPropertyChanged("SelectedFontSize");
                     AppearanceManager.Current.FontSize = value == FontLarge ? FontSize.Large : FontSize.Small;
                 }
+            }
+        }
+
+        private int _selectedMaxSize = 100;
+        public int SelectedMaxSize {
+            get { return this._selectedMaxSize; }
+            set {
+                this._selectedMaxSize = value;
+                OnPropertyChanged("SelectedMaxSize");
+                IsingRender.Current.SliderMax = Array.IndexOf(sizes, value) + 1;
             }
         }
 

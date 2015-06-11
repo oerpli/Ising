@@ -27,7 +27,18 @@ namespace IsingModern.ViewPages {
         private const double _tempMax = 5.0;
         private const double _magnMax = 0.5;
 
-        private const int sliderMin = 0, sliderMax = 3;
+        private int sliderMin = 0, sliderMax = 2;
+
+        public int SliderMax {
+            get { return sliderMax; }
+            set {
+                sliderMax = value;
+                SizeSlider.Maximum = sliderMax;
+                SizeSlider.Value = Math.Min(SizeSlider.Value, value);
+                ThreadedAction(ScaleLattice);
+            }
+        }
+
 
         private int CurrentN {
             get { return 25 * (1 << (int)SizeSlider.Value); }
@@ -46,7 +57,7 @@ namespace IsingModern.ViewPages {
             Current = this;
             ModelParentElement.Children.Add(_viewmodel);
             LatticeSize.Content = "Size: " + CurrentN.ToString();
-            SizeSlider.Maximum = sliderMax;
+            SizeSlider.Maximum = SliderMax;
             Reset();
 
             _worker = worker_Init();
