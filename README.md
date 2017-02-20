@@ -6,6 +6,6 @@ Two different implementations of the Ising Model - one with Java/Processing and 
 Binaries are available under [releases](https://github.com/oerpli/Ising/releases) (for Windows only).
 
 ####Remarks 
-* Swendsen Wang implementation (in the Java version) uses a recursive depth first search for the cluster finding algorithm. If the simulated lattice has more than 20k spins this can lead to a `StackOverflowException`. Change the stacksize for the Java JVM to circument this.
+* Swendsen Wang implementation (in the Java version) uses a recursive depth first search for the cluster finding algorithm. If the simulated lattice has more than 20k spins this can lead to a `StackOverflowException`. Change the stacksize for the Java JVM to circumvent this.
 
 * The C# version should overall be more performant, though it currently lacks options to set the simulation speed as it was programmed as an interactive showcase for kids during a science festival and not for getting simulation data. If  you need this you'll have to do it on your own.
