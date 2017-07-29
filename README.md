@@ -13,7 +13,7 @@ Binaries are available under [releases](https://github.com/oerpli/Ising/releases
 * Two different algorithms: Single spin flip metropolis hastings MCMC and spin preserving Kawasaki dynamics
 * Coupling can be changed
 * Real time plot of energy and magnetization
-* *Interactive simulation*: Spins (or areas of spins) can be changed to face either up/down or to be non-interacting. The latter can be used to showcase heterogeneous nucleation (nucleation seeds form faster in pore-like structures, [Frenkel 2006, Seeds of phase change](https://www.nature.com/nature/journal/v443/n7112/full/443641a.html), [Page & Sear 2006, Heterogeneous Nucleation in and out of Pores](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.97.065701))
+* **Interactive simulation**: Spins (or areas of spins) can be changed to face either up/down or to be non-interacting (left, middle, right mouse click, for all three: draw rectangle to select spins). The latter can be used to showcase heterogeneous nucleation (nucleation seeds form faster in pore-like structures, [Frenkel 2006, Seeds of phase change](https://www.nature.com/nature/journal/v443/n7112/full/443641a.html), [Page & Sear 2006, Heterogeneous Nucleation in and out of Pores](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.97.065701))
 
 ### Video
 ![](https://raw.githubusercontent.com/oerpli/Ising/master/cs.gif)
