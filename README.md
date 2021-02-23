@@ -3,7 +3,7 @@ Ising Model
 
 Two different implementations of the Ising Model - one with Java/Processing and one with C#/WPF. The Java version was used for my bachelor thesis, the C# version has more features and will be/was used for presentation on the Campus festival of the University of Vienna (June 2015, 650th year University of Vienna celebration).
 
-Some details about the Ising model can be found on the accompanying post on my blog: https://oerpli.ml/post/2017/04/ising-model/
+Some details about the Ising model can be found on the accompanying post on my blog: https://oerpli.github.io/post/2017/04/ising-model/
 
 Binaries are available under [releases](https://github.com/oerpli/Ising/releases) (for Windows only).
 
